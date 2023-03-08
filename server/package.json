@@ -1,0 +1,19 @@
+{
+  "name": "fleadisc-server",
+  "version": "1.0.0",
+  "description": "Fleadisc is an online marketplace for auctioning discgolf discs. Users from all over the world can use the platform to easily sell and buy used discs. Sales are primarily expected to be done within nationalites due to shipment costs but it is not impossible international sales will be done. The plattform is only used as an exchange tool to post and manage auction listings and will not handle any payment infrastructure.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.21"
+  }
+}
