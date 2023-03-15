@@ -17,6 +17,7 @@ module.exports = {
     fontFamily: {
       sans: ['Montserrat', 'sans-serif'],
       logo: ['Paytone One', 'sans-serif'],
+      dmsans: ['DM Sans', 'sans-serif'],
     },
     colors: {
       primary: '#81B29A',
