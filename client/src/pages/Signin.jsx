@@ -18,6 +18,8 @@ const Signin = () => {
     const handleSigninChange = (e) => {
         setLoginState({ ...loginState, [e.target.name]: e.target.value })
     }
+
+    //for simple form signin
     const handleSignin = (e) => {
         e.preventDefault()
 
@@ -25,12 +27,27 @@ const Signin = () => {
             .then((res) => {
                 if (!res.data.profilePicture)
                     res.data.profilePicture = null
-                console.log(res);
+                console.log(res.data);
                 setAuth(res.data)
             })
             .catch(e => console.log(e.response.data))
     }
 
+    //for google login
+    const login = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            axios.post('/user/login', { googleAccessToken: tokenResponse.access_token })
+                .then((res) => {
+                    console.log(res.data);
+                    setAuth(res.data)
+                    navigate('/')
+                })
+                .catch(e => console.log(e))
+        },
+        onError: errorResponse => console.log(errorResponse),
+    });
+
+    //for simple form signup
     const handleRegistration = (e) => {
         e.preventDefault()
         axios.post('/user/register', { email: registrationState.email, password: registrationState.password })
@@ -41,6 +58,8 @@ const Signin = () => {
             .catch(e => console.log(e))
     }
 
+
+    //for google signup
     const register = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             axios.post('/user/register', { googleAccessToken: tokenResponse.access_token })
@@ -52,20 +71,6 @@ const Signin = () => {
         },
         onError: errorResponse => console.log(errorResponse),
     });
-
-    const login = useGoogleLogin({
-        onSuccess: async (tokenResponse) => {
-            axios.post('/user/login', { googleAccessToken: tokenResponse.access_token })
-                .then((res) => {
-                    console.log(res.data.data);
-                    setAuth(res.data.data)
-                    navigate('/')
-                })
-                .catch(e => console.log(e))
-        },
-        onError: errorResponse => console.log(errorResponse),
-    });
-
 
     return (
         <div className='min-h-screen' data-ux_mode="redirect">

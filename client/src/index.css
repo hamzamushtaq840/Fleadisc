@@ -23,3 +23,71 @@
   border-color: #595959;
   border-radius: 2px;
 }
+
+
+select,
+select option {
+  color: #000000;
+}
+
+select:invalid,
+select option[value=""] {
+  color: #999999;
+}
+
+
+/*Added for browser compatibility*/
+[hidden] {
+  display: none;
+}
+
+option:first-child {
+  color: #ccc;
+}
+
+/* Define the fill color for the SVG when the NavLink is not active */
+.nav-link svg {
+  fill: #1E1E21B2;
+  ;
+}
+
+/* Define the fill color for the SVG when the NavLink is active */
+.nav-link.active svg {
+  fill: #000000;
+}
+
+.nav-link.active h1 {
+  fill: #000000;
+  font-weight: 600;
+}
+
+.modalBackground {
+  width: 100%;
+  min-width: calc(100vw - 100%);
+  height: 100vh;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.3);
+
+}
+
+.modalContainer {
+  width: 70%;
+  height: 15%;
+  border-radius: 6px;
+  border: 1px solid #81B29A;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  font-family: 'Roboto Flex', sans-serif;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 11;
+  animation-name: animateModal;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-out;
+}
