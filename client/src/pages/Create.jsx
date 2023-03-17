@@ -5,11 +5,9 @@ import arrowdown from '../assets/arrowdown.svg'
 import plastic from '../assets/plastic.svg'
 import grams from '../assets/grams.svg'
 import { getCountryInfoByISO } from '../utils/iso-country-currency'
-// import DateTimePicker from 'react-datetime-picker';
-
 import 'react-datetime-picker/dist/DateTimePicker.css?inline';
 import DateTimePicker from 'react-datetime-picker';
-import NumofListing from '../components/create/NumofListing'
+
 //will be in global auth of user 
 const userCountry = 'PK'
 const countryInfo = getCountryInfoByISO(userCountry);
@@ -31,8 +29,9 @@ const Create = () => {
     }
 
     return (
-        <div className=' mx-[37px] min-h-[90vh] mt-[0.5em] '>
-            <div className='flex justify-between  items-center mb-[15px]'>
+
+        <div className=' mx-[37px] min-h-[90vh] max-w-[1000px]  mt-[0.5em] '>
+            <div className='flex justify-between w-full items-center mb-[15px]'>
                 <h1 className='font-[700] text-[1.25rem] '>Create a listing</h1>
                 <button type="submit" className='w-[2.5em] h-[2.3125em]  text-[0.875rem] font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>+</button>
             </div>
@@ -76,8 +75,7 @@ const Create = () => {
                         {ranges.map((range) => (
                             <div
                                 key={range}
-                                className={`flex justify-center items-center rounded-full px-[8px] py-[3px] ${selectedRange === range ? 'bg-[#81b29a2f]' : ''
-                                    } border border-[#595959] cursor-pointer`}
+                                className={`flex justify-center items-center rounded-full px-[8px] py-[3px] ${selectedRange === range ? 'bg-[#81b29a2f]' : ''} border border-[#595959] cursor-pointer`}
                                 onClick={() => handleClick(range)}
                             >
                                 <span className="text-[12px]">{range}</span>
@@ -156,11 +154,11 @@ const Create = () => {
                         <span className='mr-[5px]'>End time:</span>
                         <input className='w-[56%]  text-[#595959bf] h-[20px] text-[12px]  rounded-[2px] border-[1px] border-[#000000]' id="data" type="date" name="" placeholder='sss' />
                     </div>
-                    <label htmlFor="time" className='text-[12px] font-[500]'>at<input className='w-[60%] h-[20px] ml-[9px] text-[#595959bf] text-[12px] rounded-[2px] border-[1px] border-[#000000]' type="time" name="" id="time" /></label>
+                    <label htmlFor="time" className='text-[12px] font-[500]'>at<input className='w-[81%] h-[20px] ml-[9px] text-[#595959bf] text-[12px] rounded-[2px] border-[1px] border-[#000000]' type="time" name="" id="time" /></label>
                 </div>
             </div>
 
-            <div className='flex justify-center'><button onClick={handlePublish} className='w-[7.5em] h-[2.3125em] mt-[18px] text-[0.875rem] font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Publish</button></div>
+            <div className='flex justify-center mb-[20px]'><button onClick={handlePublish} className='w-[7.5em] h-[2.3125em] mt-[18px] text-[0.875rem] font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Publish</button></div>
             {model && <NumofListing setModel={setModel} />}
 
         </div>

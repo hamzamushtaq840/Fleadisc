@@ -47,52 +47,43 @@ const Signin = () => {
         onError: errorResponse => console.log(errorResponse),
     });
 
-    //for simple form signup
-    const handleRegistration = (e) => {
-        e.preventDefault()
-        axios.post('/user/register', { email: registrationState.email, password: registrationState.password })
-            .then((res) => {
-                if (res.status === 201)
-                    navigate('/signin/country')
-            })
-            .catch(e => console.log(e))
-    }
+    // //for simple form signup
+    // const handleRegistration = (e) => {
+    //     e.preventDefault()
+    //     axios.post('/user/register', { email: registrationState.email, password: registrationState.password })
+    //         .then((res) => {
+    //             if (res.status === 201)
+    //                 navigate('/signin/country')
+    //         })
+    //         .catch(e => console.log(e))
+    // }
 
 
     //for google signup
-    const register = useGoogleLogin({
-        onSuccess: async (tokenResponse) => {
-            axios.post('/user/register', { googleAccessToken: tokenResponse.access_token })
-                .then((res) => {
-                    if (res.status === 201)
-                        navigate('/signin/country')
-                })
-                .catch(e => console.log(e))
-        },
-        onError: errorResponse => console.log(errorResponse),
-    });
+
 
     return (
-        <div className='min-h-screen' data-ux_mode="redirect">
+        <div className='min-h-screen flex flex-col' data-ux_mode="redirect">
             <header><img src={back} alt="back button" onClick={() => navigate(-1)} className='hover:cursor-pointer p-[32px]' /></header>
-            <div className='flex  flex-col mx-[46px] justify-center '>
-                <h1 className='font-[700] font-sans leading-[39px] text-[2rem] self-start'>Sign in</h1>
-                <div className='mt-[27px]'>
-                    <button onClick={() => login()} className='border bg-[#FFFFFF] rounded-[4px] border-[#D9D9D9] p-[0.75em] w-full font-[500] text-[0.875rem]  flex items-center'>
+            <div className='flex flex-1 sm:items-center md:items-center lg:items-center xl:items-center    2xl:items-center  pb-[200px] flex-col mx-[46px] justify-center '>
+                <h1 className='font-[700] font-sans leading-[39px] text-[2rem]  w-full max-w-[600px] '>Sign in</h1>
+                <div className='mt-[27px] flex flex-col items-center  w-full'>
+                    <button onClick={() => login()} className='border max-w-[600px] bg-[#FFFFFF] rounded-[4px] border-[#D9D9D9] p-[0.75em] w-full font-[500] text-[0.875rem]  flex items-center'>
                         <img src={google} alt="" />
                         <h1 className='flex-1 '>Sign in with Google</h1>
                     </button>
                     <p className='my-[11px] font-dmsans text-[8px] text-[#A5A5A5] flex justify-center'>OR</p>
-                    <form className='flex flex-col gap-[7px]' onSubmit={handleSignin}>
-                        <input required type="email" className='p-[0.75em] bg-[#F5F5F5] font-sans font-[500] text-[0.875rem] border rounded-[4px] border-[#D9D9D9]' placeholder='Email address' value={loginState.email} name="email" onChange={handleSigninChange} />
-                        <input required type="password" className='p-[0.75em] bg-[#F5F5F5] font-sans font-[500] text-[0.875rem] border rounded-[4px] border-[#D9D9D9]' placeholder='Password' value={loginState.password} name="password" onChange={handleSigninChange} />
-                        <div className='flex justify-center'><button type="submit" className='w-[7.5em] h-[2.3125em] mt-[9px] text-[0.875rem] font-[700] bg-primary text-[#ffff] shadow-2xl rounded-[6px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Sign in</button></div>
+                    <form className='flex flex-col gap-[7px] w-full items-center  ' onSubmit={handleSignin}>
+                        <input required type="email" className='p-[0.75em] max-w-[600px] w-full bg-[#F5F5F5] font-sans font-[500] text-[0.875rem] border rounded-[4px] border-[#D9D9D9]' placeholder='Email address' value={loginState.email} name="email" onChange={handleSigninChange} />
+                        <input required type="password" className='p-[0.75em] max-w-[600px] w-full bg-[#F5F5F5] font-sans font-[500] text-[0.875rem] border rounded-[4px] border-[#D9D9D9]' placeholder='Password' value={loginState.password} name="password" onChange={handleSigninChange} />
+                        <p className=' w-full max-w-[600px]  font-dmsans text-[12px] text-[#A5A5A5] flex justify-end hover:underline hover:text-[#000000] cursor-pointer' onClick={() => navigate('/signup')}>Dont have an account ?</p>
+                        <div className='flex justify-center'><button type="submit" className='w-[7.5em] h-[2.3125em] mt-[9px]  text-[0.875rem] font-[700] bg-primary text-[#ffff] shadow-2xl rounded-[6px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Sign in</button></div>
                     </form>
-                    <div className='my-[50px] border-[.1px] border-[#D9D9D9]'></div>
+                    {/* <div className='my-[50px] border-[.1px] border-[#D9D9D9]'></div> */}
                 </div>
             </div >
 
-            <div className='flex  flex-col mx-[46px] justify-center '>
+            {/* <div className='flex  flex-col mx-[46px] justify-center '>
                 <h1 className='font-[700] font-sans leading-[39px] text-[2rem] self-start'>Create account</h1>
                 <div className='mt-[27px]'>
                     <button onClick={() => register()} className='border rounded-[4px] bg-[#FFFFFF]  border-[#D9D9D9] p-[0.75em] w-full font-[500] text-[0.875rem]  flex items-center'>
@@ -106,7 +97,7 @@ const Signin = () => {
                         <div className='flex justify-center'><button type="submit" className='w-[7.5em] h-[2.3125em] mt-[9px] text-[0.875rem] font-[700] bg-primary text-[#ffff] shadow-2xl rounded-[6px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Sign up</button></div>
                     </form>
                 </div>
-            </div >
+            </div > */}
 
         </div >
     )
