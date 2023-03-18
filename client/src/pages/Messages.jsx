@@ -19,7 +19,7 @@ const Messages = () => {
             recieverName: 'Fred',
             recieverImage: user,
             lastTextTime: '12-03-2023T22:04',
-            lastText: "Okej great, I just got the parcel",
+            lastText: "Okay great, I just got the parcel",
             read: false
         },
         {
@@ -27,7 +27,7 @@ const Messages = () => {
             recieverName: 'Fred',
             recieverImage: user,
             lastTextTime: '12-03-2023T22:04',
-            lastText: "Okej great, I just got the parcel",
+            lastText: "Okay great, I just got the parcel",
             read: false
         },
         {
@@ -35,7 +35,7 @@ const Messages = () => {
             recieverName: 'Fred',
             recieverImage: user,
             lastTextTime: '12-03-2023T22:04',
-            lastText: "Okej great, I just got the parcel",
+            lastText: "Okay great, I just got the parcel",
             read: false
         }
     ]
@@ -46,20 +46,20 @@ const Messages = () => {
     }
 
     return (
-        <div className='pl-[23px] min-h-[90vh]'>
+        <div className='pl-[20px] min-h-[90vh]'>
             <h1 className='mt-[7px] text-[20px] font-[700] mb-[14px]'>Messages</h1>
             <div className='flex flex-col gap-[18px]'>
                 {chats.map((value, index) => {
                     return (
-                        <div className='flex items-center cursor-pointer' onClick={() => handleSingleChat(value.chatId)}>
-                            <div className='h-[50px] w-[50px] mr-[26px]'>
+                        <div className='flex  cursor-pointer' onClick={() => handleSingleChat(value.chatId)}>
+                            <div className='h-[50px] w-[50px]  mr-[15px]'>
                                 <img src={user} alt="userImage" />
                             </div>
-                            <div className='flex flex-col flex-1 '>
-                                <h1 className='text-[12px] text-[#595959] font-[700] mb-[5px]'>{value.recieverName}</h1>
-                                <p className={`text-[12px] text-[#000000]  mb-[10px] ${value.read ? "font-[700]" : "font-[500]"} `}>{value.lastText}</p>
-                                <p className='text-[8px] font-[500] text-[#595959Bbf] mb-[5px]'>{value.lastTextTime}</p>
-                                {index + 1 !== chats.length && <div className='p-[0.5px]  bg-[#595959]'></div>}
+                            <div className='flex flex-col flex-1'>
+                                <h1 className='text-[12px] text-[#595959] font-[700] mb-[2px]'>{value.recieverName}</h1>
+                                <p className={`text-[12px] text-[#000000]  mb-[10px] ${value.read ? "font-[700]" : "font-[400]"} `}>{value.lastText}</p>
+                                <p className='text-[8px] font-[500] text-[#595959bf] mb-[5px]'>{value.lastTextTime}</p>
+                                {index + 1 !== chats.length && <div className='py-[0.3px]  bg-[#5959593b]'></div>}
                             </div>
                         </div>)
                 })}

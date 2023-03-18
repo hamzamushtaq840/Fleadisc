@@ -53,11 +53,23 @@ option:first-child {
 
 /* Define the fill color for the SVG when the NavLink is active */
 .nav-link.active svg {
-  fill: #000000;
+  fill: #389668;
+}
+
+/* .nav-link:hover h1 {
+  font-weight: 600;
+} */
+
+.nav-link:hover svg {
+  fill: black;
+}
+
+.nav-link.active:hover svg {
+  fill: #389668;
 }
 
 .nav-link.active h1 {
-  fill: #000000;
+  color: #389668;
   font-weight: 600;
 }
 
@@ -90,4 +102,34 @@ option:first-child {
   animation-name: animateModal;
   animation-duration: 0.5s;
   animation-timing-function: ease-out;
+}
+
+.nav-link2.active {
+  background-color: white;
+  /* padding: 0.5rem 2rem; */
+  border-radius: 7px;
+  border: 0.1px solid #ccc;
+  box-shadow: 3px 4px 19px -17px rgba(0, 0, 0, 0.35);
+  -webkit-box-shadow: 3px 4px 19px -17px rgba(0, 0, 0, 0.35);
+  -moz-box-shadow: 3px 4px 19px -17px rgba(0, 0, 0, 0.35);
+}
+
+.nav-link2.active h2 {
+  font-weight: 600;
+  color: black;
+  /* text-decoration: underline; */
+  /* padding-bottom: 2px; */
+  /* border-bottom: 2px solid #389668 */
+
+}
+
+#dotted-line {
+  border: none;
+  color: rgb(7, 189, 245);
+  margin: px 60px;
+}
+
+.div {
+  border-left: 3px dotted #C6BCBC;
+  /* height: 30px; */
 }

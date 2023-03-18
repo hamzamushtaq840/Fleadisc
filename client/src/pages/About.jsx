@@ -15,7 +15,7 @@ const About = () => {
     ]
 
     return (
-        <div className='p-[34px] min-h-[90vh]'>
+        <div className='p-[20px] min-h-[90vh]'>
             <div className='flex flex-col gap-[11px]'>
                 <h1 className='text-[20px] font-[700]'>About Fleadisc</h1>
                 <p className='text-[12px] w-[70%]  font-[500]'>Fleadisc is an independent platform for buying and selling discs between private individuals. You can see us as a variant of a buy and sell group on Facebook</p>

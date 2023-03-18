@@ -5,8 +5,7 @@ import arrowdown from '../assets/arrowdown.svg'
 import plastic from '../assets/plastic.svg'
 import grams from '../assets/grams.svg'
 import { getCountryInfoByISO } from '../utils/iso-country-currency'
-import 'react-datetime-picker/dist/DateTimePicker.css?inline';
-import DateTimePicker from 'react-datetime-picker';
+import NumofListing from '../components/create/NumofListing'
 
 //will be in global auth of user 
 const userCountry = 'PK'
@@ -40,7 +39,7 @@ const Create = () => {
                     <img src={upload} alt="upload a picture" />
                 </div>
                 <div className=' border-[0.5px] border-[#0000002e] mb-[14px]'></div>
-                <div><label htmlFor="Qty" className='text-[0.75rem] ml-[1em] text-[#595959] font-[700]'>Qty :<input type="number" min='1' defaultValue={1} className='ml-[8px] pl-[5px] border-[1px] h-[20px] rounded-[2px] w-[31px]' name="" id="" /></label> </div>
+                <div><label htmlFor="Qty" className='text-[0.75rem] ml-[1em] text-[#595959] font-[700]'>Qty :<input type="number" min='1' defaultValue={1} className='ml-[8px] pl-[2px] border-[1px] h-[20px] rounded-[2px] w-[45px]' name="" id="" /></label> </div>
                 <div className='flex justify-end mb-[3px] '>
                     <div className='w-[50%] flex pl-[10px] items-center '>
                         <h1 className=' font-sans text-[12px] font-[700] mr-[10px]'>Condition*</h1>
@@ -83,18 +82,18 @@ const Create = () => {
                         ))}
                     </div>
                 </div>
-                <div className='flex text-[0.75rem] mt-[18px] ml-[1em] text-[#595959] font-[700]'>Optional details <img className={`ml-[7px] transform ${optional ? 'rotate-180' : ''}`} src={arrowdown} onClick={() => setOptional((prev) => !prev)} /></div>
+                <span onClick={() => setOptional((prev) => !prev)} className='inline-flex text-[0.75rem] mt-[18px] ml-[1em] text-[#595959] font-[700]'>Optional details <img className={`ml-[7px] transform ${optional ? 'rotate-180' : ''}`} src={arrowdown} /></span>
                 {optional &&
                     <div className='px-[0.8em] mt-[9px] flex flex-wrap  mb-[20px]'>
 
                         <div className='flex w-full'>
                             <div className='flex w-[50%] gap-[6px]'>
                                 <img src={plastic} className="h-[20px]" alt="plastic" />
-                                <input type="text" className='border rounded-[2px] w-full h-[20px] mr-[20px]  text-[12px] font-[700] pl-[8px]' placeholder='Plastic...' />
+                                <input type="text" className='border rounded-[2px] w-full h-[20px] mr-[20px]  text-[12px] placeholder:font-[700] pl-[8px]' placeholder='Plastic...' />
                             </div>
                             <div className='flex w-[50%] gap-[6px]'>
                                 <img src={grams} className="h-[20px]" alt="plastic" />
-                                <input type="number" className='border rounded-[2px] w-[50%] h-[20px]  text-[12px] font-[700] pl-[8px]' placeholder='Grams' />
+                                <input type="number" className='border rounded-[2px] w-[50%] h-[20px]  text-[12px] placeholder:font-[700] pl-[8px]' placeholder='Grams' />
                             </div>
                         </div>
 
