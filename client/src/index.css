@@ -91,3 +91,47 @@ option:first-child {
   animation-duration: 0.5s;
   animation-timing-function: ease-out;
 }
+
+
+
+.buttonAnimation{
+  position:relative;
+  transition: all;
+  transition-duration: 100ms;
+}
+
+.buttonAnimation:hover{
+  top:2px;
+}
+
+.buttonAnimation:active{
+  top:4px;
+}
+
+.listingBackgroundImage{
+  position: relative;
+  background-image: url("./ListingMainImage.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.listingBackgroundImage::before {
+  content: ""; /* create an empty element to use as the additional layer */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2); /* set the background color with alpha */
+  z-index: 1; /* make sure the layer is on top of the background image */
+}
+
+.ReactFlagsSelect-module_selectBtn__19wW7{
+  border: 0 !important;
+  /* padding-top: 0 !important; */
+  padding-bottom: 0 !important;
+}
+
+.ReactFlagsSelect-module_selectValue__152eS{
+  padding: 0 !important;
+}

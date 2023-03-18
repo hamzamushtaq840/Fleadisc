@@ -65,9 +65,9 @@ const Signin = () => {
     return (
         <div className='min-h-screen flex flex-col' data-ux_mode="redirect">
             <header><img src={back} alt="back button" onClick={() => navigate(-1)} className='hover:cursor-pointer p-[32px]' /></header>
-            <div className='flex flex-1 sm:items-center md:items-center lg:items-center xl:items-center    2xl:items-center  pb-[200px] flex-col mx-[46px] justify-center '>
-                <h1 className='font-[700] font-sans leading-[39px] text-[2rem]  w-full max-w-[600px] '>Sign in</h1>
-                <div className='mt-[27px] flex flex-col items-center  w-full'>
+            <div className='flex flex-1 sm:items-center md:items-center lg:items-center xl:items-center 2xl:items-center pb-[200px] flex-col mx-[46px] justify-center'>
+                <h1 className='font-[700] max-w-[400px] font-sans leading-[39px] text-[2rem]  w-full'>Sign in</h1>
+                <div className='max-w-[400px] mt-[27px] flex flex-col items-center  w-full'>
                     <button onClick={() => login()} className='border max-w-[600px] bg-[#FFFFFF] rounded-[4px] border-[#D9D9D9] p-[0.75em] w-full font-[500] text-[0.875rem]  flex items-center'>
                         <img src={google} alt="" />
                         <h1 className='flex-1 '>Sign in with Google</h1>
@@ -76,10 +76,13 @@ const Signin = () => {
                     <form className='flex flex-col gap-[7px] w-full items-center  ' onSubmit={handleSignin}>
                         <input required type="email" className='p-[0.75em] max-w-[600px] w-full bg-[#F5F5F5] font-sans font-[500] text-[0.875rem] border rounded-[4px] border-[#D9D9D9]' placeholder='Email address' value={loginState.email} name="email" onChange={handleSigninChange} />
                         <input required type="password" className='p-[0.75em] max-w-[600px] w-full bg-[#F5F5F5] font-sans font-[500] text-[0.875rem] border rounded-[4px] border-[#D9D9D9]' placeholder='Password' value={loginState.password} name="password" onChange={handleSigninChange} />
-                        <p className=' w-full max-w-[600px]  font-dmsans text-[12px] text-[#A5A5A5] flex justify-end hover:underline hover:text-[#000000] cursor-pointer' onClick={() => navigate('/signup')}>Dont have an account ?</p>
-                        <div className='flex justify-center'><button type="submit" className='w-[7.5em] h-[2.3125em] mt-[9px]  text-[0.875rem] font-[700] bg-primary text-[#ffff] shadow-2xl rounded-[6px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Sign in</button></div>
+                        <div className='flex justify-center'>
+                            <button type="submit" className='buttonAnimation w-[7.5em] h-[2.3125em] mt-[9px]  text-[0.875rem] font-[700] bg-primary text-[#ffff] shadow-2xl rounded-[6px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Sign in</button>
+                        </div>
                     </form>
                     {/* <div className='my-[50px] border-[.1px] border-[#D9D9D9]'></div> */}
+                    <div className='mt-6 mx-4 w-full max-w-[380px] h-[2px] bg-[#D9D9D9]'></div>
+                    <p className='mt-6 w-full text-center font-dmsans text-[12px] text-[#A5A5A5] flex justify-center'>Don't have an account?<span onClick={() => navigate('/signup')} className='font-dmsans text-[12px] text-[#A5A5A5] hover:underline font-bold hover:text-[#8ab4f8] pl-[4px] cursor-pointer'>Create Account.</span></p>
                 </div>
             </div >
 
