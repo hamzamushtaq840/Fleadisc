@@ -2,9 +2,6 @@ import React from 'react'
 import { Suspense } from 'react';
 import { ColorRing } from 'react-loader-spinner'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import SingleChat from './components/messages/SingleChat';
-import Signup from './pages/Signup';
-
 
 const Listing = React.lazy(() => import('./pages/Listing'))
 const Navbar = React.lazy(() => import('./components/Navbar'))
@@ -16,7 +13,10 @@ const Signin = React.lazy(() => import('./pages/Signin'))
 const RequireAuth = React.lazy(() => import('./components/RequireAuth'))
 const ChooseCountry = React.lazy(() => import('./components/signin/ChooseCountry'))
 const About = React.lazy(() => import('./pages/About'))
-
+const Buying = React.lazy(() => import('./components/delivery/Buying'));
+const Selling = React.lazy(() => import('./components/delivery/Selling'));
+const SingleChat = React.lazy(() => import('./components/messages/SingleChat'));
+const Signup = React.lazy(() => import('./pages/Signup'));
 
 const ROLES = {
   'User': 2001,
@@ -54,8 +54,14 @@ const App = () => {
         <Route path="/signin">
           <Route path="country" element={<Suspense fallback={Loader}><ChooseCountry /></Suspense>} />
         </Route>
+
         <Route path="/messages">
           <Route path="chat" element={<Suspense fallback={Loader}><Navbar><SingleChat /></Navbar></Suspense>} />
+        </Route>
+
+        <Route path="/delivery">
+          <Route path="buying" element={<Suspense fallback={Loader}><Navbar><Delivery><Buying /></Delivery></Navbar></Suspense>} />
+          <Route path="selling" element={<Suspense fallback={Loader}><Navbar><Delivery><Selling /></Delivery></Navbar></Suspense>} />
         </Route>
 
         {/*Nested Protected routes */}

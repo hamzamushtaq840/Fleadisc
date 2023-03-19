@@ -108,8 +108,8 @@ const SingleChat = () => {
     }, [chat]);
     return (
         <>
-            <div className='flex items-center bg-[#cccccc21] h-[50px] '>
-                <img src={chatbackarrow} className="w-[10px] h-[10.7px] cursor-pointer ml-[10px] mr-[30px]" onClick={() => navigate('/messages')} alt="back button" />
+            <div className='flex items-center bg-[#cccccc21] h-[40px] '>
+                <img src={chatbackarrow} className="w-[10px] h-[15px] cursor-pointer ml-[10px] mr-[15px]" onClick={() => navigate('/messages')} alt="back button" />
                 <img src={user} className="h-[24px]  " alt="user" />
                 <h1 className='text-[12px] text-[#595959] font-[700] ml-[12px]'>Fred</h1>
             </div>
@@ -119,7 +119,7 @@ const SingleChat = () => {
                         return userId === value.senderId ? (
                             <div className='flex  px-[13px]  justify-center ml-auto items-center ' key={index}>
                                 <div className='flex justify-center items-center py-[14px] px-[11px] rounded-[8px] border-[0.1px] bg-[#ffffff] border-[#ccc]'>
-                                    <p className='w-[80%] text-[12px] font-[600]' >{value.text}</p>
+                                    <p className='w-[100%] text-[12px] font-[600]' >{value.text}</p>
                                 </div>
                                 <img src={user} className="ml-[8px] h-[30px]" alt="user" />
                             </div>
@@ -133,7 +133,7 @@ const SingleChat = () => {
                         );
                     })}
                 </div>
-                <div className=' flex justify-between items-center px-[30px] h-[50px]'>
+                <div className=' flex justify-between items-center px-[30px] h-[60px]'>
                     <img src={imagesend} alt="send an image" />
                     <input type="text" className='border-[0.5px] px-[5px]  text-[12px] font-[500] flex-1 mx-4 h-[39px] resize-none rounded-[8px]' />
                     <img src={send} alt="send message" />
