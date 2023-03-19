@@ -140,7 +140,7 @@ const Create = () => {
                         </div>
                         <div className='w-[50%]  justify-start mt-[15px] flex flex-col items-start '>
                             <input type="number" min={0} className='w-full text-[0.75em] placeholder:font-[700] pl-[7px] border-[1px] font-sans border-[#595959] h-[1.938em] rounded-[2px] ' placeholder={`Min Price (${countryInfo.currency})`} />
-                            <p className='font-[400] text-[.6rem] text-[#AAAAAA] text-left'>5 {countryInfo.currency} min price</p>
+                            <p className='font-[400] text-[.6em] mt-[.2em] text-[#AAAAAA] text-left'>5 {countryInfo.currency} min price</p>
                         </div>
                     </div>
                     <div className='flex mx-[0.8em] mt-[10px] gap-[10px] w-full '>

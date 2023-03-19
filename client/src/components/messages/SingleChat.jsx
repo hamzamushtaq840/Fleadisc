@@ -113,8 +113,8 @@ const SingleChat = () => {
                 <img src={user} className="h-[1.5em]  " alt="user" />
                 <h1 className='text-[0.75em] text-[#595959] font-[700] ml-[0.75em]'>Fred</h1>
             </div>
-            <div className=' flex flex-col' style={{ height: "calc(100vh - 121px)", scrollBehavior: "smooth" }}>
-                <div className='flex flex-col flex-1 pt-[1.25em] gap-[0.9375em] overflow-y-auto ' ref={containerRef}>
+            <div className=' flex flex-col ' style={{ height: "calc(100vh - 121px)", scrollBehavior: "smooth" }}>
+                <div className='flex flex-col flex-1 pt-[1.25em] px-[.4em] xsm:px-[0] sm:px-[0]  gap-[0.9375em] overflow-y-auto ' ref={containerRef}>
                     {chat.map((value, index) => {
                         return userId === value.senderId ? (
                             <div className='flex  px-[0.8125em]  justify-center ml-auto items-center ' key={index}>

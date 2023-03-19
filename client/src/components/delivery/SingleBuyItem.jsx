@@ -61,7 +61,7 @@ const SingleBuyItem = ({ value }) => {
                 </div>
             </div>
 
-            <div className='mt-[35px]   mb-[20px]'>
+            <div className='mt-[55px] xsm:mt-[35px] sm:mt-[35px]  mb-[20px]'>
                 <div className='flex gap-[0.688em] sm:h-[50px] xsm:h-[50px] h-[70px] '>
                     <div className='flex flex-col items-center  '>
                         <div className={`p-[0.463em] rounded-full border-[0.063em]  ${value.purchaseConfirmed ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
