@@ -6,9 +6,9 @@ const Listing = () => {
     const [selected, setSelected] = useState("");
 
     return (
-        <div className='xsm:w-[100vw] sm:w-[100vw] w-[80vw] m-auto '>
+        <div className=' w-[100vw] m-auto '>
             <div className='listingBackgroundImage flex  justify-center h-[35vw] min-h-[135px] max-h-[300px] bg-[rgba(0,0,0,0.1)] relative'>
-                <h1 className='text-[25px] leading-[34.9px] text-[white] font-logo text-center relative z-10 mt-[clamp(39px,10vw,90px)]'>Give a disc a second arm</h1>
+                <h1 className='text-[35px] sm:text-[25px] xsm:text-[25px] md:text-[30px] leading-[34.9px] text-[white] font-logo text-center relative z-10 mt-[clamp(50px,10vw,110px)]'>Give a disc a second arm</h1>
                 <input style={{ boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)' }} className='border-[1px] w-[64.10vw] max-w-[500px] min-w-[250px] border-[#81B29A] absolute bottom-[-24px] bg-[white] z-10 h-[47px] rounded-lg px-[14px] font-sans' type='text' placeholder='Search...'></input>
             </div>
 

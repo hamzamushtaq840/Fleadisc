@@ -2,6 +2,8 @@ import React from 'react'
 import { Suspense } from 'react';
 import { ColorRing } from 'react-loader-spinner'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import PrivateProfile from './components/profile/PrivateProfile';
+import PublicProfile from './components/profile/PublicProfile';
 
 const Listing = React.lazy(() => import('./pages/Listing'))
 const Navbar = React.lazy(() => import('./components/Navbar'))
@@ -53,6 +55,11 @@ const App = () => {
         {/* Nested Public Routes */}
         <Route path="/signin">
           <Route path="country" element={<Suspense fallback={Loader}><ChooseCountry /></Suspense>} />
+        </Route>
+
+        <Route path="/profile">
+          <Route path="public" element={<Suspense fallback={Loader}><Navbar><PublicProfile /></Navbar></Suspense>} />
+          <Route path="private" element={<Suspense fallback={Loader}><Navbar><PrivateProfile /></Navbar></Suspense>} />
         </Route>
 
         <Route path="/messages">

@@ -87,13 +87,12 @@ option:first-child {
 }
 
 .modalContainer {
-  width: 70%;
-  height: 15%;
+  /* width: 70%; */
+  /* height: 15%; */
   border-radius: 6px;
   border: 1px solid #81B29A;
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  font-family: 'Roboto Flex', sans-serif;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -105,6 +104,9 @@ option:first-child {
 }
 
 
+.button {
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
 
 .buttonAnimation {
   position: relative;
@@ -112,33 +114,36 @@ option:first-child {
   transition-duration: 100ms;
 }
 
-.buttonAnimation:hover{
-  top:2px;
+.buttonAnimation:hover {
+  top: 2px;
 }
 
-.buttonAnimation:active{
-  top:4px;
+.buttonAnimation:active {
+  top: 4px;
 }
 
-.listingBackgroundImage{
+.listingBackgroundImage {
   position: relative;
-  background-image: url("./ListingMainImage.svg");
+  background-image: url("./assets/ListingMainImage.svg");
   background-repeat: no-repeat;
   background-size: cover;
 }
 
 .listingBackgroundImage::before {
-  content: ""; /* create an empty element to use as the additional layer */
+  content: "";
+  /* create an empty element to use as the additional layer */
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.2); /* set the background color with alpha */
-  z-index: 1; /* make sure the layer is on top of the background image */
+  background-color: rgba(0, 0, 0, 0.2);
+  /* set the background color with alpha */
+  z-index: 1;
+  /* make sure the layer is on top of the background image */
 }
 
-.ReactFlagsSelect-module_selectBtn__19wW7{
+.ReactFlagsSelect-module_selectBtn__19wW7 {
   border: 0 !important;
   /* padding-top: 0 !important; */
   padding-bottom: 0 !important;

@@ -21,6 +21,7 @@ const Buying = () => {
             address: null,
             shippingCost: 'sda',
             paymentAddressConfimed: false,
+            accountNo: null,
             paymentSent: false,
             paymentConfimed: false,
             parcelSent: false,
@@ -47,6 +48,7 @@ const Buying = () => {
             address: null,
             shippingCost: 'sda',
             paymentAddressConfimed: false,
+            accountNo: null,
             paymentSent: false,
             paymentConfimed: false,
             parcelSent: false,
@@ -73,6 +75,7 @@ const Buying = () => {
             address: null,
             shippingCost: 'sda',
             paymentAddressConfimed: false,
+            accountNo: null,
             paymentSent: false,
             paymentConfimed: false,
             parcelSent: false,
@@ -100,6 +103,7 @@ const Buying = () => {
             address: null,
             shippingCost: '24kr',
             paymentAddressConfimed: true,
+            accountNo: '0707124556',
             paymentSent: false,
             paymentConfimed: false,
             parcelSent: false,
@@ -126,6 +130,7 @@ const Buying = () => {
             address: null,
             shippingCost: '24kr',
             paymentAddressConfimed: true,
+            accountNo: '0707124556',
             paymentSent: true,
             paymentConfimed: false,
             parcelSent: false,
@@ -152,6 +157,7 @@ const Buying = () => {
             address: null,
             shippingCost: '24kr',
             paymentAddressConfimed: true,
+            accountNo: '0707124556',
             paymentSent: true,
             paymentConfimed: true,
             parcelSent: false,
@@ -178,6 +184,7 @@ const Buying = () => {
             address: null,
             shippingCost: '24kr',
             paymentAddressConfimed: true,
+            accountNo: '0707124556',
             paymentSent: true,
             paymentConfimed: true,
             parcelSent: true,
@@ -204,6 +211,7 @@ const Buying = () => {
             address: null,
             shippingCost: '24kr',
             paymentAddressConfimed: true,
+            accountNo: '0707124556',
             paymentSent: true,
             paymentConfimed: true,
             parcelSent: true,
@@ -215,8 +223,8 @@ const Buying = () => {
     ]
 
     return (
-        <div className='px-[1.25em] py-[0.625em] sm:text-[20px]'>
-            <div>
+        <div className=' bg-[#FAFAFA]  flex justify-center px-[1.25em] py-[0.625em] text-[20px] xsm:text-[16px] sm:text-[18px] '>
+            <div className='w-[80vw] sm:w-[100vw] xsm:w-[100vw]'>
                 {wonBids.map((value, index) => {
                     return (
                         <div>

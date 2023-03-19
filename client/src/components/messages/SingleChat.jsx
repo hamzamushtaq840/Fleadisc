@@ -108,34 +108,34 @@ const SingleChat = () => {
     }, [chat]);
     return (
         <>
-            <div className='flex items-center bg-[#cccccc21] h-[40px] '>
-                <img src={chatbackarrow} className="w-[10px] h-[15px] cursor-pointer ml-[10px] mr-[15px]" onClick={() => navigate('/messages')} alt="back button" />
-                <img src={user} className="h-[24px]  " alt="user" />
-                <h1 className='text-[12px] text-[#595959] font-[700] ml-[12px]'>Fred</h1>
+            <div className='flex text-[1.3rem] sm:text-[1rem]  xsm:text-[1rem] items-center bg-[#cccccc21] h-[2.5em] '>
+                <img src={chatbackarrow} className="w-[0.625em] h-[0.9375em] cursor-pointer ml-[0.625em] mr-[0.9375em]" onClick={() => navigate('/messages')} alt="back button" />
+                <img src={user} className="h-[1.5em]  " alt="user" />
+                <h1 className='text-[0.75em] text-[#595959] font-[700] ml-[0.75em]'>Fred</h1>
             </div>
             <div className=' flex flex-col' style={{ height: "calc(100vh - 121px)", scrollBehavior: "smooth" }}>
-                <div className='flex flex-col flex-1 pt-[20px] gap-[15px] overflow-y-auto ' ref={containerRef}>
+                <div className='flex flex-col flex-1 pt-[1.25em] gap-[0.9375em] overflow-y-auto ' ref={containerRef}>
                     {chat.map((value, index) => {
                         return userId === value.senderId ? (
-                            <div className='flex  px-[13px]  justify-center ml-auto items-center ' key={index}>
-                                <div className='flex justify-center items-center py-[14px] px-[11px] rounded-[8px] border-[0.1px] bg-[#ffffff] border-[#ccc]'>
-                                    <p className='w-[100%] text-[12px] font-[600]' >{value.text}</p>
+                            <div className='flex  px-[0.8125em]  justify-center ml-auto items-center ' key={index}>
+                                <div className='flex justify-center items-center py-[0.875em] px-[0.6875em] rounded-[8px] border-[0.1px] bg-[#ffffff] border-[#ccc]'>
+                                    <p className='w-[100%] text-[0.75em] font-[600]' >{value.text}</p>
                                 </div>
-                                <img src={user} className="ml-[8px] h-[30px]" alt="user" />
+                                <img src={user} className="ml-[0.5em] h-[1.875em]" alt="user" />
                             </div>
                         ) : (
-                            <div className='flex  px-[13px]  justify-center mr-auto items-center ' key={index}>
-                                <img src={user} className="mr-[8px] h-[30px]" alt="user" />
-                                <div className='flex justify-center items-center py-[14px] px-[11px] rounded-[8px] bg-primary'>
-                                    <p className='w-[100%] text-[12px] font-[600] text-[#ffffff] ' >{value.text}</p>
+                            <div className='flex  px-[0.8125em]  justify-center mr-auto items-center ' key={index}>
+                                <img src={user} className="mr-[0.5em] h-[1.875em]" alt="user" />
+                                <div className='flex justify-center items-center py-[0.875em] px-[0.6875em] rounded-[8px] bg-primary'>
+                                    <p className='w-[100%] text-[0.75em] font-[600] text-[#ffffff] ' >{value.text}</p>
                                 </div>
                             </div>
                         );
                     })}
                 </div>
-                <div className=' flex justify-between items-center px-[30px] h-[60px]'>
+                <div className=' flex justify-between items-center px-[1.875em] h-[3.75em]'>
                     <img src={imagesend} alt="send an image" />
-                    <input type="text" className='border-[0.5px] px-[5px]  text-[12px] font-[500] flex-1 mx-4 h-[39px] resize-none rounded-[8px]' />
+                    <input type="text" className='border-[0.5px] px-[0.3125em]  text-[0.75em] font-[500] flex-1 mx-4 h-[39px] resize-none rounded-[8px]' />
                     <img src={send} alt="send message" />
                 </div>
             </div>
