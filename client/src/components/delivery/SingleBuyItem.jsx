@@ -4,6 +4,7 @@ import user from './../../assets/user.svg'
 import Rating from '@mui/material/Rating';
 import swish from './../../assets/swish.svg'
 import CancelBuyer from './CancelBuyer';
+import { useNavigate } from 'react-router-dom';
 
 
 const SingleBuyItem = ({ value }) => {
@@ -11,6 +12,7 @@ const SingleBuyItem = ({ value }) => {
     const [model, setModel] = useState(false)
     const [addresses, setAddresses] = useState(value.buyer.address);
     const textareaRef = useRef(null);
+    const navigate = useNavigate()
 
 
     const handleButtonClick = () => {
@@ -47,9 +49,9 @@ const SingleBuyItem = ({ value }) => {
                         </div>
 
                         <div className='flex gap-[0.563em] mt-[1.063em]'>
-                            <img src={user} className="xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] 2xl:h-[2em] " alt="user" />
+                            <img onClick={() => navigate('/profile/public')} src={user} className="cursor-pointer xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] 2xl:h-[2em] " alt="user" />
                             <div className='flex flex-col justify-start'>
-                                <h1 className='text-[0.75em] font-[500]'>{value.seller.name}</h1>
+                                <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate('/profile/public')} >{value.seller.name}</h1>
                                 <div className='ml-[-0.2em]'>
                                     <Rating size='small' name="half-rating-read" onChange={(e) => console.log(e.target.value)} defaultValue={value.seller.rating} precision={0.5} readOnly />
                                 </div>
@@ -140,7 +142,7 @@ const SingleBuyItem = ({ value }) => {
                     <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} className='bg-[#F21111] text-[0.75em] text-[white] rounded-[4px] py-[0.35em] px-[1em] ' onClick={() => { setModel(true) }}>Cancel Purchase</button>
                 </div>
             </div>
-            <hr className='mt-[40px] w-full mb-[60px]' />
+            <hr className='mt-[40px] w-full mb-[40px]' />
             {model && <CancelBuyer setModel={setModel} />}
         </div>
     )

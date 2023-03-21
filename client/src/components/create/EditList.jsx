@@ -1,42 +1,42 @@
 import React, { useState } from 'react'
-import upload from '../assets/upload.svg'
-import info from '../assets/info.svg'
-import arrowdown from '../assets/arrowdown.svg'
-import plastic from '../assets/plastic.svg'
-import grams from '../assets/grams.svg'
-import { getCountryInfoByISO } from '../utils/iso-country-currency'
-import NumofListing from '../components/create/NumofListing'
+import upload from '../../assets/upload.svg'
+import info from '../../assets/info.svg'
+import arrowdown from '../../assets/arrowdown.svg'
+import plastic from '../../assets/plastic.svg'
+import grams from '../../assets/grams.svg'
+import { getCountryInfoByISO } from '../../utils/iso-country-currency'
+import RemoveModel from './RemoveModel'
 
-//will be in global auth of user 
+
 const userCountry = 'PK'
 const countryInfo = getCountryInfoByISO(userCountry);
 const ranges = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
-const Create = () => {
+const EditList = () => {
+    const [model, setModel] = useState(false)
     const [inputValues, setInputValues] = useState({
         discimage: null,
         quantity: 1,
-        discName: '',
-        brand: 'Zara',
-        range: null,
-        condition: null,
-        plastic: '',
-        grams: '',
+        discName: 'Annax',
+        brand: 'Discmania',
+        range: 'Hex',
+        condition: 9,
+        plastic: 'Plastic',
+        grams: '22.2',
         named: false,
-        dyed: false,
+        dyed: true,
         blank: false,
-        glow: false,
+        glow: true,
         collectible: false,
         firstRun: false,
-        priceType: null,
-        startingPrice: null,
-        minPrice: null,
-        endDay: null,
-        endTime: null,
+        priceType: 'auction',
+        startingPrice: '6000',
+        minPrice: '6100',
+        endDay: "2023-03-29",
+        endTime: "13:48",
     });
-    const [optional, setOptional] = useState(false);
-    const [model, setModel] = useState(false)
 
+    const [optional, setOptional] = useState(false);
     const handleOptionalChange = (event) => {
         if (event.target.name === 'priceType') {
             setInputValues((prevInputValues) => ({
@@ -69,7 +69,6 @@ const Create = () => {
 
     const handlePublish = () => {
         console.log(inputValues);
-        setModel(true)
     }
 
     const discs = [{
@@ -97,11 +96,9 @@ const Create = () => {
 
     return (
         <div>
-
             <div className='relative left-1/2  sm:text-[1rem] xsm:text-[1rem] text-[1.25rem] -translate-x-1/2 mr-[50px] min-h-[90vh] max-w-[1350px]  mt-[0.5em] '>
                 <div className='flex justify-between w-full items-center mb-[15px]'>
-                    <h1 className='font-[700] text-[1.25em] '>Create a listing</h1>
-                    <button type="submit" className='w-[2.5em] h-[2.3125em]  text-[0.875em] font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>+</button>
+                    <h1 className='font-[700] text-[1.25em] '>Edit listing</h1>
                 </div>
                 <div className='bg-[#FFFFFF] rounded-[8px] pb-[40px] px-[20px] xsm:px-[0] sm:px-[0] border-[#0000001f] border-[0.5px]'>
                     <div className='flex justify-center items-center h-[219px]'>
@@ -273,12 +270,15 @@ const Create = () => {
                     </div>
                 </div>
 
-                <div className='flex justify-center mb-[20px]'><button onClick={handlePublish} className='w-[7.5em] h-[2.3125em] mt-[18px] text-[0.875rem] font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Publish</button></div>
+                <div className='flex justify-center  mb-[20px] gap-[8px]'>
+                    <button onClick={handlePublish} className='w-[7.5em] h-[2.3125em] mt-[18px] text-[0.875rem] font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Update</button>
+                    <button onClick={() => setModel(true)} className='w-[7.5em] h-[2.3125em] mt-[18px] text-[0.875rem] font-[600] bg-[#F21111] text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Remove</button>
+                </div>
 
             </div>
-            {model && <NumofListing setModel={setModel} />}
+            {model && <RemoveModel setModel={setModel} />}
         </div>
     )
 }
 
-export default Create
+export default EditList

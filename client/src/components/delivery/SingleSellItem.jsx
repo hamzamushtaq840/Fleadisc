@@ -4,6 +4,7 @@ import user from './../../assets/user.svg'
 import swish from './../../assets/swish.svg'
 import Rating from '@mui/material/Rating';
 import CancelSeller from './CancelSeller';
+import { useNavigate } from 'react-router-dom';
 
 const SingleSellItem = ({ value }) => {
 
@@ -11,8 +12,7 @@ const SingleSellItem = ({ value }) => {
     const [shippingCost, setshippingCost] = useState(null);
     const textareaRef = useRef(null);
     const [model, setModel] = useState(false)
-
-
+    const navigate = useNavigate()
 
     const handleButtonClick = () => {
         textareaRef.current.disabled = false;
@@ -48,9 +48,9 @@ const SingleSellItem = ({ value }) => {
                             </div>
 
                             <div className='flex gap-[0.563em] mt-[1.063em]'>
-                                <img src={user} className="xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] 2xl:h-[2em] " alt="user" />
+                                <img src={user} onClick={() => navigate('/profile/private')} className="xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] 2xl:h-[2em] " alt="user" />
                                 <div className='flex flex-col justify-start'>
-                                    <h1 className='text-[0.75em] font-[500]'>{value.seller.name}</h1>
+                                    <h1 className='text-[0.75em] font-[500]' onClick={() => navigate('/profile/private')}>{value.seller.name}</h1>
                                     <div className='ml-[-0.2em]'>
                                         <Rating size='small' name="half-rating-read" onChange={(e) => console.log(e.target.value)} defaultValue={value.seller.rating} precision={0.5} readOnly />
                                     </div>
@@ -164,7 +164,7 @@ const SingleSellItem = ({ value }) => {
                 {model && <CancelSeller setModel={setModel} />}
 
             </div>
-            <hr className='mt-[40px] mb-[60px]' />
+            <hr className='mt-[40px] mb-[40px]' />
         </>
     )
 }

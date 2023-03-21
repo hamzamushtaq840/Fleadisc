@@ -182,3 +182,7 @@ option:first-child {
   border-left: 3px dotted #C6BCBC;
   /* height: 30px; */
 }
+
+.card {
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}

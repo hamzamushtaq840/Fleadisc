@@ -2,6 +2,7 @@ import React from 'react'
 import { Suspense } from 'react';
 import { ColorRing } from 'react-loader-spinner'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import EditList from './components/create/EditList';
 import PrivateProfile from './components/profile/PrivateProfile';
 import PublicProfile from './components/profile/PublicProfile';
 
@@ -60,6 +61,15 @@ const App = () => {
         <Route path="/profile">
           <Route path="public" element={<Suspense fallback={Loader}><Navbar><PublicProfile /></Navbar></Suspense>} />
           <Route path="private" element={<Suspense fallback={Loader}><Navbar><PrivateProfile /></Navbar></Suspense>} />
+        </Route>
+
+        <Route path="/create">
+          <Route path="edit" element={<Suspense fallback={Loader}><Navbar><EditList /></Navbar></Suspense>} />
+        </Route>
+
+
+        <Route path="/messages">
+          <Route path="chat" element={<Suspense fallback={Loader}><Navbar><SingleChat /></Navbar></Suspense>} />
         </Route>
 
         <Route path="/messages">

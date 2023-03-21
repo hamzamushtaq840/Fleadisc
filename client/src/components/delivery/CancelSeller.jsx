@@ -1,7 +1,10 @@
 import { Rating } from '@mui/material'
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const CancelSeller = ({ setModel }) => {
+    const navigate = useNavigate()
+
     return (
         <>
             <div className='modalBackground' onClick={() => setModel(false)}></div>
@@ -13,7 +16,7 @@ const CancelSeller = ({ setModel }) => {
 
 
                 <div className='flex flex-col gap-[11px] mt-[.5em]'>
-                    <button onClick={() => setModel(false)} className='py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary'>Re-list</button>
+                    <button onClick={() => navigate('/create/edit')} className='py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary'>Re-list</button>
                     <button onClick={() => setModel(false)} className='py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-[#F21111]'>Cancel</button>
                 </div>
             </div>
