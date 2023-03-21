@@ -5,6 +5,7 @@ import useRefreshToken from '../../hooks/useRefreshToken';
 
 const SubListing = () => {
     const refresh = useRefreshToken()
+    const h = 2
 
     useEffect(() => {
         axios.get('/listing', { withCredentials: true });
