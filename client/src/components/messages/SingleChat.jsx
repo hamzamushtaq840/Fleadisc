@@ -99,6 +99,7 @@ const SingleChat = () => {
         },
 
     ]
+
     const containerRef = useRef(null);
 
     useEffect(() => {
@@ -110,8 +111,8 @@ const SingleChat = () => {
         <>
             <div className='flex text-[1.3rem] sm:text-[1rem]  xsm:text-[1rem] items-center bg-[#cccccc21] h-[2.5em] '>
                 <img src={chatbackarrow} className="w-[0.625em] h-[0.9375em] cursor-pointer ml-[0.625em] mr-[0.9375em]" onClick={() => navigate('/messages')} alt="back button" />
-                <img src={user} onClick={() => navigate('/profile/public')} className="h-[1.5em]  " alt="user" />
-                <h1 onClick={() => navigate('/profile/public')} className='text-[0.75em] text-[#595959] font-[700] ml-[0.75em]'>Fred</h1>
+                <img src={user} onClick={() => navigate('/profile/public')} className="h-[1.5em]  cursor-pointer " alt="user" />
+                <h1 onClick={() => navigate('/profile/public')} className='text-[0.75em] cursor-pointer text-[#595959] font-[700] ml-[0.75em]'>Fred</h1>
             </div>
             <div className=' flex flex-col ' style={{ height: "calc(100vh - 121px)", scrollBehavior: "smooth" }}>
                 <div className='flex flex-col flex-1 pt-[1.25em] px-[.4em] xsm:px-[0] sm:px-[0]  gap-[0.9375em] overflow-y-auto ' ref={containerRef}>

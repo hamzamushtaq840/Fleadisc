@@ -17,7 +17,7 @@ const Create = () => {
         discimage: null,
         quantity: 1,
         discName: '',
-        brand: 'Zara',
+        brand: '',
         range: null,
         condition: null,
         plastic: '',
@@ -28,7 +28,7 @@ const Create = () => {
         glow: false,
         collectible: false,
         firstRun: false,
-        priceType: null,
+        priceType: 'auction',
         startingPrice: null,
         minPrice: null,
         endDay: null,
@@ -72,28 +72,7 @@ const Create = () => {
         setModel(true)
     }
 
-    const discs = [{
-        discimage: null,
-        quantity: 1,
-        discName: 'Annax',
-        brand: 'Discart',
-        range: 'xyz',
-        condition: 8,
-        plastic: null,
-        grams: null,
-        named: false,
-        dyed: false,
-        blank: false,
-        glow: false,
-        collectible: false,
-        firstRun: false,
-        priceType: null,
-        auction: false,
-        fixedPrice: false,
-        startingPrice: '',
-        minPrice: '',
-        endTime: '02:20PM 23 OKt',
-    }]
+    const handleAddMore = () => { setInputValues({ discimage: null, quantity: 1, discName: '', brand: '', range: null, condition: null, plastic: '', grams: '', named: false, dyed: false, blank: false, glow: false, collectible: false, firstRun: false, priceType: null, startingPrice: null, minPrice: null, endDay: null, endTime: null, }) }
 
     return (
         <div>
@@ -101,7 +80,7 @@ const Create = () => {
             <div className='relative left-1/2  sm:text-[1rem] xsm:text-[1rem] text-[1.25rem] -translate-x-1/2 mr-[50px] min-h-[90vh] max-w-[1350px]  mt-[0.5em] '>
                 <div className='flex justify-between w-full items-center mb-[15px]'>
                     <h1 className='font-[700] text-[1.25em] '>Create a listing</h1>
-                    <button type="submit" className='w-[2.5em] h-[2.3125em]  text-[0.875em] font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>+</button>
+                    <button onClick={handleAddMore} className='w-[2.5em] h-[2.3125em]  text-[0.875em] font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>+</button>
                 </div>
                 <div className='bg-[#FFFFFF] rounded-[8px] pb-[40px] px-[20px] xsm:px-[0] sm:px-[0] border-[#0000001f] border-[0.5px]'>
                     <div className='flex justify-center items-center h-[219px]'>

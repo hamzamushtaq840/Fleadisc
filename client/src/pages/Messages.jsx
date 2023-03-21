@@ -52,7 +52,7 @@ const Messages = () => {
                 {chats.map((value, index) => {
                     return (
                         <div className='flex  cursor-pointer' onClick={() => handleSingleChat(value.chatId)}>
-                            <div className='h-[50px] w-[50px]  mr-[15px]'>
+                            <div className='h-[50px] w-[50px]   mr-[15px]'>
                                 <img src={user} alt="userImage" />
                             </div>
                             <div className='flex flex-col flex-1'>
