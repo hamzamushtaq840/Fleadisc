@@ -147,9 +147,9 @@ const ReList = () => {
                             </datalist>
                         </div>
                         <div className="w-[50%] grid grid-cols-4 gap-x-2 gap-y-[6px]">
-                            {ranges.map((condition) => (
+                            {ranges.map((condition, index) => (
                                 <div
-                                    key={condition}
+                                    key={index}
                                     className={`flex justify-center items-center rounded-full px-[8px] py-[3px] ${inputValues.condition === condition ? 'bg-[#81b29a2f]' : ''} border border-[#595959] cursor-pointer`}
                                     onClick={() => handleCondition(condition)}
                                 >

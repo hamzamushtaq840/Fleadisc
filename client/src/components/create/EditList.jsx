@@ -70,30 +70,6 @@ const EditList = () => {
     const handlePublish = () => {
         console.log(inputValues);
     }
-
-    const discs = [{
-        discimage: null,
-        quantity: 1,
-        discName: 'Annax',
-        brand: 'Discart',
-        range: 'xyz',
-        condition: 8,
-        plastic: null,
-        grams: null,
-        named: false,
-        dyed: false,
-        blank: false,
-        glow: false,
-        collectible: false,
-        firstRun: false,
-        priceType: null,
-        auction: false,
-        fixedPrice: false,
-        startingPrice: '',
-        minPrice: '',
-        endTime: '02:20PM 23 OKt',
-    }]
-
     return (
         <div>
             <div className='relative left-1/2  sm:text-[1rem] xsm:text-[1rem] text-[1.25rem] -translate-x-1/2 mr-[50px] min-h-[90vh] max-w-[1350px]  mt-[0.5em] '>
@@ -147,9 +123,9 @@ const EditList = () => {
                             </datalist>
                         </div>
                         <div className="w-[50%] grid grid-cols-4 gap-x-2 gap-y-[6px]">
-                            {ranges.map((condition) => (
+                            {ranges.map((condition, index) => (
                                 <div
-                                    key={condition}
+                                    key={index}
                                     className={`flex justify-center items-center rounded-full px-[8px] py-[3px] ${inputValues.condition === condition ? 'bg-[#81b29a2f]' : ''} border border-[#595959] cursor-pointer`}
                                     onClick={() => handleCondition(condition)}
                                 >

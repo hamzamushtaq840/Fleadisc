@@ -227,7 +227,7 @@ const Buying = () => {
             <div className='w-[80vw] sm:w-[100vw] xsm:w-[100vw]'>
                 {wonBids.map((value, index) => {
                     return (
-                        <div>
+                        <div key={index}>
                             <SingleBuyItem value={value} />
                         </div>
                     )
