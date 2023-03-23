@@ -43,7 +43,7 @@ const SingleBuyItem = ({ value }) => {
                             </div>
 
                             <div className='flex flex-col justify-start '>
-                                <span className='text-[0.75em]  font-[600]'>{value.bidWonPrice}</span>
+                                <span className='text-[0.75em]  font-[600]'>{value.bidWonPrice} Kr</span>
                                 <span className='text-[0.5em] font-[500] min-w-[40px] text-[#595959bf]'>Final price</span>
                             </div>
                         </div>
@@ -139,10 +139,10 @@ const SingleBuyItem = ({ value }) => {
                 <div className='flex flex-col justify-center items-center'>
                     <p className='text-[0.75em]  mb-[6px]'>Leave a rating of<span className='text-[#000000] font-[700]'> seller</span></p>
                     <Rating size='large' className='mb-[10px]' name="half-rating-read" onChange={(e) => console.log(e.target.value)} precision={0.5} />
-                    <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} className='bg-[#F21111] text-[0.75em] text-[white] rounded-[4px] py-[0.35em] px-[1em] ' onClick={() => { setModel(true) }}>Cancel Purchase</button>
+                    <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} className='bg-[#F21111] font-[600] text-[0.75em] text-[white] rounded-[4px] py-[0.45em] px-[1em] ' onClick={() => { setModel(true) }}>Cancel Purchase</button>
                 </div>
             </div>
-            <hr className='mt-[40px] w-full mb-[40px]' />
+            <hr className='mt-[10px] w-full mb-[15px]' />
             {model && <CancelBuyer setModel={setModel} />}
         </div>
     )

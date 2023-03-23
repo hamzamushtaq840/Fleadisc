@@ -22,6 +22,7 @@
     "react-datetime-picker": "^4.2.0",
     "react-dom": "^18.2.0",
     "react-flags-select": "^2.2.3",
+    "react-icons": "^4.8.0",
     "react-loader-spinner": "^5.3.4",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.8.2"

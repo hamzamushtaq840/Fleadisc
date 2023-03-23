@@ -1,7 +1,7 @@
 import React from 'react'
 import user from '../../assets/user.svg'
 
-const ConfirmBid = ({ setModel, price, type }) => {
+const ConfirmBid = ({ setModel, price, type, val }) => {
     console.log(type);
     return (
         <>
@@ -18,7 +18,7 @@ const ConfirmBid = ({ setModel, price, type }) => {
                     <div className='flex flex-col gap-[8px]  items-center'>
                         <h1 className='text-[0.9375em] font-[500]'>Price</h1>
                         <div className='flex  min-h-[25px] items-center '>
-                            <p className='text-[0.75em] font-[400]'>{price}kr</p>
+                            <p className='text-[0.75em] font-[400]'>{type === 'bid' ? price : val.startingPrice}</p>
                         </div>
                     </div>
                     <div className='flex flex-col gap-[8px]'>

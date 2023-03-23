@@ -91,7 +91,7 @@ const SingleListCard = ({ val, index }) => {
                     <button className='text-[0.5em] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
 
                     <div className='flex flex-col'>
-                        <span className='text-[0.75em]  font-[600]'>{val.startingPrice}</span>
+                        <span className='text-[0.75em]  font-[600]'>{val.startingPrice} kr</span>
                         <span className='text-[0.5em] font-[500]  text-[#595959bf]'>Final price</span>
                     </div>
 
@@ -148,6 +148,11 @@ const SingleListCard = ({ val, index }) => {
                             <p className='text-[0.6em] font-[300]'>Collectible</p>
                         </div>
                     }
+                    {val.bids.length !== 0 &&
+                        <div className=' flex items-center gap-[3px] text-[1rem] '>
+                            <p onClick={() => setOldModal(true)} className='text-[0.6em] font-[700] text-[#5c5c5c] underline'>{val.bids.length} Bids</p>
+                        </div>
+                    }
                 </div>
                 {val.priceType === 'auction' &&
                     <form onSubmit={(e) => handleBid(e, 'bid')} className='flex flex-col mb-[7px] gap-[6px]'>
@@ -168,7 +173,7 @@ const SingleListCard = ({ val, index }) => {
                     </div>
                 </div>
             )}
-            {modal && <ConfirmBid price={price} type={type} setModel={setModal} />}
+            {modal && <ConfirmBid price={price} val={val} type={type} setModel={setModal} />}
             {oldModal && <OlderBids setModel={setOldModal} />}
         </div >
     )

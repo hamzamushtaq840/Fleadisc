@@ -24,7 +24,7 @@ const OlderBids = ({ setModel }) => {
                     <div className='flex flex-col gap-[8px]'>
                         <h1 className='text-[0.9375em] font-[500]'>Time</h1>
                         <div className='flex gap-[6px]  min-h-[25px] items-center'>
-                            <p className='text-[0.75em] font-[400]'>asd asdasd das </p>
+                            <p className='text-[0.75em] font-[400]'>08-12-13 23:42:12</p>
                         </div>
                     </div>
 
@@ -47,11 +47,12 @@ const OlderBids = ({ setModel }) => {
                     <div className='flex flex-col gap-[8px]'>
                         <h1 className='text-[0.9375em] font-[500]'>Time</h1>
                         <div className='flex gap-[6px]  min-h-[25px] items-center'>
-                            <p className='text-[0.75em] font-[400]'>asd asdasd das </p>
+                            <p className='text-[0.75em] font-[400]'>08-12-13 23:42:12</p>
                         </div>
                     </div>
 
                 </div>
+                <div className='w-[95%] my-[15px] py-[0.3px] bg-[#323232]'></div>
             </div>
         </>
     )

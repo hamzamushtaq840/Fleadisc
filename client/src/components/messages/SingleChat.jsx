@@ -126,7 +126,7 @@ const SingleChat = () => {
                             </div>
                         ) : (
                             <div className='flex  px-[0.8125em]  justify-center mr-auto items-center ' key={index}>
-                                <img src={user} onClick={() => navigate('/profile/public')} className="mr-[0.5em] h-[1.875em]" alt="user" />
+                                <img src={user} onClick={() => navigate('/profile/public')} className="mr-[0.5em] h-[1.875em] cursor-pointer" alt="user" />
                                 <div className='flex justify-center items-center py-[0.875em] px-[0.6875em] rounded-[8px] bg-primary'>
                                     <p className='w-[100%] text-[0.75em] font-[600] text-[#ffffff] ' >{value.text}</p>
                                 </div>

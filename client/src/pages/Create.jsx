@@ -77,7 +77,19 @@ const Create = () => {
         setModel(true)
     }
 
-    const handleAddMore = () => { setInputValues({ discimage: null, quantity: 1, discName: '', brand: '', range: null, condition: null, plastic: '', grams: '', named: false, dyed: false, blank: false, glow: false, collectible: false, firstRun: false, priceType: null, startingPrice: null, minPrice: null, endDay: null, endTime: null, }) }
+    const handleAddMore = () => {
+        setInputValues({
+            discimage: null, quantity: 1, discName: '', brand: '', range: '', condition: null, plastic: '', grams: '', named: false, dyed: false, blank: false, glow: false, collectible: false, firstRun: false, priceType: inputValues.priceType, startingPrice: null, minPrice: null, endDay: null, endTime: null,
+        })
+    }
+
+    const [imageUrl, setImageUrl] = useState(null);
+
+    function handleFileUpload(event) {
+        const file = event.target.files[0];
+        const url = URL.createObjectURL(file);
+        setImageUrl(url);
+    }
 
     return (
         <div>
@@ -88,9 +100,19 @@ const Create = () => {
                     <button onClick={handleAddMore} className='w-[2.5em] h-[2.3125em]  text-[0.875em] font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>+</button>
                 </div>
                 <div className='bg-[#FFFFFF] rounded-[8px] pb-[40px] px-[20px] xsm:px-[0] sm:px-[0] border-[#0000001f] border-[0.5px]'>
-                    <div className='flex justify-center items-center h-[219px]'>
-                        <img src={upload} alt="upload a picture" />
+                    <div className="flex justify-center items-center px-[10px] h-[219px]">
+                        <label htmlFor="file-upload" className="cursor-pointer">
+                            {imageUrl ? (
+                                <img src={imageUrl} className='w-full h-[200px] rounded-[4px]' alt="uploaded picture" />
+                            ) : (
+                                <img src={upload} alt="upload a picture" />
+                            )}
+                        </label>
+                        <input id="file-upload" type="file" className="hidden" onChange={handleFileUpload} />
                     </div>
+                    {/* <div className="mt-4">
+                            {imageUrl && <img src={imageUrl} alt="uploaded picture" className="w-48 h-48 object-cover" />}
+                        </div> */}
                     <div className=' border-[0.5px] border-[#0000002e] mb-[14px]'></div>
                     <div>
                         <label htmlFor="Qty" className='text-[0.75em] ml-[1em] text-[#595959] font-[700]'>Qty :<input name='quantity'
@@ -110,7 +132,7 @@ const Create = () => {
                                 value={inputValues.discName}
                                 onChange={handleOptionalChange} type="text" className='text-[0.75em] placeholder:font-[700] pl-[7px] border-[1px] border-[#595959]  xsm:h-[23px] sm:h-[23px] h-[1.938em] rounded-[2px] ' placeholder='Disc Name *' />
                             <select name='brand' value={inputValues.brand}
-                                onChange={handleOptionalChange} className="w-full  text-[0.75em]  pl-[2px] border-[1px] border-[#595959]   rounded-[2px]  xsm:h-[23px] sm:h-[23px] h-[1.938em]  ">
+                                onChange={handleOptionalChange} className="w-full  text-[0.75em]  pl-[7px] font-[700] text-[#AAAAAA] border-[1px] border-[#595959]   rounded-[2px]  xsm:h-[23px] sm:h-[23px] h-[1.938em]  outline-none   leading-[14.63px]  bg-[white]">
                                 <option disabled value="" selected hidden>Brand *</option>
                                 <option>Zara</option>
                                 <option>Gucci</option>
@@ -121,7 +143,7 @@ const Create = () => {
                                 value={inputValues.range}
                                 onChange={handleOptionalChange}
                                 list="rangeOptions"
-                                className="w-full text-[0.75em] bg-white border-[1px] border-[#595959] pl-[6px] rounded-[2px]  xsm:h-[23px] sm:h-[23px] h-[1.938em]"
+                                className="w-full text-[0.75em] bg-white border-[1px] border-[#595959] placeholder:font-[700]  pl-[7px] rounded-[2px]  xsm:h-[23px] sm:h-[23px] h-[1.938em]"
                                 placeholder="Range *"
                             />
                             <datalist id="rangeOptions">
@@ -235,13 +257,13 @@ const Create = () => {
                         <div className='w-[50%] pr-[10px] mt-[15px] flex items-center '>
                             <input name='startingPrice'
                                 value={inputValues.startingPrice}
-                                onChange={handleOptionalChange} type="number" min={0} className='w-full text-[0.75em] h-[1.938em] placeholder:font-[700] pl-[7px] border-[1px] font-sans border-[#595959]  rounded-[2px] ' placeholder={`Starting Price (${countryInfo.currency})`} />
+                                onChange={handleOptionalChange} type="number" min={0} className='w-full text-[0.75em] h-[1.938em] placeholder:font-[700] pl-[7px] border-[1px] font-sans border-[#595959]  rounded-[2px] ' placeholder={inputValues.priceType === 'auction' ? `Starting Price (Kr)` : "Price"} />
                         </div>
                         <div className='w-[50%]  justify-start mt-[15px] flex flex-col items-start '>
                             <input name='minPrice'
                                 value={inputValues.minPrice}
-                                onChange={handleOptionalChange} type="number" min={0} className='w-full text-[0.75em] placeholder:font-[700] pl-[7px] border-[1px] font-sans border-[#595959] h-[1.938em] rounded-[2px] ' placeholder={`Min Price (${countryInfo.currency})`} />
-                            <p className='font-[400] text-[.6em] mt-[.2em] text-[#AAAAAA] text-left'>5 {countryInfo.currency} min price</p>
+                                onChange={handleOptionalChange} type="number" min={0} className={`w-full text-[0.75em]  placeholder:font-[700] pl-[7px] border-[1px] font-sans border-[#595959] h-[1.938em] rounded-[2px]  ${inputValues.priceType !== 'auction' ? 'hidden' : ''}`} placeholder={`Min Price (Kr)`} />
+                            <p className={`font-[400] text-[.6em]  mt-[.2em] text-[#AAAAAA] text-left ${inputValues.priceType !== 'auction' ? 'hidden' : ''}`}>5 Kr min price</p>
                         </div>
                     </div>
                     <div className='flex flex-wrap mx-[0.8em] mt-[10px] gap-[10px] w-full '>
@@ -249,11 +271,11 @@ const Create = () => {
                             <span className='mr-[5px] text-[.75em]'>End time :</span>
                             <input name='endDay'
                                 value={inputValues.endDay}
-                                onChange={handleOptionalChange} className='  text-[#595959bf]  xsm:h-[1.25em] sm:h-[1.25em] h-[1.75em]  text-[.75em] rounded-[2px] border-[1px] border-[#000000]' id="data" type="date" placeholder='sss' />
+                                onChange={handleOptionalChange} className='  text-[#595959bf]   text-[.75em] rounded-[2px] border-[1px] border-[#000000]' id="data" type="date" placeholder='sss' />
                         </div>
                         <label htmlFor="time" className='text-[.75em] xsm:h-[1.25em] sm:h-[1.25em] h-[1.75em]  font-[500]'>at<input name='endTime'
                             value={inputValues.endTime}
-                            onChange={handleOptionalChange} className='min-w-[80px] xsm:h-[1.25em] sm:h-[1.25em] h-[1.75em]  ml-2  text-[#595959bf]  rounded-[2px] border-[1px] border-[#000000]' type="time" id="time" /></label>
+                            onChange={handleOptionalChange} className='min-w-[80px]   ml-2  text-[#595959bf]  rounded-[2px] border-[1px] border-[#000000]' type="time" id="time" /></label>
                     </div>
                 </div>
 
@@ -261,7 +283,7 @@ const Create = () => {
 
             </div>
             {model && <NumofListing setModel={setModel} />}
-        </div>
+        </div >
     )
 }
 

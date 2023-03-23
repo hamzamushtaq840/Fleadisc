@@ -5,6 +5,7 @@ import swish from './../../assets/swish.svg'
 import Rating from '@mui/material/Rating';
 import CancelSeller from './CancelSeller';
 import { useNavigate } from 'react-router-dom';
+import { FaSpinner } from "react-icons/fa";
 
 const SingleSellItem = ({ value }) => {
 
@@ -13,6 +14,7 @@ const SingleSellItem = ({ value }) => {
     const textareaRef = useRef(null);
     const [model, setModel] = useState(false)
     const navigate = useNavigate()
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleButtonClick = () => {
         textareaRef.current.disabled = false;
@@ -42,7 +44,7 @@ const SingleSellItem = ({ value }) => {
                                 </div>
 
                                 <div className='flex flex-col justify-start '>
-                                    <span className='text-[0.75em]  font-[600]'>{value.bidWonPrice}</span>
+                                    <span className='text-[0.75em]  font-[600]'>{value.bidWonPrice} Kr</span>
                                     <span className='text-[0.5em] font-[500] min-w-[40px] text-[#595959bf]'>Final price</span>
                                 </div>
                             </div>
@@ -69,7 +71,20 @@ const SingleSellItem = ({ value }) => {
                             <div className='div h-full flex flex-col'></div>
                         </div>
                         <div className='mt-[-0.3em]'>
-                            <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} onClick={() => console.log(addresses)} className={` text-[#ffffff] min-w-[105px]  rounded-[8px] py-[0.5em] px-[0.906em] text-[0.75em] bg-primary`} disabled={value.purchaseConfirmed === true ? true : false}>{value.purchaseConfirmed ? "Purchased Confirmed" : "Confirm Purchase"}</button>
+                            <button
+                                style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }}
+                                className={`text-[#ffffff] min-w-[105px] min-h-[30px] rounded-[8px] py-[0.5em] px-[0.906em] text-[0.75em] bg-primary relative ${isLoading ? "opacity-50 cursor-wait" : ""
+                                    }`}
+                                disabled={value.purchaseConfirmed}
+                            >
+                                {isLoading && (
+                                    <FaSpinner
+                                        className="animate-spin absolute inset-0 m-auto"
+                                        style={{ width: "1em", height: "1em" }}
+                                    />
+                                )}
+                                {!isLoading && (value.purchaseConfirmed ? "Purchased Confirmed" : "Confirm Purchase")}
+                            </button>
                         </div>
                     </div>
 
@@ -156,15 +171,15 @@ const SingleSellItem = ({ value }) => {
                         </div>
                     </div>
                     <div className='flex flex-col justify-center items-center'>
-                        <p className='text-[0.75em] mb-[6px]'>Leave a rating of<span className='text-[#000000] font-[700]'> seller</span></p>
+                        <p className='text-[0.75em] mb-[6px]'>Leave a rating of<span className='text-[#000000] font-[700]'> buyer</span></p>
                         <Rating size="large" className='mb-[10px]' name="half-rating-read" onChange={(e) => console.log(e.target.value)} precision={0.5} />
-                        <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} className='bg-[#F21111] text-[0.75em] text-[white] rounded-[4px] py-[0.35em] px-[1em] ' onClick={() => { setModel(true) }}>Cancel Purchase</button>
+                        <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} className='bg-[#F21111] text-[0.75em] text-[white] font-[600] rounded-[4px] py-[0.45em] px-[1em] ' onClick={() => { setModel(true) }}>Cancel Purchase</button>
                     </div>
                 </div>
                 {model && <CancelSeller setModel={setModel} />}
 
             </div>
-            <hr className='mt-[40px] mb-[40px]' />
+            <hr className='mt-[10px] mb-[15px]' />
         </>
     )
 }
