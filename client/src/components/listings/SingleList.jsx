@@ -20,7 +20,8 @@ const SingleList = ({ value, index }) => {
                     </div>
                 </div>
 
-                <div className='flex px-[19px] xsm:overflow-auto sm:overflow-auto pb-[5px] gap-[10px]  '>
+                {/* parent div  */}
+                <div className='bg-primary flex px-[19px] xsm:overflow-auto sm:overflow-auto pb-[5px] gap-[10px]  '>
                     {value.activelistings.map((val, index) => {
                         return (
                             <SingleListCard key={index} val={val} index={index} />

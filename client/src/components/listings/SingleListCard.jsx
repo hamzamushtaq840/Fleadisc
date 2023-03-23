@@ -70,7 +70,8 @@ const SingleListCard = ({ val, index }) => {
     }
 
     return (
-        <div className={`flex mb-[10px] pb-[5px] min-h-[217.7px]  ${!extra ? "max-h-[217.7px]" : ""}  card rounded-[8px] bg-[#ffffff] flex-wrap min-w-[150px] w-[30%] max-w-[230px] flex-col`}>
+        // this needs to be responsive
+        <div className={`flex mb-[10px] pb-[5px] card rounded-[8px] bg-[#ffffff] flex-wrap min-w-[150px] w-[30%] max-w-[230px] flex-col`}>
             <img src={disc} className=' w-full' alt="" onClick={() => setImageModal(true)} />
             <div onClick={() => setExtra(prev => !prev)} className='flex justify-between px-[0.625em] pt-[0.425em]'>
                 <div className='flex  flex-col justify-between'>
