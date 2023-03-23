@@ -74,7 +74,7 @@ const Listing = () => {
                     blank: false,
                     glow: true,
                     collectible: false,
-                    firstRun: true,
+                    firstRun: false,
                     priceType: 'auction',
                     startingPrice: 125,
                     minPrice: 130,

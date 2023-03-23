@@ -19,9 +19,9 @@ const SingleList = ({ value, index }) => {
                 </div>
 
                 <div className='flex px-[19px] xsm:overflow-auto sm:overflow-auto pb-[5px] gap-[10px]  '>
-                    {value.activelistings.map((val) => {
+                    {value.activelistings.map((val, index) => {
                         return (
-                            <SingleListCard val={val} index={index} />
+                            <SingleListCard key={index} val={val} index={index} />
                         )
                     })}
                 </div>

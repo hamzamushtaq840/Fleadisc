@@ -10,11 +10,18 @@ import blank from '../../assets/blank.svg'
 import collectible from '../../assets/collectible.svg'
 import moment from 'moment';
 import disc2 from '../../assets/disc2.svg'
+import ConfirmBid from './ConfirmBid'
+import OlderBids from './OlderBids'
+import { useNavigate } from 'react-router-dom'
 
 const SingleListCard = ({ val, index }) => {
     const [extra, setExtra] = useState(false)
     const [imageModal, setImageModal] = useState(false);
-
+    const [modal, setModal] = useState(false)
+    const [oldModal, setOldModal] = useState(false)
+    const [price, setPrice] = useState(null)
+    const [type, setType] = useState(null)
+    const navigate = useNavigate()
 
     function getRemainingTime(endDay, endTime) {
         const endDateTime = moment(`${endDay} ${endTime}`);
@@ -56,8 +63,14 @@ const SingleListCard = ({ val, index }) => {
         return `${dayOfMonth} ${monthName}`;
     }
 
+    const handleBid = (e, type) => {
+        e.preventDefault()
+        type === 'bid' ? setType('bid') : setType('buy')
+        setModal(true)
+    }
+
     return (
-        <div className={`flex mb-[10px] pb-[5px]  card rounded-[8px] bg-[#ffffff] flex-wrap min-w-[150px] w-[30%] max-w-[230px] flex-col`}>
+        <div className={`flex mb-[10px] pb-[5px] min-h-[217.7px]  ${!extra ? "max-h-[217.7px]" : ""}  card rounded-[8px] bg-[#ffffff] flex-wrap min-w-[150px] w-[30%] max-w-[230px] flex-col`}>
             <img src={disc} className=' w-full' alt="" onClick={() => setImageModal(true)} />
             <div onClick={() => setExtra(prev => !prev)} className='flex justify-between px-[0.625em] pt-[0.425em]'>
                 <div className='flex  flex-col justify-between'>
@@ -69,7 +82,7 @@ const SingleListCard = ({ val, index }) => {
                         <span className='px-[0.5em] mt-[2px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{val.condition}</span>
                     </div>
                     <div className='flex mt-[5px] flex-col text-[0.5em]  text-[#595959]'>
-                        <span className='font-[600]'>{val.endTime} -{getMonthAndDate(val.endDay)}</span>
+                        <span className='font-[600]'>{getMonthAndDate(val.endDay)} - {val.endTime} </span>
                         <span className='font-[500] text-[#595959BF]'>{getRemainingTime(val.endDay, val.endTime)}</span>
                     </div>
                 </div>
@@ -137,13 +150,13 @@ const SingleListCard = ({ val, index }) => {
                     }
                 </div>
                 {val.priceType === 'auction' &&
-                    <div className='flex flex-col mb-[7px] gap-[6px]'>
-                        <input type="number" className='w-full pl-[3px] py-[0.25em]  rounded-[2px] text-[.65em] border-[1px] border-[#000000]' min={val.minPrice} placeholder={`Min Price - ${val.minPrice} kr`} />
-                        <button className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Place Bid</button>
-                    </div>}
+                    <form onSubmit={(e) => handleBid(e, 'bid')} className='flex flex-col mb-[7px] gap-[6px]'>
+                        <input value={price} onChange={(e) => setPrice(Number(e.target.value))} required type="number" className='w-full pl-[3px] py-[0.25em]  rounded-[2px] text-[.65em] border-[1px] border-[#000000]' min={val.minPrice} placeholder={`Min Price - ${val.minPrice} kr`} />
+                        <button type='submit' className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Place Bid</button>
+                    </form>}
                 {val.priceType === 'fixedPrice' &&
-                    <div className='flex mb-[5px] '>
-                        <button className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Buy</button>
+                    <div className='flex mb-[5px] mt-[10px]'>
+                        <button onClick={(e) => handleBid(e, 'buy')} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Buy</button>
                     </div>}
             </div>
             </>
@@ -152,12 +165,12 @@ const SingleListCard = ({ val, index }) => {
                 <div onClick={() => setImageModal(false)} className="fixed   bg-[#000000CC] z-50 top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center">
                     <div className="w-[50%]  xsm:w-full sm:w-full max-h-[80%]">
                         <img src={disc2} alt="" className="w-full object-contain" />
-
                     </div>
                 </div>
             )}
-
-        </div>
+            {modal && <ConfirmBid price={price} type={type} setModel={setModal} />}
+            {oldModal && <OlderBids setModel={setOldModal} />}
+        </div >
     )
 }
 
