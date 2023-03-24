@@ -608,7 +608,7 @@ const Listing = () => {
                 </>}
             </div>
             <div className='flex justify-center'>
-                <div className='w-full  max-w-[330px] flex justify-start '>
+                <div className='w-full max-w-[330px] flex justify-start '>
                     <p onClick={() => setMoreFilters((prev) => !prev)} className='text-[0.75em] text-[#595959] mt-[10px] cursor-pointer'>{moreFilters ? 'Close more filters' : 'Show more filters'}</p>
                 </div>
             </div>

@@ -14,7 +14,7 @@ import ConfirmBid from './ConfirmBid'
 import OlderBids from './OlderBids'
 import { useNavigate } from 'react-router-dom'
 
-const SingleListCard = ({ val, index }) => {
+const SingleListCard = ({ val }) => {
     const [extra, setExtra] = useState(false)
     const [imageModal, setImageModal] = useState(false);
     const [modal, setModal] = useState(false)
@@ -41,16 +41,16 @@ const SingleListCard = ({ val, index }) => {
         } else if (months > 0) {
             remainingTime = `${months} ${months === 1 ? 'month' : 'months'}`;
         } else if (days > 0) {
-            remainingTime = `${days} ${days === 1 ? 'day' : 'days'} ${hours} ${hours === 1 ? 'hour' : 'hours'}`;
+            remainingTime = `${days} ${days === 1 ? 'day' : 'days'} ${hours}h`;
         } else if (hours > 0) {
-            remainingTime = `${hours} ${hours === 1 ? 'hour' : 'hours'} ${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`;
+            remainingTime = `${hours}h ${minutes} ${minutes === 1 ? 'min' : 'mins'}`;
         } else if (minutes > 0) {
-            remainingTime = `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`;
+            remainingTime = `${minutes} ${minutes === 1 ? 'min' : 'mins'}`;
             if (seconds > 0) {
-                remainingTime += ` ${seconds} ${seconds === 1 ? 'second' : 'seconds'}`;
+                remainingTime += ` ${seconds} s`;
             }
         } else {
-            remainingTime = `${seconds} ${seconds === 1 ? 'second' : 'seconds'}`;
+            remainingTime = `${seconds} s`;
         }
 
         return remainingTime;
@@ -71,9 +71,9 @@ const SingleListCard = ({ val, index }) => {
 
     return (
         // this needs to be responsive
-        <div className={`flex mb-[10px] pb-[5px] card rounded-[8px] bg-[#ffffff] flex-wrap min-w-[150px] w-[30%] max-w-[230px] flex-col`}>
+        <div className={`flex relative mb-[10px] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[150px] sm:min-w-[150px] md:min-w-[190px]  lg:min-w-[200px] 2xl:min-w-[210px] h-[0%] flex-col`}>
             <img src={disc} className=' w-full' alt="" onClick={() => setImageModal(true)} />
-            <div onClick={() => setExtra(prev => !prev)} className='flex justify-between px-[0.625em] pt-[0.425em]'>
+            <div onClick={() => setExtra(prev => !prev)} className='flex justify-between cursor-pointer px-[0.625em] pt-[0.425em]'>
                 <div className='flex  flex-col justify-between'>
                     <div className='flex items-start '>
                         <div className='flex flex-col  mr-[0.425em]'>
@@ -156,7 +156,7 @@ const SingleListCard = ({ val, index }) => {
                     }
                 </div>
                 {val.priceType === 'auction' &&
-                    <form onSubmit={(e) => handleBid(e, 'bid')} className='flex flex-col mb-[7px] gap-[6px]'>
+                    <form onSubmit={(e) => handleBid(e, 'bid')} className='flex flex-col mb-[6px] gap-[6px]'>
                         <input value={price} onChange={(e) => setPrice(Number(e.target.value))} required type="number" className='w-full pl-[3px] py-[0.25em]  rounded-[2px] text-[.65em] border-[1px] border-[#000000]' min={val.minPrice} placeholder={`Min Price - ${val.minPrice} kr`} />
                         <button type='submit' className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Place Bid</button>
                     </form>}
