@@ -23,10 +23,9 @@ const SingleBuyItem = ({ value }) => {
 
     return (
         <div className='flex flex-col  '>
-            <div className='flex w-full  justify-between xsm:justify-start sm:justify-start  mt-[20px] gap-[1.875em]  '>
-
+            <div className='flex w-full justify-start xsm:justify-start sm:justify-start mt-[20px] gap-2'>
                 <img src={disc} className='sm:h-[9.375em] xsm:h-[9.375em] rounded-[8px] md:h-[11em] h-[12em]' alt="disc image" />
-                <div className='flex max-w-[23%]  flex-col  flex-1 ml-[3rem] sm:ml-[0] xsm:ml-[0] md:ml-[0]'>
+                <div className='flex max-w-[23%] flex-col flex-1 ml-[3rem] sm:ml-[0] xsm:ml-[0] md:ml-[0]'>
                     <div className='  flex flex-col    min-w-[150px] h-full justify-between'>
                         <div className='flex items-start '>
                             <div className='flex flex-col  mr-[0.625em]'>
