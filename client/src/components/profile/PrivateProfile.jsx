@@ -25,20 +25,16 @@ const PrivateProfile = ({ children }) => {
             </label>
             <div className='flex justify-center'><button className='text-[#ffffff] mt-[0.45em] mb-[0.625em] button rounded-[2px] text-[.75em] font-[600] py-[0.625em] px-[2.1875em] bg-primary '>Edit</button></div>
             <div className='flex justify-center items-center mt-[10px] gap-[27px]'>
-                <NavLink to="/profile/private/information" className="nav-link3 text-[0.75em] flex flex-col gap-[3px] min-w-[50px] items-center   text-[#00000080]" activeclassname="active" >
-                    <h1>Information</h1>
+                <NavLink to="/profile/private/information" className="nav-link3 flex flex-col gap-[3px] min-w-[50px] items-center text-[#00000080]" activeclassname="active" >
+                    <li className='text-[0.75em]'>Information</li>
                 </NavLink>
-
                 <span>|</span>
-
-                <NavLink to="/profile/private/listings" className="nav-link3 text-[0.75em] flex flex-col gap-[3px] min-w-[50px] items-center  text-[#00000080] " activeclassname="active" >
-                    <h1>Listings</h1>
+                <NavLink to="/profile/private/listings" className="nav-link3 ! flex flex-col gap-[3px] min-w-[50px] items-center text-[#00000080] " activeclassname="active" >
+                    <li className='text-[0.75em]'>Listings</li>
                 </NavLink>
-
                 <span>|</span>
-
-                <NavLink to="/profile/private/purchases" className="nav-link3 text-[0.75em] flex flex-col gap-[3px] min-w-[50px] items-center  text-[#00000080] " activeclassname="active" >
-                    <h1>Purchases</h1>
+                <NavLink to="/profile/private/purchases" className="nav-link3 ! flex flex-col gap-[3px] min-w-[50px] items-center text-[#00000080] " activeclassname="active" >
+                    <li className='text-[0.75em]'>Purchases</li>
                 </NavLink>
             </div>
             {children}
