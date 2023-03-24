@@ -34,18 +34,18 @@ const PrivateInfo = () => {
 
                     <div className='flex flex-col '>
                         <h1 className='text-[0.75em] font-[600]' >Delivery Address</h1>
-                        <h1 className='text-[0.75em] font-[500] text-[#595959bf]' > Tullgarsgatan 27 753 17 Uppsala </h1>
+                        <h1 className='text-[0.75em]  max-w-[150px] font-[500] text-[#595959bf]' > Tullgarsgatan 27 753 17 Upsad asd asd asd asd as das dasd psala </h1>
                     </div>
 
 
                     <div className='flex flex-col '>
                         <h1 className='text-[0.75em] font-[600]' >Shipping Address</h1>
-                        <h1 className='text-[0.75em] font-[500] text-[#595959bf]' > Tullgarsgatan 27 753 17 Uppsala </h1>
+                        <h1 className='text-[0.75em] max-w-[150px] font-[500] text-[#595959bf]' > Tullgarsgatan 27 753 sda sad asd asd ad adas das  17 Uppsala </h1>
                     </div>
 
                 </div>
 
-                <div className='flex flex-col justify-between'>
+                <div className='flex flex-col '>
                     <div className='flex flex-col'>
                         <h1 className='text-[0.75em] min-w-[150px] font-[600]' >Accepted payments</h1>
                         <div className='w-[100%] mt-[10px] flex gap-[6px]'>
@@ -58,7 +58,7 @@ const PrivateInfo = () => {
                                 <p className='peer-checked:text-[#000000] text-[#AAAAAA] text-[0.75em] font-[600]'>0707721066</p>
                             </div>
                         </div>
-                        <div className='w-[100%]  mt-[15px] flex  gap-[6px]'>
+                        <div className='w-[100%] mt-[15px] flex  gap-[6px]'>
                             <input name='collectible'
                                 id='collectible' type="checkbox" className="peer/published w-[18px] h-[18px] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black" />
                             <div className='flex flex-col  mt-[-3px]'>
@@ -68,7 +68,7 @@ const PrivateInfo = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='flex flex-col '>
+                    <div className='flex flex-col mt-[25px] '>
                         <h1 className='text-[0.75em] font-[600]' >Who pays shipping? </h1>
                         <div className='flex justify-between'>
                             <div className='  mt-[15px] flex items-center gap-[6px]'>

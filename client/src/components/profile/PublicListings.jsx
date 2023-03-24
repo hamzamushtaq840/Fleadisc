@@ -77,8 +77,8 @@ const PublicListing = () => {
     ]
 
     return (
-        <>
-            <div className='mt-[1.0625em] px-[5px]'>
+        <div className='flex items-center flex-col'>
+            <div className='mt-[1.0625em] px-[5px] xsm:w-[100%] sm:w-[100%] w-[95%] '>
                 <h1 className='font-[700] text-[1.25em] mb-[15px] '>Active Listings</h1>
                 <div className='flex flex-wrap  gap-[1.8625em] xsm:gap-[1.0625em]  sm:gap-[1.0625em]'>
                     {activeDiscs.map((value, index) => {
@@ -115,7 +115,8 @@ const PublicListing = () => {
                     })}
                 </div>
             </div>
-            <div className='mt-[2.0625em] px-[5px]'>
+            <div className='mt-[2.0625em] px-[5px] xsm:w-[100%] sm:w-[100%] w-[95%] '>
+
                 <h1 className='font-[700] text-[1.25em] mb-[15px] '>Finished Listings</h1>
                 <div className='flex flex-wrap  gap-[1.8625em] xsm:gap-[1.0625em]  sm:gap-[1.0625em]'>
                     {activeDiscs.map((value, index) => {
@@ -153,7 +154,7 @@ const PublicListing = () => {
                     })}
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

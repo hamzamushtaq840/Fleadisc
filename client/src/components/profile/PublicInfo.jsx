@@ -24,18 +24,18 @@ const PublicInfo = () => {
 
                     <div className='flex flex-col '>
                         <h1 className='text-[0.75em] font-[600]' >Delivery Address</h1>
-                        <h1 className='text-[0.75em] font-[500] text-[#595959bf]' >Uppsala,Sweden</h1>
+                        <h1 className='text-[0.75em] max-w-[150px] font-[500] text-[#595959bf]' >Uppsala,Sweden dsadas ads asd asd asd ad asd asd asd ada sasdas d asdadada sas da asd asd asd adas das</h1>
                     </div>
 
 
                     <div className='flex flex-col '>
                         <h1 className='text-[0.75em] font-[600]' >Shipping Address</h1>
-                        <h1 className='text-[0.75em] font-[500] text-[#595959bf]' >Uppsala,Sweden</h1>
+                        <h1 className='text-[0.75em] max-w-[150px]  font-[500] text-[#595959bf]' >Uppsala,Sweden</h1>
                     </div>
 
                 </div>
 
-                <div className='flex flex-col justify-between'>
+                <div className='flex flex-col '>
                     <div className='flex flex-col'>
                         <h1 className='text-[0.75em] font-[600]' >Accepted payments</h1>
                         <div className='w-[100%]  mt-[10px] flex items-center gap-[6px]'>
@@ -51,7 +51,7 @@ const PublicInfo = () => {
                             <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[0.75em] font-[600] '>Bank transaction</p>
                         </div>
                     </div>
-                    <div className='flex flex-col '>
+                    <div className='flex flex-col mt-[30px] '>
                         <h1 className='text-[0.75em] font-[600]' >Who pays shipping? </h1>
                         <div className='w-[100%]  mt-[10px] flex items-center gap-[6px]'>
                             <input name='collectible'

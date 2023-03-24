@@ -72,7 +72,7 @@ const EditList = () => {
     }
     return (
         <div>
-            <div className='relative left-1/2  sm:text-[1rem] xsm:text-[1rem] text-[1.25rem] -translate-x-1/2 mr-[50px] min-h-[90vh] max-w-[1350px]  mt-[0.5em] '>
+            <div className='relative left-1/2  sm:text-[1rem] xsm:text-[1rem] text-[1.2rem] -translate-x-1/2 mr-[50px] min-h-[90vh] max-w-[1350px]  mt-[0.5em] '>
                 <div className='flex justify-between w-full items-center mb-[15px]'>
                     <h1 className='font-[700] text-[1.25em] '>Edit listing</h1>
                 </div>

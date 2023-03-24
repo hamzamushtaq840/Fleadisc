@@ -23,17 +23,17 @@ const SingleBuyItem = ({ value }) => {
 
     return (
         <div className='flex flex-col  '>
-            <div className='flex w-full  justify-between xsm:justify-start sm:justify-start  mt-[20px] gap-[1.875em]  '>
+            <div className='flex w-full justify-start mt-[20px] xsm:gap-[1.875em] sm:gap-[1.875em]  '>
 
                 <img src={disc} className='sm:h-[9.375em] xsm:h-[9.375em] rounded-[8px] md:h-[11em] h-[12em]' alt="disc image" />
-                <div className='flex max-w-[23%]  flex-col  flex-1 ml-[3rem] sm:ml-[0] xsm:ml-[0] md:ml-[0]'>
-                    <div className='  flex flex-col    min-w-[150px] h-full justify-between'>
-                        <div className='flex items-start '>
+                <div className='flex max-w-[17%]  flex-col  flex-1 ml-[3rem] sm:ml-[0] xsm:ml-[0] md:ml-[0]'>
+                    <div className='  flex flex-col    min-w-[150px] h-full '>
+                        <div className='flex items-start xsm:justify-start sm:justify-start  justify-between'>
                             <div className='flex flex-col  mr-[0.625em]'>
                                 <h1 className='text-[0.85em] font-[700] ' >{value.discName}</h1>
-                                <h1 className='text-[0.7em] font-[500] mt-[-0.413em]  text-[#595959bf]' >{value.brand}</h1>
+                                <h1 className='text-[0.7em] font-[500] mt-[-0.313em]  text-[#595959bf]' >{value.brand}</h1>
                             </div>
-                            <span className='px-[0.5em] mt-[3px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
+                            <span className='px-[0.5em] sm:mt-[3px] xsm:mt-[3px] mt-[5px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
                         </div>
 
                         <div className=' justify-between  w-full  items-end flex  '>
@@ -62,6 +62,7 @@ const SingleBuyItem = ({ value }) => {
                     </div>
                 </div>
             </div>
+
 
             <div className='mt-[55px] xsm:mt-[35px] sm:mt-[35px]  mb-[20px]'>
                 <div className='flex gap-[0.688em] sm:h-[50px] xsm:h-[50px] h-[70px] '>

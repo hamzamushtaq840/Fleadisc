@@ -46,28 +46,27 @@ const Messages = () => {
     }
 
     return (
-        <div className='px-[1.25em] sm:text-[1rem] xsm:text-[1rem] text-[1.2rem] min-h-[90vh]'>
-            <h1 className='mt-[0.438em] text-[20px] font-[700] mb-[0.875em]'>Messages</h1>
-            <div className='flex flex-col gap-[18px]'>
-                {chats.map((value, index) => {
-                    return (
-                        <div className='flex  cursor-pointer' onClick={() => handleSingleChat(value.chatId)}>
-                            <div className='h-[50px] w-[50px]   mr-[15px]'>
-                                <img src={user} alt="userImage" />
-                            </div>
-                            <div className='flex flex-col flex-1'>
-                                <h1 className='text-[.7em] text-[#595959] font-[700] mb-[2px]'>{value.recieverName}</h1>
-                                <p className={`text-[.7em] text-[#000000]  mb-[10px] ${value.read ? "font-[700]" : "font-[400]"} `}>{value.lastText}</p>
-                                <p className='text-[.5em] font-[500] text-[#595959bf] mb-[5px]'>{value.lastTextTime}</p>
-                                {index + 1 !== chats.length && <div className='py-[0.019em]  bg-[#5959593b]'></div>}
-                            </div>
-                        </div>)
-                })}
+        <div className='flex justify-center'>
+
+            <div style={{ height: "calc(100vh - 78px)", scrollBehavior: "smooth" }} className='px-[1.25em] xsm:w-full sm:w-full w-[90%] xsm:pt-[0px] pt-[10px] sm:pt-[0px] sm:text-[1rem] xsm:text-[1rem] text-[1.2rem] '>
+                <h1 className='mt-[0.438em] text-[1.25em] font-[700] mb-[0.875em]'>Messages</h1>
+                <div className='flex flex-col gap-[18px]'>
+                    {chats.map((value, index) => {
+                        return (
+                            <div className='flex  cursor-pointer' onClick={() => handleSingleChat(value.chatId)}>
+                                <div className='h-[50px] w-[50px]   mr-[15px]'>
+                                    <img src={user} alt="userImage" />
+                                </div>
+                                <div className='flex flex-col flex-1'>
+                                    <h1 className='text-[.7em] text-[#595959] font-[700] mb-[2px]'>{value.recieverName}</h1>
+                                    <p className={`text-[.7em] text-[#000000]  mb-[10px] ${value.read ? "font-[700]" : "font-[400]"} `}>{value.lastText}</p>
+                                    <p className='text-[.5em] font-[500] text-[#595959bf] mb-[5px]'>{value.lastTextTime}</p>
+                                    {index + 1 !== chats.length && <div className='py-[0.019em]  bg-[#5959593b]'></div>}
+                                </div>
+                            </div>)
+                    })}
+                </div>
             </div>
-
-
-
-
         </div>
     )
 }

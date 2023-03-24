@@ -4,7 +4,7 @@ const RemoveModel = ({ setModel }) => {
     return (
         <>
             <div className='modalBackground' onClick={() => setModel(false)}></div>
-            <div className='modalContainer flex flex-col gap-[10px]  xsm:text-[1rem] sm:text-[1rem] text-[1.25rem] sm:h-[20%] sm:w-[70%] md:xsm-[405px] xsm:w-[80%] xsm:h-[20%] h-[30%] w-[40%] justify-center items-center'>
+            <div className='modalContainer flex flex-col gap-[10px]  xsm:text-[1rem] sm:text-[1rem] text-[1.2rem] sm:h-[20%] sm:w-[70%] md:xsm-[405px] xsm:w-[80%] xsm:h-[20%] h-[30%] w-[40%] justify-center items-center'>
                 <p className='w-[80%] text-center text-[.85em] font-[400] mt-[0.688em]'>Are you sure you want to remove this listing?<span className='font-[800]'></span></p>
 
                 <div className='flex flex-wrap justify-center mb-[15px]  gap-[11px] mt-[.5em]'>

@@ -12,7 +12,7 @@ const ChooseCountry = () => {
         <div className='bg-[#FAFAFA] min-h-screen flex flex-col' data-ux_mode="redirect">
             <header><img src={back} alt="back button" onClick={() => navigate(-1)} className='hover:cursor-pointer p-[32px]' /></header>
             <div className='flex flex-1  flex-col mx-[46px]  items-center pt-[10rem]  '>
-                <h1 className='font-sans leading-[24.38px] font-[500] text-[1.25rem]'>What country are you primarily selling and buying discs in?</h1>
+                <h1 className='font-sans leading-[24.38px] font-[500] text-[1.2rem]'>What country are you primarily selling and buying discs in?</h1>
 
                 <div className='w-full mt-[19px] mb-[19px]'>
                     <ReactFlagsSelect

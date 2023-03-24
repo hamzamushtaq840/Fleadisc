@@ -567,7 +567,7 @@ const Listing = () => {
 
 
     return (
-        <div className=' w-full  m-auto text-[1.25rem] sm:text-[1rem] xsm:text-[1rem] '>
+        <div className=' w-full  m-auto text-[1.2rem] sm:text-[1rem] xsm:text-[1rem] '>
             <div className='listingBackgroundImage  flex  justify-center h-[35vw] min-h-[135px] max-h-[300px] bg-[rgba(0,0,0,0.1)] relative'>
                 <h1 className='text-[35px] sm:text-[25px] xsm:text-[25px] md:text-[30px] leading-[34.9px] text-[white] font-logo text-center relative z-10 mt-[clamp(50px,10vw,110px)]'>Give a disc a second arm</h1>
                 <input style={{ boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)' }} className='border-[1px] w-[64.10vw] max-w-[500px] min-w-[250px] border-[#81B29A] absolute bottom-[-24px] bg-[white] z-10 h-[47px] rounded-lg px-[14px] font-sans' type='text' placeholder='Search...'></input>

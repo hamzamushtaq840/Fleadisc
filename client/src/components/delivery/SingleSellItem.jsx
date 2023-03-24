@@ -24,17 +24,17 @@ const SingleSellItem = ({ value }) => {
     return (
         <>
             <div className='flex flex-col '>
-                <div className='flex w-full  justify-between xsm:justify-start sm:justify-start mt-[20px] gap-[1.875em]  '>
+                <div className='flex w-full justify-start mt-[20px] xsm:gap-[1.875em] sm:gap-[1.875em]  '>
 
                     <img src={disc} className='sm:h-[9.375em] xsm:h-[9.375em] rounded-[8px] md:h-[11em] h-[12em]' alt="disc image" />
-                    <div className='flex  max-w-[23%] flex-col  flex-1 ml-[3rem] sm:ml-[0] xsm:ml-[0] md:ml-[0]'>
-                        <div className='  flex flex-col    min-w-[150px] h-full justify-between'>
-                            <div className='flex items-start '>
+                    <div className='flex max-w-[17%]  flex-col  flex-1 ml-[3rem] sm:ml-[0] xsm:ml-[0] md:ml-[0]'>
+                        <div className='  flex flex-col    min-w-[150px] h-full '>
+                            <div className='flex items-start xsm:justify-start sm:justify-start  justify-between'>
                                 <div className='flex flex-col  mr-[0.625em]'>
                                     <h1 className='text-[0.85em] font-[700] ' >{value.discName}</h1>
-                                    <h1 className='text-[0.7em] font-[500] mt-[-0.413em]  text-[#595959bf]' >{value.brand}</h1>
+                                    <h1 className='text-[0.7em] font-[500] mt-[-0.313em]  text-[#595959bf]' >{value.brand}</h1>
                                 </div>
-                                <span className='px-[0.5em] mt-[3px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
+                                <span className='px-[0.5em] sm:mt-[3px] xsm:mt-[3px] mt-[5px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
                             </div>
 
                             <div className=' justify-between  w-full  items-end flex  '>
@@ -50,9 +50,9 @@ const SingleSellItem = ({ value }) => {
                             </div>
 
                             <div className='flex gap-[0.563em] mt-[1.063em]'>
-                                <img src={user} onClick={() => navigate('/profile/private')} className="xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] " alt="user" />
+                                <img onClick={() => navigate('/profile/public')} src={user} className="cursor-pointer xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] " alt="user" />
                                 <div className='flex flex-col justify-start'>
-                                    <h1 className='text-[0.75em] font-[500]' onClick={() => navigate('/profile/private')}>{value.seller.name}</h1>
+                                    <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate('/profile/public')} >{value.seller.name}</h1>
                                     <div className='ml-[-0.2em]'>
                                         <Rating size='small' name="half-rating-read" onChange={(e) => console.log(e.target.value)} defaultValue={value.seller.rating} precision={0.5} readOnly />
                                     </div>

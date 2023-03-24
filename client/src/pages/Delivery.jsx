@@ -10,7 +10,7 @@ const Delivery = ({ children }) => {
 
     return (
         <div className='flex flex-col xsm:text-[1rem] sm:text-[1rem] text-[1.2rem]' style={{ height: "calc(100vh - 67px)", scrollBehavior: "smooth" }}>
-            <div className='flex items-center mt-2 gap-[15px] justify-center'>
+            <div className='flex items-center xsm:mt-[10px] sm:mt-[10px] xsm:mb-[0] sm:mb-[0]  my-[20px] gap-[15px] justify-center'>
                 <NavLink to="/delivery/buying" className="px-[1.5rem] py-[0.5rem] nav-link2 flex flex-col gap-[3px] min-w-[50px] items-center  text-[#00000] " activeClassname="active" >
                     <h2 className='text-[#0000005f] w-[4rem] text-center text-[0.875em] font-[500]'>Buying</h2>
                 </NavLink>

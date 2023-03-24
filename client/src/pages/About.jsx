@@ -15,29 +15,32 @@ const About = () => {
     ]
 
     return (
-        <div className='p-[20px] min-h-[90vh]'>
-            <div className='flex flex-col gap-[11px]'>
-                <h1 className='text-[20px] font-[700]'>About Fleadisc</h1>
-                <p className='text-[12px] w-[70%]  font-[500]'>Fleadisc is an independent platform for buying and selling discs between private individuals. You can see us as a variant of a buy and sell group on Facebook</p>
-            </div>
-
-            <div className='mt-[20px]'>
-                <h1 className='text-[20px] mb-[15px] font-[700]'>FAQ</h1>
-
-                <div className='flex flex-col gap-[10px]' >
-                    {faq.map((item, index) => {
-                        return (
-                            <Faq title={item.title} description={item.description} />
-                        )
-                    })}
+        <div className='flex justify-center'>
+            <div style={{ height: "calc(100vh - 78px)", scrollBehavior: "smooth" }} className='px-[1.25em] xsm:w-full sm:w-full w-[90%] xsm:pt-[0px] pt-[30px] sm:pt-[0px] sm:text-[1rem] xsm:text-[1rem] text-[1.2rem] '>
+                <div className='flex flex-col gap-[0.6875em]'>
+                    <h1 className='text-[1.25em] font-[700]'>About Fleadisc</h1>
+                    <p className='text-[0.75em] w-[70%]  font-[500]'>Fleadisc is an independent platform for buying and selling discs between private individuals. You can see us as a variant of a buy and sell group on Facebook</p>
                 </div>
 
-            </div>
-            <div className='mt-[25px]'>
-                <h1 className='text-[20px] mb-[15px] font-[700]'>Contact</h1>
+                <div className='mt-[1.25em]'>
+                    <h1 className='text-[1.25em] mb-[0.9375em] font-[700]'>FAQ</h1>
 
+                    <div className='flex flex-col gap-[0.625em]' >
+                        {faq.map((item, index) => {
+                            return (
+                                <Faq title={item.title} description={item.description} />
+                            )
+                        })}
+                    </div>
+
+                </div>
+                <div className='mt-[1.5625em]'>
+                    <h1 className='text-[1.25em] mb-[0.9375em] font-[700]'>Contact</h1>
+
+                </div>
             </div>
         </div>
+
     )
 }
 
