@@ -40,7 +40,6 @@ const Messages = () => {
         }
     ]
 
-
     const handleSingleChat = (id) => {
         navigate("/messages/chat", { state: { chatId: id } })
     }
