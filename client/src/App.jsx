@@ -64,6 +64,7 @@ const App = () => {
           <Route path="/delivery" element={<Suspense fallback={Loader}><Delivery /></Suspense >} />
           <Route path="/messages" element={<Suspense fallback={Loader}><Messages /></Suspense >} />
           <Route path="/about" element={<Suspense fallback={Loader}><About /></Suspense>} />
+
           <Route path="/profile">
             <Route path="public" element={<Suspense fallback={Loader}><PublicProfile /></Suspense>} />
             <Route path="public/information" element={<Suspense fallback={Loader}><PublicProfile><PublicInfo /></PublicProfile></Suspense>} />
@@ -73,6 +74,7 @@ const App = () => {
             <Route path="private/listings" element={<Suspense fallback={Loader}><PrivateProfile><PrivateListings /></PrivateProfile></Suspense>} />
             <Route path="private/purchases" element={<Suspense fallback={Loader}><PrivateProfile><PrivatePurchases /></PrivateProfile></Suspense>} />
           </Route>
+
           <Route path="/create">
             <Route path="edit" element={<Suspense fallback={Loader}><EditList /></Suspense>} />
           </Route>

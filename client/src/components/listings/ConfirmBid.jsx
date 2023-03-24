@@ -6,7 +6,7 @@ const ConfirmBid = ({ setModel, price, type, val }) => {
     return (
         <>
             <div className='modalBackground' onClick={() => setModel(false)}></div>
-            <div className='modalContainer  xsm:text-[16px] sm:text-[16px] text-[20px] sm:h-[25%] sm:w-[90%] xsm:w-[90%] xsm:h-[25%] h-[50%] w-[40%]  flex flex-col justify-center items-center'>
+            <div className='modalContainer  xsm:text-[16px] sm:text-[16px] text-[20px] py-[40px] px-[10px] sm:w-[90%] xsm:w-[90%]  w-[40%]  flex flex-col justify-center items-center'>
                 <div className='flex w-full  justify-between px-[15px]'>
                     <div className='flex flex-col gap-[8px]'>
                         <h1 className='text-[0.9375em] font-[500]'>{type === 'bid' ? "Bidder" : "Buyer"}</h1>
@@ -29,7 +29,7 @@ const ConfirmBid = ({ setModel, price, type, val }) => {
                     </div>
 
                 </div>
-                <div className='w-[90%] my-[15px] py-[0.3px] bg-[#323232]'></div>
+                <div className='w-[95%]  my-[15px] py-[0.3px] bg-[#323232]'></div>
                 <div className='flex justify-center mt-[.5em]'>
                     <button className='button rounded-[4px] py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary'>{type === 'bid' ? "Confirm Bid" : "Confirm Buy"}</button>
                 </div>

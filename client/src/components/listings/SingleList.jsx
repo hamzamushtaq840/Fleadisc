@@ -3,6 +3,8 @@ import { Rating } from '@mui/material'
 import user from '../../assets/user.svg'
 import SingleListCard from './SingleListCard';
 import { useNavigate } from 'react-router-dom';
+import { BsFillCaretLeftFill } from "react-icons/bs";
+import { BsFillCaretRightFill } from "react-icons/bs";
 
 const SingleList = ({ value, index }) => {
     const navigate = useNavigate();
@@ -112,7 +114,7 @@ const SingleList = ({ value, index }) => {
         <>
             <div key={index} className='flex  flex-col'>
                 <div className='flex px-[19px] mb-[2px] gap-[0.563em] mt-[1.063em]'>
-                    <img src={user} onClick={() => navigate('/profile/public')} className="cursor-pointer mt-1 xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] 2xl:h-[2em] " alt="user" />
+                    <img src={user} onClick={() => navigate('/profile/public')} className="cursor-pointer mt-1 xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] " alt="user" />
                     <div className='flex flex-col justify-start'>
                         <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate('/profile/public')} >{value.name}</h1>
                         <div className='ml-[-0.2em]'>
@@ -121,16 +123,16 @@ const SingleList = ({ value, index }) => {
                     </div>
                 </div>
 
-                <div className='relative px-10' onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                    <h1 style={!isHovered ? { opacity: "0" } : { opacity: "1" }} className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%] bg-[rgba(0,0,0,0.1)] h-[80%] w-10 select-none' onClick={handleScrollLeft}>L</h1>
-                    <div ref={scrollableDivRef} className='flex px-2 overflow-hidden pb-[5px] gap-[10px] mt-[11px] select-none'>
+                <div className={`relative ${screenSize.width > 768 ? "px-[25px] " : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                    {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%]  flex justify-center items-center h-[80%] w-[20px] select-none  ' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
+                    <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[4px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"}  pb-[5px] gap-[10px] mt-[11px] `}>
                         {value.activelistings.map((val, index) => {
                             return (
                                 <SingleListCard key={index} val={val} index={index} />
                             )
                         })}
                     </div>
-                    <h1 style={!isHovered ? { opacity: "0" } : { opacity: "1" }} className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] bg-[rgba(0,0,0,0.1)] h-[80%] w-10 select-none' onClick={handleScrollRight}>R</h1>
+                    {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none  ' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer  text-[#a9a8a8] hover:text-text' /></h1>}
                 </div>
             </div>
         </>

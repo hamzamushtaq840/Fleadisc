@@ -70,8 +70,7 @@ const SingleListCard = ({ val }) => {
     }
 
     return (
-        // this needs to be responsive
-        <div className={`flex relative mb-[10px] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[150px] sm:min-w-[150px] md:min-w-[190px]  lg:min-w-[200px] 2xl:min-w-[210px] h-[0%] flex-col`}>
+        <div className={`flex relative mb-[10px] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[150px] sm:min-w-[150px] md:min-w-[190px]  lg:min-w-[200px] xl:min-w-[210px] 2xl:min-w-[210px] h-[0%] flex-col`}>
             <img src={disc} className=' w-full' alt="" onClick={() => setImageModal(true)} />
             <div onClick={() => setExtra(prev => !prev)} className='flex justify-between cursor-pointer px-[0.625em] pt-[0.425em]'>
                 <div className='flex  flex-col justify-between'>
@@ -151,7 +150,7 @@ const SingleListCard = ({ val }) => {
                     }
                     {val.bids.length !== 0 &&
                         <div className=' flex items-center gap-[3px] text-[1rem] '>
-                            <p onClick={() => setOldModal(true)} className='text-[0.6em] font-[700] text-[#5c5c5c] underline'>{val.bids.length} Bids</p>
+                            <p onClick={() => setOldModal(true)} className='text-[0.6em] cursor-pointer hover:text-text font-[700] text-[#5c5c5c] underline'>{val.bids.length} Bids</p>
                         </div>
                     }
                 </div>
@@ -169,7 +168,7 @@ const SingleListCard = ({ val }) => {
             }
             {imageModal && (
                 <div onClick={() => setImageModal(false)} className="fixed   bg-[#000000CC] z-50 top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center">
-                    <div className="w-[50%]  xsm:w-full sm:w-full max-h-[80%]">
+                    <div className="w-[50%] xsm:w-full sm:w-full max-h-[80%]">
                         <img src={disc2} alt="" className="w-full object-contain" />
                     </div>
                 </div>
@@ -181,5 +180,3 @@ const SingleListCard = ({ val }) => {
 }
 
 export default SingleListCard
-
-// min-h-[217.7px]  ${!extra ? "max-h-[217.7px]" : ""}

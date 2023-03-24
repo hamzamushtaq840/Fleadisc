@@ -5,7 +5,7 @@ const OlderBids = ({ setModel }) => {
     return (
         <>
             <div className='modalBackground' onClick={() => setModel(false)}></div>
-            <div className='modalContainer pb-[40px] py-[20px]  xsm:text-[16px] sm:text-[16px] text-[20px] sm:w-[90%] xsm:w-[90%] w-[40%]  flex flex-col justify-center items-center'>
+            <div className='modalContainer px-[10px] pb-[50px] py-[30px]  xsm:text-[16px] sm:text-[16px] text-[20px] sm:w-[90%] xsm:w-[90%] w-[40%]  flex flex-col justify-center items-center'>
                 <h1 className='text-[1.2em] mb-[20px] font-[600] px-[15px] text-start w-full'>Older Bids</h1>
                 <div className='flex w-full  justify-between px-[15px]'>
                     <div className='flex flex-col gap-[8px]'>
