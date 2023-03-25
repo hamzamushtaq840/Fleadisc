@@ -112,7 +112,7 @@ const PrivateInfoEdit = () => {
                 <div className='flex w-full flex-col gap-[0.5em] mt-[15px]'>
                     <div className='flex flex-col gap-[0.75em]'>
                         <input name='fullName' type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] w-[50%] placeholder:font-[700]  border-[1px] border-[#595959]  xsm:h-[27px] sm:h-[27px] h-[2.938em] rounded-[2px] ' placeholder='Name of method' />
-                        <textarea name='fullName' defaultValue="Payment information like phone number, bank details or other transaction instructions " type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] min-h-[4em] w-[80%] placeholder:font-[700]  border-[1px] resize-none border-[#595959]  xsm:h-[32px] sm:h-[32px] h-[2.938em] rounded-[2px] ' />
+                        <textarea name='fullName' defaultValue="Payment information like phone number, bank details or other transaction instructions " type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] min-h-[5em] w-[80%] placeholder:font-[700]  border-[1px] resize-none border-[#595959] rounded-[2px] ' />
                     </div>
 
                     <div className=' flex gap-[0.625em] justify-center' >

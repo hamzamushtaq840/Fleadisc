@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 
-const Delivery = ({ children }) => {
+const Delivery = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -19,7 +19,7 @@ const Delivery = ({ children }) => {
                     <h2 className='text-[#0000005f] w-[4rem] text-center  text-[0.875em] font-[500]'>Selling</h2>
                 </NavLink>
             </div>
-            {children}
+            <Outlet />
         </div>
     )
 }

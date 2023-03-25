@@ -243,7 +243,7 @@ const PrivatePurchases = () => {
         <div className='flex justify-center mt-[20px]'>
             <div className={`relative  xsm:w-screen sm:w-screen  w-[100%] ${screenSize.width > 768 ? "px-[25px] " : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                 <div className='flex gap-[0.8125em]'>
-                    <h1 className='font-[700] pl-[4px] text-[1.25em] mb-[15px] '>Purchased Listings</h1>
+                    <h1 className='font-[700] pl-[4px] text-[1.25em] mb-[10px] '>Purchased Listings</h1>
                     <span className='text-[1.25em] font-[700] text-[#00000080]'>(1500 sek)</span>
                 </div>
                 {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%]  flex justify-center items-center h-[80%] w-[20px] select-none  ' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}

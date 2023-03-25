@@ -93,9 +93,9 @@ const App = () => {
             <Route path="chat" element={<Suspense fallback={Loader}><SingleChat /></Suspense>} />
           </Route>
 
-          <Route path="/delivery">
-            <Route path="buying" element={<Suspense fallback={Loader}><Delivery><Buying /></Delivery></Suspense>} />
-            <Route path="selling" element={<Suspense fallback={Loader}><Delivery><Selling /></Delivery></Suspense>} />
+          <Route path="/delivery" element={<Delivery />}>
+            <Route path="buying" element={<Suspense fallback={Loader}><Buying /></Suspense>} />
+            <Route path="selling" element={<Suspense fallback={Loader}><Selling /></Suspense>} />
           </Route>
         </Route>
 
