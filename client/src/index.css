@@ -157,6 +157,17 @@ option:first-child {
   padding: 0 !important;
 }
 
+.ReactFlagsSelect-module_label__27pw9 {
+  color: #000000;
+  font-weight: 600;
+  font-size: 0.75em;
+  /* background: #000; */
+  display: flex;
+  align-items: center;
+  letter-spacing: 1px;
+  padding-top: 2px;
+}
+
 .nav-link2.active {
   background-color: white;
   /* padding: 0.5rem 2rem; */

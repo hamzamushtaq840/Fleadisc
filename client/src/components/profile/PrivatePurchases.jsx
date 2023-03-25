@@ -284,7 +284,8 @@ const PrivatePurchases = () => {
                     })}
                 </div>
                 {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none  ' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer  text-[#a9a8a8] hover:text-text' /></h1>}
-            </div></div>
+            </div>
+        </div>
     )
 }
 
