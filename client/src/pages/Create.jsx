@@ -93,7 +93,7 @@ const Create = () => {
 
     return (
         <div>
-            <div style={{ height: "calc(100vh - 88px)", scrollBehavior: "smooth" }} className='relative left-1/2  sm:text-[1rem] xsm:text-[1rem] text-[1.2rem] -translate-x-1/2 mr-[50px]  max-w-[1300px]  mt-[0.5em] '>
+            <div style={{ minHeight: "calc(100vh - 88px)", scrollBehavior: "smooth" }} className='relative  left-1/2  sm:text-[1rem] xsm:text-[1rem] text-[1.2rem] -translate-x-1/2 mr-[50px]  max-w-[1300px]  mt-[0.5em] '>
                 <div className='flex justify-between mb-[1.2em] xsm:my-[0.9375em] sm:my-[0.9375em] w-full items-center '>
                     <h1 className='font-[700] text-[1.25em] '>Create a listing</h1>
                     <button onClick={handleAddMore} className='w-[2.5em] h-[2.3125em]  text-[0.895em] font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 0.375em -1px rgba(0, 0, 0, 0.1), 0 0.375em 4px -1px rgba(0, 0, 0, 0.06)" }}>+</button>
@@ -278,7 +278,7 @@ const Create = () => {
                     </div>
                 </div>
 
-                <div className='flex justify-center xsm:pt-[0em] sm:pt-[0em] pt-[1.2em] pb-[1.25em]'><button onClick={handlePublish} className='w-[7.5em] h-[2.4125em] mt-[1.125em] text-[0.875em]  button font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[4px]' style={{ boxShadow: "0 4px 0.375em -1px rgba(0, 0, 0, 0.1), 0 0.375em 4px -1px rgba(0, 0, 0, 0.06)" }}>Publish</button></div>
+                <div className='flex  justify-center xsm:pt-[0em] sm:pt-[0em] pt-[1.2em] pb-[1.25em]'><button onClick={handlePublish} className='w-[7.5em] h-[2.4125em] mt-[1.125em] text-[0.875em]  button font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[4px]' style={{ boxShadow: "0 4px 0.375em -1px rgba(0, 0, 0, 0.1), 0 0.375em 4px -1px rgba(0, 0, 0, 0.06)" }}>Publish</button></div>
 
             </div>
             {model && <NumofListing setModel={setModel} />}

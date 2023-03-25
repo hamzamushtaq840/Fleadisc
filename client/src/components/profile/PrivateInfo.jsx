@@ -1,5 +1,7 @@
 import { Rating } from '@mui/material';
 import React, { useState } from 'react'
+import ReactCountryFlag from "react-country-flag"
+import { getCountryInfoByISO } from '../../utils/iso-country-currency';
 
 const PrivateInfo = () => {
     const [buyerChecked, setBuyerChecked] = useState(false);
@@ -18,9 +20,8 @@ const PrivateInfo = () => {
         <>
             <div className='flex xsm:justify-between sm:justify-between px-[10px] mt-[20px] gap-[0.938em]  justify-center  md:gap-[5.5em]  lg:gap-[8.4em] xl:gap-[8em] 2xl:gap-[10em] '>
 
-                <div className='flex gap-[16px] flex-col'>
+                <div className='flex gap-[20px] flex-col'>
                     <div className='flex flex-col '>
-                        {/* <img src={user} className="xsm:h-[4.125em] sm:h-[3.125em] md:h-[3.725em] lg:h-[3.725em] 2xl:h-[3.725em] " alt="user" /> */}
                         <div>
                             <h1 className='text-[0.75em] font-[700] text-[#595959]' >Fred Isaksson</h1>
                             <h1 className='text-[0.5em] font-[500] text-[#595959bf]' >Joined 2022</h1>
@@ -31,16 +32,30 @@ const PrivateInfo = () => {
                             <p className='text-[0.75em] text-[#595959]'>(23)</p>
                         </div>
                     </div>
-
+                    <div className='flex flex-col '>
+                        <h1 className='text-[0.75em] font-[600]' >Listing in</h1>
+                        <div className='flex gap-[5px] mt-[5px]'>
+                            <ReactCountryFlag
+                                countryCode="SE"
+                                svg
+                                style={{
+                                    width: '1.8em',
+                                    height: '1.2em',
+                                }}
+                                title="US"
+                            />
+                            <p className='text-[.75em] font-[500]'>{getCountryInfoByISO('SE').countryName}</p>
+                        </div>
+                    </div>
                     <div className='flex flex-col '>
                         <h1 className='text-[0.75em] font-[600]' >Delivery Address</h1>
-                        <h1 className='text-[0.75em]  max-w-[150px] font-[500] text-[#595959bf]' > Tullgarsgatan 27 753 17 Upsad asd asd asd asd as das dasd psala </h1>
+                        <h1 className='text-[0.75em]  max-w-[150px] font-[500] text-[#595959bf]' >Tullgarsgatan 27 753 17, Uppsala Uppland, Sweden</h1>
                     </div>
 
 
                     <div className='flex flex-col '>
                         <h1 className='text-[0.75em] font-[600]' >Shipping Address</h1>
-                        <h1 className='text-[0.75em] max-w-[150px] font-[500] text-[#595959bf]' > Tullgarsgatan 27 753 sda sad asd asd ad adas das  17 Uppsala </h1>
+                        <h1 className='text-[0.75em] max-w-[150px] font-[500] text-[#595959bf]' >Tullgarsgatan 27 753 17, Uppsala Uppland, Sweden</h1>
                     </div>
 
                 </div>

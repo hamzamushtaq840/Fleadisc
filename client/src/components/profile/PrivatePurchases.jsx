@@ -1,88 +1,257 @@
-import React from 'react'
 import disc from './../../assets/disc.svg'
+import React, { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { BsFillCaretLeftFill } from "react-icons/bs";
+import { BsFillCaretRightFill } from "react-icons/bs";
 
 const PrivatePurchases = () => {
+    const navigate = useNavigate();
+
     const activeDiscs = [
         {
             discimage: null,
             quantity: 1,
-            discName: 'Annax',
+            discName: "Annax",
             brand: 'Discart',
-            range: 'xyz',
+            range: null,
             condition: 8,
-            optionalDetails: {
-                plastic: null,
-                grams: null,
-                named: false,
-                dyed: false,
-                blank: false,
-                glow: false,
-                collectible: false,
-                firstRun: false,
-                auction: false,
-                fixedPrice: false,
-            },
+            plastic: '',
+            grams: '174',
+            named: true,
+            dyed: true,
+            blank: true,
+            glow: true,
+            collectible: true,
+            firstRun: true,
+            priceType: 'auction',
             startingPrice: 125,
-            minPrice: '',
-            endTime: '02:20PM 23 OKt',
+            minPrice: 130,
+            endDay: "2023-04-02",
+            endTime: "13:48",
+            bids: [{ sa: 1 }, { bd: 1 }]
         },
         {
             discimage: null,
             quantity: 1,
-            discName: 'Annax',
+            discName: "Annax",
             brand: 'Discart',
-            range: 'xyz',
+            range: null,
             condition: 8,
-            optionalDetails: {
-                plastic: null,
-                grams: null,
-                named: false,
-                dyed: false,
-                blank: false,
-                glow: false,
-                collectible: false,
-                firstRun: false,
-                auction: false,
-                fixedPrice: false,
-            },
+            plastic: '',
+            grams: '174',
+            named: false,
+            dyed: true,
+            blank: false,
+            glow: true,
+            collectible: false,
+            firstRun: true,
+            priceType: 'fixedPrice',
             startingPrice: 125,
-            minPrice: '',
-            endTime: '02:20PM 23 OKt',
+            minPrice: 130,
+            endDay: "2023-04-22",
+            endTime: "12:35",
+            bids: []
         },
         {
             discimage: null,
             quantity: 1,
-            discName: 'Annax',
+            discName: "Annax",
             brand: 'Discart',
-            range: 'xyz',
+            range: null,
             condition: 8,
-            optionalDetails: {
-                plastic: null,
-                grams: null,
-                named: false,
-                dyed: false,
-                blank: false,
-                glow: false,
-                collectible: false,
-                firstRun: false,
-                auction: false,
-                fixedPrice: false,
-            },
+            plastic: '',
+            grams: '174',
+            named: false,
+            dyed: true,
+            blank: false,
+            glow: true,
+            collectible: false,
+            firstRun: false,
+            priceType: 'auction',
             startingPrice: 125,
-            minPrice: '',
-            endTime: '02:20PM 23 OKt',
+            minPrice: 130,
+            endDay: "2023-03-29",
+            endTime: "13:48",
+            bids: [{ sa: 1 }, { bd: 1 }]
+        },
+        {
+            discimage: null,
+            quantity: 1,
+            discName: "Annax",
+            brand: 'Discart',
+            range: null,
+            condition: 8,
+            plastic: '',
+            grams: '174',
+            named: false,
+            dyed: true,
+            blank: false,
+            glow: true,
+            collectible: false,
+            firstRun: false,
+            priceType: 'fixedPrice',
+            startingPrice: 125,
+            minPrice: 130,
+            endDay: "2023-04-22",
+            endTime: "12:35",
+            bids: []
+        },
+        {
+            discimage: null,
+            quantity: 1,
+            discName: "Annax",
+            brand: 'Discart',
+            range: null,
+            condition: 8,
+            plastic: 'Plastic',
+            grams: '174',
+            named: true,
+            dyed: true,
+            blank: true,
+            glow: true,
+            collectible: true,
+            firstRun: true,
+            priceType: 'fixedPrice',
+            startingPrice: 125,
+            minPrice: 130,
+            endDay: "2023-04-22",
+            endTime: "12:35",
+            bids: []
+        },
+        {
+            discimage: null,
+            quantity: 1,
+            discName: "Annax",
+            brand: 'Discart',
+            range: null,
+            condition: 8,
+            plastic: '',
+            grams: '174',
+            named: false,
+            dyed: true,
+            blank: false,
+            glow: true,
+            collectible: false,
+            firstRun: false,
+            priceType: 'auction',
+            startingPrice: 125,
+            minPrice: 130,
+            endDay: "2023-03-24",
+            endTime: "13:48",
+            bids: [{ sa: 1 }, { bd: 1 }]
+        },
+        {
+            discimage: null,
+            quantity: 1,
+            discName: "Annax",
+            brand: 'Discart',
+            range: null,
+            condition: 8,
+            plastic: '',
+            grams: '174',
+            named: true,
+            dyed: false,
+            blank: true,
+            glow: true,
+            collectible: false,
+            firstRun: true,
+            priceType: 'auction',
+            startingPrice: 125,
+            minPrice: 130,
+            endDay: "2023-03-24",
+            endTime: "13:48",
+            bids: []
         },
 
     ]
-    return (
-        <div className='flex justify-center '>
 
-            <div className='mt-[1.0625em] px-[5px] xsm:w-[100%] sm:w-[100%] w-[95%] '>
-                <h1 className='font-[700] text-[1.25em] mb-[15px] '>Purchased Listings</h1>
-                <div className='flex flex-wrap  gap-[1.8625em] xsm:gap-[1.0625em]  sm:gap-[1.0625em]'>
+
+    const scrollableDivRef = useRef(null);
+
+    function handleScrollRight() {
+        let value = 220;
+        if (screenSize.width > 1279) {
+            value = 220
+        }
+        if (screenSize.width < 1279) {
+            value = 210
+        }
+        if (screenSize.width < 1023) {
+            value = 200
+        }
+        if (screenSize.width < 767) {
+            value = 160
+        }
+
+        console.log(value);
+        scrollableDivRef.current.scrollBy({
+            left: value,
+            behavior: 'smooth',
+        });
+    }
+
+    function handleScrollLeft() {
+        let value = 220;
+        if (screenSize.width > 1279) {
+            value = 220
+        }
+        if (screenSize.width < 1279) {
+            value = 210
+        }
+        if (screenSize.width < 1023) {
+            value = 200
+        }
+        if (screenSize.width < 767) {
+            value = 160
+        }
+
+        console.log(value);
+
+        scrollableDivRef.current.scrollBy({
+            left: -value,
+            behavior: 'smooth',
+        });
+    }
+
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+    };
+
+    const [screenSize, setScreenSize] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight
+    });
+
+    useEffect(() => {
+        const handleResize = () => {
+            setScreenSize({ width: window.innerWidth, height: window.innerHeight });
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+    return (
+        <div className='flex justify-center mt-[20px]'>
+            <div className={`relative  xsm:w-screen sm:w-screen  w-[100%] ${screenSize.width > 768 ? "px-[25px] " : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                <div className='flex gap-[0.8125em]'>
+                    <h1 className='font-[700] pl-[4px] text-[1.25em] mb-[15px] '>Purchased Listings</h1>
+                    <span className='text-[1.25em] font-[700] text-[#00000080]'>(1500 sek)</span>
+                </div>
+                {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%]  flex justify-center items-center h-[80%] w-[20px] select-none  ' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
+                <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[4px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"}  pb-[5px] gap-[10px] mt-[11px] `}>
                     {activeDiscs.map((value, index) => {
                         return (
-                            <div className='flex card rounded-[8px] bg-[#ffffff] flex-wrap min-w-[150px] w-[30%] max-w-[230px] flex-col'>
+                            <div className={`flex relative mb-[10px] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[150px] sm:min-w-[150px] md:min-w-[190px]  lg:min-w-[200px] xl:min-w-[210px] 2xl:min-w-[210px] h-[0%] flex-col`}>
+
                                 <img src={disc} className=' w-full' alt="" />
                                 <div className='flex justify-between px-[0.625em] py-[0.425em]'>
                                     <div className='flex  flex-col justify-between'>
@@ -114,6 +283,7 @@ const PrivatePurchases = () => {
                         )
                     })}
                 </div>
+                {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none  ' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer  text-[#a9a8a8] hover:text-text' /></h1>}
             </div></div>
     )
 }
