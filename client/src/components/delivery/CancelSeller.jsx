@@ -16,7 +16,7 @@ const CancelSeller = ({ setModel }) => {
 
 
                 <div className='flex flex-col gap-[11px] mt-[.5em]'>
-                    <button onClick={() => navigate('/create/edit')} className='py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary'>Re-list</button>
+                    <button onClick={() => navigate('/create/relist')} className='py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary'>Re-list</button>
                     <button onClick={() => setModel(false)} className='py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-[#F21111]'>Cancel</button>
                 </div>
             </div>

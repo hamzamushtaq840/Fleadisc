@@ -29,7 +29,7 @@ const ConfirmBid = ({ setModel, price, type, val }) => {
                 </div>
                 <div className='w-[95%] my-[15px] py-[0.3px] bg-[#323232]'></div>
                 <div className='flex justify-center mt-[.5em]'>
-                    <button className='button rounded-[4px] py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary'>{type === 'bid' ? "Confirm Bid" : "Confirm Buy"}</button>
+                    <button onClick={() => setModel(false)} className='button rounded-[4px] py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary'>{type === 'bid' ? "Confirm Bid" : "Confirm Buy"}</button>
                 </div>
             </div>
         </>

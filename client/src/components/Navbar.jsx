@@ -4,6 +4,7 @@ import signin from './../assets/signin.svg';
 
 const Navbar = () => {
     const [showShadow, setShowShadow] = useState(false);
+
     useEffect(() => {
         window.addEventListener("scroll", handleScroll);
         return () => {

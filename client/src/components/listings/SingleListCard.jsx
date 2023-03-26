@@ -66,17 +66,20 @@ const SingleListCard = ({ val }) => {
     const handleBid = (e, type) => {
         e.preventDefault()
         console.log(price);
-        if (price === null || price === '') {
-            setError(true)
-            setErrorText('Please enter a price')
-            return
-        }
-        if (price < val.minPrice) {
-            setError(true)
-            setErrorText('Enter higher price than min price')
-            return
+        if (type === 'bid') {
+            if (price === null || price === '') {
+                setError(true)
+                setErrorText('Please enter a price')
+                return
+            }
+            if (price < val.minPrice) {
+                setError(true)
+                setErrorText('Enter higher price than min price')
+                return
+            }
         }
         setError(false)
+        console.log(type);
         type === 'bid' ? setType('bid') : setType('buy')
         setModal(true)
     }
@@ -186,7 +189,7 @@ const SingleListCard = ({ val }) => {
                     </form>}
                 {val.priceType === 'fixedPrice' &&
                     <div className='flex mb-[5px] mt-[10px]'>
-                        <button onClick={(e) => handleBid(e, 'buy')} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Buy</button>
+                        <button onClick={(e) => { handleBid(e, 'buy') }} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Buy</button>
                     </div>}
             </div>
             </>
@@ -194,7 +197,7 @@ const SingleListCard = ({ val }) => {
             {imageModal && (
                 <div onClick={() => setImageModal(false)} className="fixed  bg-[#000000CC] z-50 top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center">
                     <div className="w-[50%] xsm:w-full sm:w-full max-h-[80%]">
-                        <img onClick={(e)=>e.stopPropagation()} src={disc2} alt="" className="w-full object-contain" />
+                        <img onClick={(e) => e.stopPropagation()} src={disc2} alt="" className="w-full object-contain" />
                     </div>
                 </div>
             )}
