@@ -569,7 +569,7 @@ const Listing = () => {
                 <h1 className='text-[35px] sm:text-[25px] xsm:text-[25px] md:text-[30px] leading-[34.9px] text-[white] font-logo text-center relative z-10 mt-[clamp(50px,10vw,110px)]'>Give a disc a second arm</h1>
                 <input style={{ boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)' }} className='border-[1px] w-[64.10vw] max-w-[500px] min-w-[250px] border-[#81B29A] absolute bottom-[-24px] bg-[white] z-10 h-[47px] rounded-lg px-[14px] font-sans' type='text' placeholder='Search...'></input>
             </div>
-            <div className='mt-[35px] flex gap-[10px] items-center justify-center'>
+            <div className='mt-[35px] flex gap-[10px] xsm:gap-[5px] items-center justify-center'>
                 <ReactFlagsSelect
                     selected={selected}
                     onSelect={(code) => setSelected(code)}
@@ -590,7 +590,7 @@ const Listing = () => {
                     <option selected disabled value={null}>Condition</option>
                 </select>
             </div>
-            <div className='px-[5px] flex gap-[10px] items-center justify-start flex-wrap w-[340px] m-auto'>
+            <div className='px-[5px] xsm:px-0 flex gap-[10px] xsm:gap-[5px] items-center justify-start flex-wrap xsm:w-[320px] w-[340px] m-auto'>
                 <button className='w-[57px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>New</button>
                 <button className='w-[66px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>Popular</button>
                 <button className='w-[99px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>Short on time</button>

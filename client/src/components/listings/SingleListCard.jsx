@@ -194,7 +194,7 @@ const SingleListCard = ({ val }) => {
             {imageModal && (
                 <div onClick={() => setImageModal(false)} className="fixed  bg-[#000000CC] z-50 top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center">
                     <div className="w-[50%] xsm:w-full sm:w-full max-h-[80%]">
-                        <img src={disc2} alt="" className="w-full object-contain" />
+                        <img onClick={(e)=>e.stopPropagation()} src={disc2} alt="" className="w-full object-contain" />
                     </div>
                 </div>
             )}
