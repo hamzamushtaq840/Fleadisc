@@ -217,7 +217,7 @@ const Selling = () => {
     ]
 
     return (
-        <div className=' bg-[#FAFAFA]  flex justify-center px-[1.25em] py-[0.625em] text-[1.2rem] xsm:text-[1rem] sm:text-[1.125rem] '>
+        <div className=' bg-[#FAFAFA] flex justify-center px-[1.25em] py-[0.625em] text-[1.2rem] xsm:text-[1rem] sm:text-[1.125rem] '>
             <div className='w-[80vw] sm:w-[100vw] xsm:w-[100vw]'>
                 {wonBids.map((value, index) => {
                     return (

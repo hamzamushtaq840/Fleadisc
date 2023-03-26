@@ -3,11 +3,9 @@ import ReactFlagsSelect from "react-flags-select";
 import { Us } from "react-flags-select";
 import SingleList from '../components/listings/SingleList';
 
-
 const Listing = () => {
     const [selected, setSelected] = useState("");
     const [moreFilters, setMoreFilters] = useState(false)
-
 
     const [listings, setListings] = useState([
         {
@@ -565,14 +563,13 @@ const Listing = () => {
 
     ])
 
-
     return (
-        <div className=' w-full  m-auto text-[1.2rem] sm:text-[1rem] xsm:text-[1rem] '>
-            <div className='listingBackgroundImage  flex  justify-center h-[35vw] min-h-[135px] max-h-[300px] bg-[rgba(0,0,0,0.1)] relative'>
+        <div className=' w-full m-auto text-[1.2rem] sm:text-[1rem] xsm:text-[1rem]'>
+            <div className='listingBackgroundImage flex justify-center h-[35vw] min-h-[135px] max-h-[300px] bg-[rgba(0,0,0,0.1)] relative'>
                 <h1 className='text-[35px] sm:text-[25px] xsm:text-[25px] md:text-[30px] leading-[34.9px] text-[white] font-logo text-center relative z-10 mt-[clamp(50px,10vw,110px)]'>Give a disc a second arm</h1>
                 <input style={{ boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)' }} className='border-[1px] w-[64.10vw] max-w-[500px] min-w-[250px] border-[#81B29A] absolute bottom-[-24px] bg-[white] z-10 h-[47px] rounded-lg px-[14px] font-sans' type='text' placeholder='Search...'></input>
             </div>
-            <div className='mt-[35px]  flex gap-[10px] items-center justify-center'>
+            <div className='mt-[35px] flex gap-[10px] items-center justify-center'>
                 <ReactFlagsSelect
                     selected={selected}
                     onSelect={(code) => setSelected(code)}
@@ -609,7 +606,7 @@ const Listing = () => {
                 </>}
             </div>
             <div className='flex justify-center'>
-                <div className='w-full max-w-[330px] flex justify-start '>
+                <div className='w-full max-w-[330px] flex justify-start'>
                     <p onClick={() => setMoreFilters((prev) => !prev)} className='text-[0.75em] text-[#595959] mt-[10px] cursor-pointer'>{moreFilters ? 'Close more filters' : 'Show more filters'}</p>
                 </div>
             </div>
@@ -622,8 +619,6 @@ const Listing = () => {
                     )
                 })}
             </div>
-
-
         </div>
     )
 }

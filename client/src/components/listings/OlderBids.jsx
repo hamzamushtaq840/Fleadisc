@@ -17,13 +17,13 @@ const OlderBids = ({ setModel }) => {
                     </div>
                     <div className='flex flex-col gap-[8px]  items-center'>
                         <h1 className='text-[0.9375em] font-[500]'>Price</h1>
-                        <div className='flex  min-h-[25px] items-center '>
+                        <div className='flex  min-h-[25px] items-center'>
                             <p className='text-[0.75em] font-[400]'>125 kr</p>
                         </div>
                     </div>
                     <div className='flex flex-col gap-[8px]'>
                         <h1 className='text-[0.9375em] font-[500]'>Time</h1>
-                        <div className='flex gap-[6px]  min-h-[25px] items-center'>
+                        <div className='flex gap-[6px] min-h-[25px] items-center'>
                             <p className='text-[0.75em] font-[400]'>08-12-13 23:42:12</p>
                         </div>
                     </div>
@@ -40,17 +40,16 @@ const OlderBids = ({ setModel }) => {
                     </div>
                     <div className='flex flex-col gap-[8px]  items-center'>
                         <h1 className='text-[0.9375em] font-[500]'>Price</h1>
-                        <div className='flex  min-h-[25px] items-center '>
+                        <div className='flex  min-h-[25px] items-center'>
                             <p className='text-[0.75em] font-[400]'>125 kr</p>
                         </div>
                     </div>
                     <div className='flex flex-col gap-[8px]'>
                         <h1 className='text-[0.9375em] font-[500]'>Time</h1>
-                        <div className='flex gap-[6px]  min-h-[25px] items-center'>
+                        <div className='flex gap-[6px] min-h-[25px] items-center'>
                             <p className='text-[0.75em] font-[400]'>08-12-13 23:42:12</p>
                         </div>
                     </div>
-
                 </div>
                 <div className='w-[95%] my-[15px] py-[0.3px] bg-[#323232]'></div>
             </div>

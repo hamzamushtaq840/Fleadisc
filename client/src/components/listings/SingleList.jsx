@@ -8,35 +8,12 @@ import { BsFillCaretRightFill } from "react-icons/bs";
 
 const SingleList = ({ value, index }) => {
     const navigate = useNavigate();
-
-    const [isDragging, setIsDragging] = useState(false);
-    const [startX, setStartX] = useState(0);
-    const [scrollLeft, setScrollLeft] = useState(0);
-
-    const handleMouseDown = (e) => {
-        console.log(e.button, new Date());
-        if (e.button === 0) {
-            setIsDragging(true);
-            setStartX(e.pageX - e.currentTarget.offsetLeft);
-            setScrollLeft(e.currentTarget.scrollLeft);
-        }
-    };
-
-    const handleMouseUp = (e) => {
-        console.log(e.button, new Date());
-        if (e.button === 0) {
-            setIsDragging(false);
-        }
-    };
-
-    const handleMouseMove = (e) => {
-        if (!isDragging) return;
-        const x = e.pageX - e.currentTarget.offsetLeft;
-        const scrollX = x - startX;
-        e.currentTarget.scrollLeft = scrollLeft - scrollX;
-    };
-
     const scrollableDivRef = useRef(null);
+    const [isHovered, setIsHovered] = useState(false);
+    const [screenSize, setScreenSize] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight
+    });
 
     function handleScrollRight() {
         let value = 220;
@@ -83,8 +60,6 @@ const SingleList = ({ value, index }) => {
         });
     }
 
-    const [isHovered, setIsHovered] = useState(false);
-
     const handleMouseEnter = () => {
         setIsHovered(true);
     };
@@ -92,11 +67,6 @@ const SingleList = ({ value, index }) => {
     const handleMouseLeave = () => {
         setIsHovered(false);
     };
-
-    const [screenSize, setScreenSize] = useState({
-        width: window.innerWidth,
-        height: window.innerHeight
-    });
 
     useEffect(() => {
         const handleResize = () => {
@@ -112,7 +82,7 @@ const SingleList = ({ value, index }) => {
 
     return (
         <>
-            <div key={index} className='flex  flex-col'>
+            <div key={index} className='flex flex-col'>
                 <div className='flex px-[19px] mb-[2px] gap-[0.563em] mt-[1.063em]'>
                     <img src={user} onClick={() => navigate('/profile/public')} className="cursor-pointer mt-1 xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] " alt="user" />
                     <div className='flex flex-col justify-start'>
@@ -124,7 +94,7 @@ const SingleList = ({ value, index }) => {
                 </div>
 
                 <div className={`relative ${screenSize.width > 768 ? "px-[25px] " : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                    {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%]  flex justify-center items-center h-[80%] w-[20px] select-none  ' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
+                    {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%]  flex justify-center items-center h-[80%] w-[20px] select-none ' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
                     <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[4px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"}  pb-[5px] gap-[10px] mt-[11px] `}>
                         {value.activelistings.map((val, index) => {
                             return (
@@ -132,7 +102,7 @@ const SingleList = ({ value, index }) => {
                             )
                         })}
                     </div>
-                    {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none  ' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer  text-[#a9a8a8] hover:text-text' /></h1>}
+                    {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none ' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
                 </div>
             </div>
         </>

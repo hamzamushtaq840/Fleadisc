@@ -70,18 +70,18 @@ const SingleListCard = ({ val }) => {
     }
 
     return (
-        <div className={`flex relative mb-[10px] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[150px] sm:min-w-[150px] md:min-w-[190px]  lg:min-w-[200px] xl:min-w-[210px] 2xl:min-w-[210px] h-[0%] flex-col`}>
+        <div className={`flex relative mb-[10px] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[150px] sm:min-w-[150px] md:min-w-[190px] lg:min-w-[200px] xl:min-w-[210px] 2xl:min-w-[210px] h-[0%] flex-col`}>
             <img src={disc} className=' w-full' alt="" onClick={() => setImageModal(true)} />
             <div onClick={() => setExtra(prev => !prev)} className='flex justify-between cursor-pointer px-[0.625em] pt-[0.425em]'>
-                <div className='flex  flex-col justify-between'>
-                    <div className='flex items-start '>
-                        <div className='flex flex-col  mr-[0.425em]'>
-                            <h1 className='text-[0.75em] font-[700] ' >{val.discName}</h1>
-                            <h1 className='text-[0.5em] font-[500] mt-[-0.413em]  text-[##595959]' >{val.brand}</h1>
+                <div className='flex flex-col justify-between'>
+                    <div className='flex items-start'>
+                        <div className='flex flex-col mr-[0.425em]'>
+                            <h1 className='text-[0.75em] font-[700]' >{val.discName}</h1>
+                            <h1 className='text-[0.5em] font-[500] mt-[-0.413em] text-[##595959]' >{val.brand}</h1>
                         </div>
                         <span className='px-[0.5em] mt-[2px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{val.condition}</span>
                     </div>
-                    <div className='flex mt-[5px] flex-col text-[0.5em]  text-[#595959]'>
+                    <div className='flex mt-[5px] flex-col text-[0.5em] text-[#595959]'>
                         <span className='font-[600]'>{getMonthAndDate(val.endDay)} - {val.endTime} </span>
                         <span className='font-[500] text-[#595959BF]'>{getRemainingTime(val.endDay, val.endTime)}</span>
                     </div>
@@ -91,8 +91,8 @@ const SingleListCard = ({ val }) => {
                     <button className='text-[0.5em] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
 
                     <div className='flex flex-col'>
-                        <span className='text-[0.75em]  font-[600]'>{val.startingPrice} kr</span>
-                        <span className='text-[0.5em] font-[500]  text-[#595959bf]'>Final price</span>
+                        <span className='text-[0.75em] font-[600]'>{val.startingPrice} kr</span>
+                        <span className='text-[0.5em] font-[500] text-[#595959bf]'>Final price</span>
                     </div>
 
                 </div>
@@ -101,62 +101,62 @@ const SingleListCard = ({ val }) => {
                 <div className='flex w-full mb-[5px] justify-between gap-[5px] flex-wrap'>
 
                     {val.plastic !== '' &&
-                        <div className=' flex items-center gap-[3px] text-[1rem] '>
+                        <div className=' flex items-center gap-[3px] text-[1rem]'>
                             <img src={plastic} alt="" className=" w-[13px]" />
                             <p className='text-[0.6em] font-[300]'>{val.plastic}</p>
                         </div>
                     }
                     {val.grams !== '' &&
-                        <div className=' flex items-center gap-[3px] text-[1rem] '>
+                        <div className=' flex items-center gap-[3px] text-[1rem]'>
                             <img src={grams} alt="" className=" w-[12px]" />
                             <p className='text-[0.6em] font-[300]'>{val.grams}</p>
                         </div>
                     }
                     {val.named !== false &&
-                        <div className=' flex items-center  gap-[3px] text-[1rem]  '>
+                        <div className=' flex items-center gap-[3px] text-[1rem] '>
                             <img src={named} alt="" className=" w-[10px]" />
                             <p className='text-[0.6em] font-[300]'>Named</p>
                         </div>
                     }
                     {val.dyed !== false &&
-                        <div className=' flex items-center gap-[3px] text-[1rem]  '>
+                        <div className=' flex items-center gap-[3px] text-[1rem] '>
                             <img src={dyed} alt="" className=" w-[11px]" />
                             <p className='text-[0.6em] font-[300]'>Dyed</p>
                         </div>
                     }
                     {val.blank !== false &&
-                        <div className=' flex items-center gap-[3px] text-[1rem] '>
+                        <div className=' flex items-center gap-[3px] text-[1rem]'>
                             <img src={blank} alt="" className=" w-[10px]" />
                             <p className='text-[0.6em] font-[300]'>Blank</p>
                         </div>
                     }
                     {val.glow !== false &&
-                        <div className=' flex items-center gap-[3px] text-[1rem] '>
+                        <div className=' flex items-center gap-[3px] text-[1rem]'>
                             <img src={glow} alt="" className=" w-[12px]" />
                             <p className='text-[0.6em] font-[300]'>Glow</p>
                         </div>
                     }
                     {val.firstRun !== false &&
-                        <div className=' flex items-center gap-[3px] text-[1rem] '>
+                        <div className=' flex items-center gap-[3px] text-[1rem]'>
                             <img src={firstRun} alt="" className=" w-[10px]" />
                             <p className='text-[0.6em] font-[300]'>Run</p>
                         </div>
                     }
                     {val.collectible !== false &&
-                        <div className=' flex items-center gap-[3px] text-[1rem] '>
+                        <div className=' flex items-center gap-[3px] text-[1rem]'>
                             <img src={collectible} alt="" className=" w-[11px]" />
                             <p className='text-[0.6em] font-[300]'>Collectible</p>
                         </div>
                     }
                     {val.bids.length !== 0 &&
-                        <div className=' flex items-center gap-[3px] text-[1rem] '>
+                        <div className=' flex items-center gap-[3px] text-[1rem]'>
                             <p onClick={() => setOldModal(true)} className='text-[0.6em] cursor-pointer hover:text-text font-[700] text-[#5c5c5c] underline'>{val.bids.length} Bids</p>
                         </div>
                     }
                 </div>
                 {val.priceType === 'auction' &&
                     <form onSubmit={(e) => handleBid(e, 'bid')} className='flex flex-col mb-[6px] gap-[6px]'>
-                        <input value={price} onChange={(e) => setPrice(Number(e.target.value))} required type="number" className='w-full pl-[3px] py-[0.25em]  rounded-[2px] text-[.65em] border-[1px] border-[#000000]' min={val.minPrice} placeholder={`Min Price - ${val.minPrice} kr`} />
+                        <input value={price} onChange={(e) => setPrice(Number(e.target.value))} required type="number" className='w-full pl-[3px] py-[0.25em] rounded-[2px] text-[.65em] border-[1px] border-[#000000]' min={val.minPrice} placeholder={`Min Price - ${val.minPrice} kr`} />
                         <button type='submit' className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Place Bid</button>
                     </form>}
                 {val.priceType === 'fixedPrice' &&
@@ -167,7 +167,7 @@ const SingleListCard = ({ val }) => {
             </>
             }
             {imageModal && (
-                <div onClick={() => setImageModal(false)} className="fixed   bg-[#000000CC] z-50 top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center">
+                <div onClick={() => setImageModal(false)} className="fixed  bg-[#000000CC] z-50 top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center">
                     <div className="w-[50%] xsm:w-full sm:w-full max-h-[80%]">
                         <img src={disc2} alt="" className="w-full object-contain" />
                     </div>

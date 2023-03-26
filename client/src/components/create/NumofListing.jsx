@@ -5,7 +5,7 @@ const NumofListing = ({ setModel }) => {
     return (
         <>
             <div className='modalBackground' onClick={() => setModel(false)}></div>
-            <div className='modalContainer  xsm:text-[16px] sm:text-[16px] text-[20px] sm:h-[20%] sm:w-[70%] xsm:w-[70%] xsm:h-[20%] h-[30%] w-[40%]  flex flex-col justify-center items-center'>
+            <div className='modalContainer xsm:text-[16px] sm:text-[16px] text-[20px] sm:h-[20%] sm:w-[70%] xsm:w-[70%] xsm:h-[20%] h-[30%] w-[40%] flex flex-col justify-center items-center'>
                 <span className='text-[.75em] items-center flex font-[500]' >
                     No of Listing : &nbsp;
                     <h1 className='text-[.95em] mt-[1px] font-[800]'>{listing}</h1>

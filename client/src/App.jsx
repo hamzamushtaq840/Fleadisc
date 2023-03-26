@@ -5,7 +5,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import ReList from './components/create/ReList';
 import PrivateInfoEdit from './components/profile/PrivateInfoEdit';
 
-
 const Listing = React.lazy(() => import('./pages/Listing'))
 const Navbar = React.lazy(() => import('./components/Navbar'))
 const SubListing = React.lazy(() => import('./components/listings/SubListing'))
@@ -72,10 +71,8 @@ const App = () => {
             </Route>
 
             <Route path="private" element={<Suspense fallback={Loader}><PrivateProfile /></Suspense>} >
-              {/* <Route path="private/information"> */}
               <Route index element={<Suspense fallback={Loader}><PrivateInfo /></Suspense>} />
               <Route path="edit" element={<Suspense fallback={Loader}><PrivateInfoEdit /></Suspense>} />
-              {/* </Route> */}
               <Route path="listings" element={<Suspense fallback={Loader}><PrivateListings /></Suspense>} />
               <Route path="purchases" element={<Suspense fallback={Loader}><PrivatePurchases /></Suspense>} />
             </Route>
@@ -99,16 +96,16 @@ const App = () => {
             <Route path="selling" element={<Suspense fallback={Loader}><Selling /></Suspense>} />
           </Route>
         </Route>
-
-        {/*Nested Protected routes */}
-        <Route path="/" element={<Suspense fallback={Loader}><RequireAuth allowedRoles={[ROLES.User]} /></Suspense>}>
-          <Route path="/listing">
-            <Route path="sublisting" element={<Suspense fallback={Loader}><Navbar><SubListing /></Navbar></Suspense>} />
-          </Route>
-        </Route>
       </Routes >
     </BrowserRouter >
   )
 }
 
 export default App
+
+{/*Nested Protected routes */ }
+//  <Route path="/" element={<Suspense fallback={Loader}><RequireAuth allowedRoles={[ROLES.User]} /></Suspense>}>
+//  <Route path="/listing">
+//    <Route path="sublisting" element={<Suspense fallback={Loader}><Navbar><SubListing /></Navbar></Suspense>} />
+//  </Route>
+// </Route>

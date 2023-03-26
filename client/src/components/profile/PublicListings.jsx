@@ -1,17 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
 import SingleListCard from '../listings/SingleListCard'
 import disc from './../../assets/disc.svg'
 import { BsFillCaretLeftFill } from "react-icons/bs";
 import { BsFillCaretRightFill } from "react-icons/bs";
 
 const PublicListing = () => {
-    const navigate = useNavigate();
-
-    const [isDragging, setIsDragging] = useState(false);
-    const [startX, setStartX] = useState(0);
-    const [scrollLeft, setScrollLeft] = useState(0);
-
+    const [isHovered, setIsHovered] = useState(false);
+    const scrollableDivRef = useRef(null);
+    const [screenSize, setScreenSize] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight
+    });
     const activeDiscs = [
         {
             discimage: null,
@@ -170,9 +169,6 @@ const PublicListing = () => {
 
     ]
 
-
-    const scrollableDivRef = useRef(null);
-
     function handleScrollRight() {
         let value = 220;
         if (screenSize.width > 1279) {
@@ -187,8 +183,6 @@ const PublicListing = () => {
         if (screenSize.width < 767) {
             value = 160
         }
-
-        console.log(value);
         scrollableDivRef.current.scrollBy({
             left: value,
             behavior: 'smooth',
@@ -209,16 +203,11 @@ const PublicListing = () => {
         if (screenSize.width < 767) {
             value = 160
         }
-
-        console.log(value);
-
         scrollableDivRef.current.scrollBy({
             left: -value,
             behavior: 'smooth',
         });
     }
-
-    const [isHovered, setIsHovered] = useState(false);
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -227,11 +216,6 @@ const PublicListing = () => {
     const handleMouseLeave = () => {
         setIsHovered(false);
     };
-
-    const [screenSize, setScreenSize] = useState({
-        width: window.innerWidth,
-        height: window.innerHeight
-    });
 
     useEffect(() => {
         const handleResize = () => {
@@ -244,44 +228,44 @@ const PublicListing = () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+
     return (
         <div className='flex items-center flex-col mt-[20px] gap-[30px]'>
-
-            <div className={`relative  xsm:w-screen sm:w-screen w-[100%] ${screenSize.width > 768 ? "px-[25px] " : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                <h1 className='font-[700] pl-[4px] text-[1.25em] mb-[15px] '>Active Listings</h1>
-                {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%]  flex justify-center items-center h-[80%] w-[20px] select-none  ' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
-                <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[4px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"}  pb-[5px] gap-[10px] mt-[11px] `}>
+            <div className={`relative xsm:w-screen sm:w-screen w-[100%] ${screenSize.width > 768 ? "px-[25px] " : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                <h1 className='font-[700] pl-[4px] text-[1.25em] mb-[15px]'>Active Listings</h1>
+                {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
+                <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[4px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"} pb-[5px] gap-[10px] mt-[11px] `}>
                     {activeDiscs.map((val, index) => {
                         return (
                             <SingleListCard key={index} val={val} index={index} />
                         )
                     })}
                 </div>
-                {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none  ' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer  text-[#a9a8a8] hover:text-text' /></h1>}
+                {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
             </div>
-            <div className={`relative  xsm:w-screen sm:w-screen  w-[100%] ${screenSize.width > 768 ? "px-[25px] " : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+            <div className={`relative xsm:w-screen sm:w-screen w-[100%] ${screenSize.width > 768 ? "px-[25px]" : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                 <div className='flex gap-[0.8125em]'>
-                    <h1 className='font-[700] pl-[4px] text-[1.25em] mb-[10px] '>Finished Listings</h1>
+                    <h1 className='font-[700] pl-[4px] text-[1.25em] mb-[10px]'>Finished Listings</h1>
                     <span className='text-[1.25em] font-[700] text-[#00000080]'>(1500 sek)</span>
                 </div>
-                {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%]  flex justify-center items-center h-[80%] w-[20px] select-none  ' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
-                <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[4px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"}  pb-[5px] gap-[10px] mt-[11px] `}>
+                {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
+                <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[4px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"} pb-[5px] gap-[10px] mt-[11px] `}>
                     {activeDiscs.map((value, index) => {
                         return (
-                            <div className={`flex relative mb-[10px] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[150px] sm:min-w-[150px] md:min-w-[190px]  lg:min-w-[200px] xl:min-w-[210px] 2xl:min-w-[210px] h-[0%] flex-col`}>
+                            <div className={`flex relative mb-[10px] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[150px] sm:min-w-[150px] md:min-w-[190px] lg:min-w-[200px] xl:min-w-[210px] 2xl:min-w-[210px] h-[0%] flex-col`}>
 
                                 <img src={disc} className=' w-full' alt="" />
                                 <div className='flex justify-between px-[0.625em] py-[0.425em]'>
-                                    <div className='flex  flex-col justify-between'>
+                                    <div className='flex flex-col justify-between'>
 
-                                        <div className='flex items-start '>
-                                            <div className='flex flex-col  mr-[0.425em]'>
-                                                <h1 className='text-[0.75em] font-[700] ' >{value.discName}</h1>
-                                                <h1 className='text-[0.5em] font-[500] mt-[-0.413em]  text-[##595959]' >{value.brand}</h1>
+                                        <div className='flex items-start'>
+                                            <div className='flex flex-col mr-[0.425em]'>
+                                                <h1 className='text-[0.75em] font-[700]' >{value.discName}</h1>
+                                                <h1 className='text-[0.5em] font-[500] mt-[-0.413em] text-[##595959]' >{value.brand}</h1>
                                             </div>
                                             <span className='px-[0.5em] mt-[2px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
                                         </div>
-                                        <div className='flex mt-[5px] flex-col text-[0.5em]  text-[#595959]'>
+                                        <div className='flex mt-[5px] flex-col text-[0.5em] text-[#595959]'>
                                             <span className='font-[600]'>{value.endTime}</span>
                                             <span className='font-[500] text-[#595959BF]'>23h 23 min</span>
                                         </div>
@@ -290,9 +274,9 @@ const PublicListing = () => {
                                     <div className='flex flex-col justify-between'>
                                         <button className='text-[0.5em] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
 
-                                        <div className='flex   flex-col'>
-                                            <span className='text-[0.75em]  font-[600]'>{value.startingPrice}</span>
-                                            <span className='text-[0.5em] font-[500]  text-[#595959bf]'>Final price</span>
+                                        <div className='flex flex-col'>
+                                            <span className='text-[0.75em] font-[600]'>{value.startingPrice}</span>
+                                            <span className='text-[0.5em] font-[500] text-[#595959bf]'>Final price</span>
                                         </div>
                                     </div>
 
@@ -301,7 +285,7 @@ const PublicListing = () => {
                         )
                     })}
                 </div>
-                {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none  ' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer  text-[#a9a8a8] hover:text-text' /></h1>}
+                {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
             </div>
         </div>
     )
