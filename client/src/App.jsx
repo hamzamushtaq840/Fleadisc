@@ -51,14 +51,12 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-
         <Route path="/signin" element={<Suspense fallback={Loader}>< Signin /></Suspense>} />
         <Route path="/signup" element={<Suspense fallback={Loader}>< Signup /></Suspense>} />
         {/* Nested Public Routes */}
         <Route path="/signin">
           <Route path="country" element={<Suspense fallback={Loader}><ChooseCountry /></Suspense>} />
         </Route>
-
         {/* Public routes */}
         <Route path='/' element={<Navbar />}>
           <Route index element={<Suspense fallback={Loader}><Listing /></Suspense>} />
@@ -68,16 +66,19 @@ const App = () => {
           <Route path="/about" element={<Suspense fallback={Loader}><About /></Suspense>} />
 
           <Route path="/profile">
-            <Route path="public" element={<Suspense fallback={Loader}><PublicProfile /></Suspense>} />
-            <Route path="public/information" element={<Suspense fallback={Loader}><PublicProfile><PublicInfo /></PublicProfile></Suspense>} />
-            <Route path="public/listings" element={<Suspense fallback={Loader}><PublicProfile><PublicListing /></PublicProfile></Suspense>} />
-            <Route path="private" element={<Suspense fallback={Loader}><PrivateProfile /></Suspense>} />
-            <Route path="private/information">
-              <Route index element={<Suspense fallback={Loader}><PrivateProfile><PrivateInfo /></PrivateProfile></Suspense>} />
-              <Route path="edit" element={<Suspense fallback={Loader}><PrivateProfile><PrivateInfoEdit /></PrivateProfile></Suspense>} />
+            <Route path="public" element={<Suspense fallback={Loader}><PublicProfile /></Suspense>} >
+              <Route index element={<Suspense fallback={Loader}><PublicInfo /></Suspense>} />
+              <Route path="listings" element={<Suspense fallback={Loader}><PublicListing /></Suspense>} />
             </Route>
-            <Route path="private/listings" element={<Suspense fallback={Loader}><PrivateProfile><PrivateListings /></PrivateProfile></Suspense>} />
-            <Route path="private/purchases" element={<Suspense fallback={Loader}><PrivateProfile><PrivatePurchases /></PrivateProfile></Suspense>} />
+
+            <Route path="private" element={<Suspense fallback={Loader}><PrivateProfile /></Suspense>} >
+              {/* <Route path="private/information"> */}
+              <Route index element={<Suspense fallback={Loader}><PrivateInfo /></Suspense>} />
+              <Route path="edit" element={<Suspense fallback={Loader}><PrivateInfoEdit /></Suspense>} />
+              {/* </Route> */}
+              <Route path="listings" element={<Suspense fallback={Loader}><PrivateListings /></Suspense>} />
+              <Route path="purchases" element={<Suspense fallback={Loader}><PrivatePurchases /></Suspense>} />
+            </Route>
           </Route>
 
           <Route path="/create">
@@ -93,7 +94,7 @@ const App = () => {
             <Route path="chat" element={<Suspense fallback={Loader}><SingleChat /></Suspense>} />
           </Route>
 
-          <Route path="/delivery" element={<Delivery />}>
+          <Route path="/delivery" element={<Suspense fallback={Loader}><Delivery /></Suspense>}>
             <Route index element={<Suspense fallback={Loader}><Buying /></Suspense>} />
             <Route path="selling" element={<Suspense fallback={Loader}><Selling /></Suspense>} />
           </Route>
@@ -105,7 +106,6 @@ const App = () => {
             <Route path="sublisting" element={<Suspense fallback={Loader}><Navbar><SubListing /></Navbar></Suspense>} />
           </Route>
         </Route>
-
       </Routes >
     </BrowserRouter >
   )
