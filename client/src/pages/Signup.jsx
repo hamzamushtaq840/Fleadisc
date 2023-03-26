@@ -1,9 +1,9 @@
-import React, { useContext, useState } from 'react'
-import back from './../assets/back.svg'
-import { useNavigate } from "react-router-dom";
-import google from './../assets/google.svg'
 import { useGoogleLogin } from '@react-oauth/google';
-import axios from '../api/axios'
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import axios from '../api/axios';
+import back from './../assets/back.svg';
+import google from './../assets/google.svg';
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -18,7 +18,7 @@ const Signup = () => {
         axios.post('/user/register', { email: registrationState.email, password: registrationState.password })
             .then((res) => {
                 if (res.status === 201)
-                    navigate('/signin/country')
+                    navigate('/signup/country')
             })
             .catch(e => console.log(e))
     }

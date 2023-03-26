@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Rating } from '@mui/material'
-import user from '../../assets/user.svg'
-import SingleListCard from './SingleListCard';
+import { Rating } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
+import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
-import { BsFillCaretLeftFill } from "react-icons/bs";
-import { BsFillCaretRightFill } from "react-icons/bs";
+import user from '../../assets/user.svg';
+import SingleListCard from './SingleListCard';
 
 const SingleList = ({ value, index }) => {
     const navigate = useNavigate();

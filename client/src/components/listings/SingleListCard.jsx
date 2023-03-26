@@ -1,18 +1,18 @@
+import moment from 'moment'
 import React, { useState } from 'react'
-import disc from '../../assets/disc.svg'
-import grams from '../../assets/grams.svg'
-import plastic from '../../assets/plastic.svg'
-import glow from '../../assets/glow.svg'
-import dyed from '../../assets/dyed.svg'
-import firstRun from '../../assets/firstRun.svg'
-import named from '../../assets/named.svg'
+import { useNavigate } from 'react-router-dom'
 import blank from '../../assets/blank.svg'
 import collectible from '../../assets/collectible.svg'
-import moment from 'moment';
+import disc from '../../assets/disc.svg'
 import disc2 from '../../assets/disc2.svg'
+import dyed from '../../assets/dyed.svg'
+import firstRun from '../../assets/firstRun.svg'
+import glow from '../../assets/glow.svg'
+import grams from '../../assets/grams.svg'
+import named from '../../assets/named.svg'
+import plastic from '../../assets/plastic.svg'
 import ConfirmBid from './ConfirmBid'
 import OlderBids from './OlderBids'
-import { useNavigate } from 'react-router-dom'
 
 const SingleListCard = ({ val }) => {
     const [extra, setExtra] = useState(false)

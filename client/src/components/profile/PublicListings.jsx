@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react'
-import SingleListCard from '../listings/SingleListCard'
-import disc from './../../assets/disc.svg'
-import { BsFillCaretLeftFill } from "react-icons/bs";
-import { BsFillCaretRightFill } from "react-icons/bs";
+import React, { useEffect, useRef, useState } from 'react';
+import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs";
+import SingleListCard from '../listings/SingleListCard';
+import disc from './../../assets/disc.svg';
 
 const PublicListing = () => {
     const [isHovered, setIsHovered] = useState(false);

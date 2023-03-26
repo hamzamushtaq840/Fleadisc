@@ -1,9 +1,7 @@
 import React from 'react'
 import SingleSellItem from './SingleSellItem'
 
-
 const Selling = () => {
-
     const wonBids = [
         {
             id: '123',
@@ -227,7 +225,7 @@ const Selling = () => {
                     )
                 })}
             </div>
-        </div >
+        </div>
     )
 }
 

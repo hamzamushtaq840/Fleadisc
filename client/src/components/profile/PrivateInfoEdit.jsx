@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import ReactFlagsSelect from "react-flags-select";
-import add from '../../assets/addd.svg'
-import cross from '../../assets/cross.svg'
+import add from '../../assets/addd.svg';
+import cross from '../../assets/cross.svg';
 
 const PrivateInfoEdit = () => {
     const [selected, setSelected] = useState("SE");

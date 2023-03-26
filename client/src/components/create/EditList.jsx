@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import upload from '../../assets/upload.svg'
-import info from '../../assets/info.svg'
+import { useNavigate } from 'react-router-dom'
 import arrowdown from '../../assets/arrowdown.svg'
-import plastic from '../../assets/plastic.svg'
 import grams from '../../assets/grams.svg'
+import info from '../../assets/info.svg'
+import plastic from '../../assets/plastic.svg'
+import upload from '../../assets/upload.svg'
 import { getCountryInfoByISO } from '../../utils/iso-country-currency'
 import RemoveModel from './RemoveModel'
-import { useNavigate } from 'react-router-dom'
 
 
 const userCountry = 'PK'

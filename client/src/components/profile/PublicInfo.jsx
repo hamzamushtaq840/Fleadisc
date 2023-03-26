@@ -1,6 +1,6 @@
-import { Rating } from '@mui/material'
-import React from 'react'
-import ReactCountryFlag from "react-country-flag"
+import { Rating } from '@mui/material';
+import React from 'react';
+import ReactCountryFlag from "react-country-flag";
 import { getCountryInfoByISO } from '../../utils/iso-country-currency';
 
 const PublicInfo = () => {

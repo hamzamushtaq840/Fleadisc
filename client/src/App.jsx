@@ -1,13 +1,11 @@
-import React from 'react'
-import { Suspense } from 'react';
-import { ColorRing } from 'react-loader-spinner'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import React, { Suspense } from 'react';
+import { ColorRing } from 'react-loader-spinner';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ReList from './components/create/ReList';
 import PrivateInfoEdit from './components/profile/PrivateInfoEdit';
 
 const Listing = React.lazy(() => import('./pages/Listing'))
 const Navbar = React.lazy(() => import('./components/Navbar'))
-const SubListing = React.lazy(() => import('./components/listings/SubListing'))
 const Create = React.lazy(() => import('./pages/Create'))
 const Delivery = React.lazy(() => import('./pages/Delivery'))
 const Messages = React.lazy(() => import('./pages/Messages'))
@@ -50,13 +48,14 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
+
         <Route path="/signin" element={<Suspense fallback={Loader}>< Signin /></Suspense>} />
         <Route path="/signup" element={<Suspense fallback={Loader}>< Signup /></Suspense>} />
-        {/* Nested Public Routes */}
-        <Route path="/signin">
+
+        <Route path="/signup">
           <Route path="country" element={<Suspense fallback={Loader}><ChooseCountry /></Suspense>} />
         </Route>
-        {/* Public routes */}
+
         <Route path='/' element={<Navbar />}>
           <Route index element={<Suspense fallback={Loader}><Listing /></Suspense>} />
           <Route path="/create" element={<Suspense fallback={Loader}><Create /></Suspense>} />

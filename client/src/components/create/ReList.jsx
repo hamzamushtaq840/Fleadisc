@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import upload from './../../assets/upload.svg'
-import info from '../../assets/info.svg'
 import arrowdown from '../../assets/arrowdown.svg'
-import plastic from '../../assets/plastic.svg'
 import grams from '../../assets/grams.svg'
+import info from '../../assets/info.svg'
+import plastic from '../../assets/plastic.svg'
 import { getCountryInfoByISO } from '../../utils/iso-country-currency'
+import upload from './../../assets/upload.svg'
 
 //will be in global auth of user 
 const userCountry = 'PK'

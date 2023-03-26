@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import chatbackarrow from './../../assets/chatbackarrow.svg'
-import user from './../../assets/user.svg'
-import send from './../../assets/send.svg'
 import imagesend from './../../assets/imagesend.svg'
+import send from './../../assets/send.svg'
+import user from './../../assets/user.svg'
 
 const SingleChat = () => {
     // console.log(location.state.name);

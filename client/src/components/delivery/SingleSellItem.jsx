@@ -1,14 +1,13 @@
+import Rating from '@mui/material/Rating'
 import React, { useRef, useState } from 'react'
+import { FaSpinner } from "react-icons/fa"
+import { useNavigate } from 'react-router-dom'
 import disc from './../../assets/disc.svg'
-import user from './../../assets/user.svg'
 import swish from './../../assets/swish.svg'
-import Rating from '@mui/material/Rating';
-import CancelSeller from './CancelSeller';
-import { useNavigate } from 'react-router-dom';
-import { FaSpinner } from "react-icons/fa";
+import user from './../../assets/user.svg'
+import CancelSeller from './CancelSeller'
 
 const SingleSellItem = ({ value }) => {
-
     const [accountNo, setAccountNo] = useState(value.seller.paymentCardNo);
     const [shippingCost, setshippingCost] = useState(null);
     const textareaRef = useRef(null);
@@ -112,14 +111,14 @@ const SingleSellItem = ({ value }) => {
                                     <span className={`text-[0.75em] ${value.addressSent ? 'text-[#000000] ml-[10px] ' : 'text-[#78636382]'}`}>
                                         Total : {value.bidWonPrice + Number(shippingCost)}
                                         {(shippingCost !== 0 && shippingCost !== null) ?
-                                            " ( " + value.bidWonPrice + " + " + shippingCost + " )" : null}
+                                            "(" + value.bidWonPrice + "+" + shippingCost + ")" : null}
                                     </span>}
                                 {(value.paymentAddressConfimed === true && value.seller.whoPayShipping === 'buyer') && <p className='text-[0.75em]'>Total cost inc shipping : {value.bidWonPrice} ( {value.bidWonPrice} + {value.shippingCost} )</p>}
                             </div>
                             <div className='flex items-start gap-[0.875em] mt-[0.5em]'>
                                 <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} onClick={() => console.log(addresses)} className={` text-[#ffffff] min-w-[170px] rounded-[8px] py-[0.5em] px-[0.906em] text-[0.75em]  ${value.addressSent ? 'bg-primary' : 'bg-[#81b29a4b]'} `} disabled={value.paymentAddressConfimed === false ? false : true}>{value.paymentAddressConfimed ? "Payment requested" : "Send payment request"}</button>
                                 {value.addressSent && <div className='flex flex-col'>
-                                    <div className='flex items-center '>
+                                    <div className='flex items-center'>
                                         <div className='flex flex-col items-start justify-start'>
                                             <input ref={textareaRef} disabled className={`w-[100%] text-[0.75em] bg-[#fafafa00] ${value.addressSent ? 'text-[#000000]' : 'text-[#78636382]'} ${value.addressSent === true ? " overflow-hidden" : ""}`} onChange={(e) => setAccountNo(e.target.value)} value={accountNo} />
                                             <img src={swish} className='w-[3.75em] h-[2.5em] mt-[-.7em]' alt="" />

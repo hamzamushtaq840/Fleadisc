@@ -1,6 +1,6 @@
 import React from 'react'
-import user from './../../assets/user.svg'
 import { NavLink, Outlet } from 'react-router-dom'
+import user from './../../assets/user.svg'
 
 const PublicProfile = () => {
     return (

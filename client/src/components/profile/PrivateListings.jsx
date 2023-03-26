@@ -1,8 +1,7 @@
-import disc from './../../assets/disc.svg'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react';
+import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
-import { BsFillCaretLeftFill } from "react-icons/bs";
-import { BsFillCaretRightFill } from "react-icons/bs";
+import disc from './../../assets/disc.svg';
 
 const PrivateListings = () => {
     const navigate = useNavigate();

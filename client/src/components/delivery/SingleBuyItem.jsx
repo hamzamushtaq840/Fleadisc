@@ -6,25 +6,20 @@ import swish from './../../assets/swish.svg'
 import CancelBuyer from './CancelBuyer';
 import { useNavigate } from 'react-router-dom';
 
-
 const SingleBuyItem = ({ value }) => {
-
     const [model, setModel] = useState(false)
     const [addresses, setAddresses] = useState(value.buyer.address);
     const textareaRef = useRef(null);
     const navigate = useNavigate()
-
 
     const handleButtonClick = () => {
         textareaRef.current.disabled = false;
         textareaRef.current.select();
     };
 
-
     return (
         <div className='flex flex-col '>
             <div className='flex w-full justify-start mt-[20px] xsm:gap-[1.875em] sm:gap-[1.875em] '>
-
                 <img src={disc} className='sm:h-[9.375em] xsm:h-[9.375em] rounded-[8px] md:h-[11em] h-[12em]' alt="disc image" />
                 <div className='flex max-w-[17%] flex-col flex-1 ml-[3rem] sm:ml-[0] xsm:ml-[0] md:ml-[0]'>
                     <div className=' flex flex-col  min-w-[150px] h-full '>
@@ -62,8 +57,6 @@ const SingleBuyItem = ({ value }) => {
                     </div>
                 </div>
             </div>
-
-
             <div className='mt-[55px] xsm:mt-[35px] sm:mt-[35px] mb-[20px]'>
                 <div className='flex gap-[0.688em] sm:h-[50px] xsm:h-[50px] h-[70px] '>
                     <div className='flex flex-col items-center '>

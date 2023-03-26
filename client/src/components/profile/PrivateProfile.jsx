@@ -1,6 +1,6 @@
 import React from 'react'
-import user from './../../assets/user.svg'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import user from './../../assets/user.svg'
 
 const PrivateProfile = () => {
     const navigate = useNavigate()

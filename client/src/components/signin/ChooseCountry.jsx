@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
-import back from './../../assets/back.svg'
+import React, { useState } from 'react';
 import ReactFlagsSelect from "react-flags-select";
+import { useNavigate } from 'react-router-dom';
+import back from './../../assets/back.svg';
 
 const ChooseCountry = () => {
     const navigate = useNavigate();

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import signin from './../assets/signin.svg'
-import { NavLink, Outlet } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { NavLink, Outlet } from 'react-router-dom';
+import signin from './../assets/signin.svg';
 
 const Navbar = () => {
     const [showShadow, setShowShadow] = useState(false);

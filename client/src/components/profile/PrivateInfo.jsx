@@ -1,6 +1,6 @@
 import { Rating } from '@mui/material';
-import React, { useState } from 'react'
-import ReactCountryFlag from "react-country-flag"
+import React, { useState } from 'react';
+import ReactCountryFlag from "react-country-flag";
 import { getCountryInfoByISO } from '../../utils/iso-country-currency';
 
 const PrivateInfo = () => {

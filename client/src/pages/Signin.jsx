@@ -1,10 +1,10 @@
-import React, { useContext, useState } from 'react'
-import back from './../assets/back.svg'
-import { useNavigate } from "react-router-dom";
-import google from './../assets/google.svg'
 import { useGoogleLogin } from '@react-oauth/google';
-import axios from './../api/axios'
+import React, { useContext, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import AuthContext from '../context/AuthProvider';
+import axios from './../api/axios';
+import back from './../assets/back.svg';
+import google from './../assets/google.svg';
 
 const Signin = () => {
     const navigate = useNavigate();

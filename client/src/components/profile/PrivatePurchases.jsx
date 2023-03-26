@@ -1,7 +1,6 @@
-import disc from './../../assets/disc.svg'
-import React, { useEffect, useRef, useState } from 'react'
-import { BsFillCaretLeftFill } from "react-icons/bs";
-import { BsFillCaretRightFill } from "react-icons/bs";
+import React, { useEffect, useRef, useState } from 'react';
+import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs";
+import disc from './../../assets/disc.svg';
 
 const PrivatePurchases = () => {
     const [isHovered, setIsHovered] = useState(false);
