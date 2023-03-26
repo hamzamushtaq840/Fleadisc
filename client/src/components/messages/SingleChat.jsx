@@ -122,7 +122,7 @@ const SingleChat = () => {
                                 <div className='flex justify-center items-center py-[0.875em] px-[0.6875em] rounded-[8px] border-[0.1px] bg-[#ffffff] border-[#ccc]'>
                                     <p className='w-[100%] xsm:text-[0.75em] sm:text-[0.75em] text-[0.85em] font-[600]' >{value.text}</p>
                                 </div>
-                                <img src={user} onClick={() => navigate('/profile/private')} className="ml-[0.5em] h-[1.875em]" alt="user" />
+                                <img src={user} onClick={() => navigate('/profile/private')} className="ml-[0.5em] cursor-pointer h-[1.875em]" alt="user" />
                             </div>
                         ) : (
                             <div className='flex  px-[0.8125em]  justify-center mr-auto items-center ' key={index}>
@@ -134,10 +134,10 @@ const SingleChat = () => {
                         );
                     })}
                 </div>
-                <div className=' flex justify-between items-center px-[1.875em] xsm:h-[3.75em] sm:h-[3.75em] h-[4.75em]'>
-                    <img src={imagesend} alt="send an image" />
+                <div className='border-t-[0.5px] border-t-[#ccc] flex justify-between items-center px-[1.875em] xsm:h-[3.75em] sm:h-[3.75em] h-[4.75em]'>
+                    <img src={imagesend} className="cursor-pointer" alt="send an image" />
                     <input type="text" className='border-[0.5px] px-[0.3125em]  text-[0.75em] font-[500] flex-1 mx-4 h-[39px] resize-none rounded-[8px]' />
-                    <img src={send} alt="send message" />
+                    <img src={send} className="cursor-pointer" alt="send message" />
                 </div>
             </div>
         </>

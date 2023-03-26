@@ -166,7 +166,7 @@ const Create = () => {
                             ))}
                         </div>
                     </div>
-                    <span onClick={() => setOptional((prev) => !prev)} className='inline-flex text-[0.75em] mt-[18px] ml-[1em] text-[#595959] font-[700]'>Optional details <img className={`ml-[7px] transform ${optional ? 'rotate-180' : ''}`} src={arrowdown} /></span>
+                    <span onClick={() => setOptional((prev) => !prev)} className='inline-flex text-[0.75em] mt-[18px] ml-[1em] text-[#595959] font-[700]'>Optional details <img className={`ml-[7px] cursor-pointer transform ${optional ? 'rotate-180' : ''}`} src={arrowdown} /></span>
                     {optional &&
                         <div className='px-[0.8em] mt-[0.5625em] flex flex-wrap  mb-[1.25em]'>
 
@@ -188,9 +188,9 @@ const Create = () => {
                             <div className='w-[50%]  mt-[0.9375em] flex items-center gap-[0.375em]'>
                                 <input name='named'
                                     checked={inputValues.named}
-                                    onChange={handleOptionalChange} id='named' type="checkbox" className="peer/published w-[18px] h-[18px] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black" />
+                                    onChange={handleOptionalChange} id='named' type="checkbox" className="peer/published w-[1.125em] h-[1.125em] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black" />
                                 <svg width="18" height="18" className='peer-checked/published:fill-[#000000] fill-[#AAAAAA] '><path d="M0 15.6V18h18v-2.4H0Zm5.786-5.04h6.428l1.157 2.64h2.7L9.964 0H8.036L1.929 13.2h2.7l1.157-2.64ZM9 2.376 11.404 8.4H6.596L9 2.376Z" /></svg>
-                                <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[12px] font-[700] '>Named</p>
+                                <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[0.75em] font-[700] '>Named</p>
                             </div>
                             <div className='w-[50%]  mt-[0.9375em] flex items-center gap-[0.375em]'>
                                 <input
@@ -204,30 +204,30 @@ const Create = () => {
                             <div className='w-[50%]  mt-[0.9375em] flex items-center gap-[0.375em]'>
                                 <input name='blank'
                                     checked={inputValues.blank}
-                                    onChange={handleOptionalChange} id='blank' type="checkbox" className="peer/published w-[18px] h-[18px] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black" />
+                                    onChange={handleOptionalChange} id='blank' type="checkbox" className="peer/published w-[1.125em] h-[1.125em] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black" />
                                 <svg width="20" height="20" className='peer-checked/published:fill-[#000000] fill-[#AAAAAA] '><path d="M10 0C4.47 0 0 4.47 0 10C0 15.53 4.47 20 10 20C15.53 20 20 15.53 20 10C20 4.47 15.53 0 10 0ZM10 18C5.59 18 2 14.41 2 10C2 5.59 5.59 2 10 2C14.41 2 18 5.59 18 10C18 14.41 14.41 18 10 18Z" /></svg>
-                                <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[12px] font-[700] '>Blank</p>
+                                <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[0.75em] font-[700] '>Blank</p>
                             </div>
                             <div className='w-[50%]  mt-[0.9375em] flex items-center gap-[0.375em]'>
                                 <input name='glow'
                                     checked={inputValues.glow}
-                                    onChange={handleOptionalChange} id='glow' type="checkbox" className="peer/published w-[18px] h-[18px] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black" />
+                                    onChange={handleOptionalChange} id='glow' type="checkbox" className="peer/published w-[1.125em] h-[1.125em] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black" />
                                 <svg width="20" height="20" className='peer-checked/published:fill-[#000000] fill-[#AAAAAA] '><path d="M10 4.54545C11.4466 4.54545 12.834 5.12013 13.8569 6.14305C14.8799 7.16598 15.4545 8.55336 15.4545 10C15.4545 12.0182 14.3545 13.7818 12.7273 14.7273V16.3636C12.7273 16.6047 12.6315 16.836 12.461 17.0065C12.2905 17.177 12.0593 17.2727 11.8182 17.2727H8.18182C7.94071 17.2727 7.70948 17.177 7.53899 17.0065C7.36851 16.836 7.27273 16.6047 7.27273 16.3636V14.7273C5.64545 13.7818 4.54545 12.0182 4.54545 10C4.54545 8.55336 5.12013 7.16598 6.14305 6.14305C7.16598 5.12013 8.55336 4.54545 10 4.54545ZM11.8182 18.1818V19.0909C11.8182 19.332 11.7224 19.5632 11.5519 19.7337C11.3814 19.9042 11.1502 20 10.9091 20H9.09091C8.8498 20 8.61857 19.9042 8.44808 19.7337C8.2776 19.5632 8.18182 19.332 8.18182 19.0909V18.1818H11.8182ZM17.2727 9.09091H20V10.9091H17.2727V9.09091ZM0 9.09091H2.72727V10.9091H0V9.09091ZM10.9091 0V2.72727H9.09091V0H10.9091ZM3.56364 2.27273L5.5 4.21818L4.20909 5.5L2.27273 3.57273L3.56364 2.27273ZM14.5 4.20909L16.4273 2.27273L17.7273 3.57273L15.7909 5.5L14.5 4.20909Z" /></svg>
-                                <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[12px] font-[700] '>Glow</p>
+                                <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[0.75em] font-[700] '>Glow</p>
                             </div>
                             <div className='w-[50%]  mt-[0.9375em] flex items-center gap-[0.375em]'>
                                 <input name='collectible'
                                     checked={inputValues.collectible}
-                                    onChange={handleOptionalChange} id='collectible' type="checkbox" className="peer/published w-[18px] h-[18px] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black" />
+                                    onChange={handleOptionalChange} id='collectible' type="checkbox" className="peer/published w-[1.125em] h-[1.125em] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black" />
                                 <svg width="18" height="18" className='peer-checked/published:fill-[#000000] fill-[#AAAAAA] '><path d="M9 18L7.695 16.7052C3.06 12.1243 0 9.103 0 5.3951C0 2.37384 2.178 0 4.95 0C6.516 0 8.019 0.794551 9 2.05014C9.981 0.794551 11.484 0 13.05 0C15.822 0 18 2.37384 18 5.3951C18 9.103 14.94 12.1243 10.305 16.715L9 18Z" /></svg>
-                                <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[12px] font-[700] '>Collectible</p>
+                                <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[0.75em] font-[700] '>Collectible</p>
                             </div>
                             <div className='w-[50%]  mt-[0.9375em] flex items-center gap-[0.375em]'>
                                 <input name='firstRun'
                                     checked={inputValues.firstRun}
-                                    onChange={handleOptionalChange} id='firstRun' type="checkbox" className="peer/published w-[18px] h-[18px] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black" />
+                                    onChange={handleOptionalChange} id='firstRun' type="checkbox" className="peer/published w-[1.125em] h-[1.125em] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black" />
                                 <svg width="20" height="20" className='peer-checked/published:fill-[#000000] fill-[#AAAAAA] '><path d="M12.2222 15.5556H10V6.66667H7.77778V4.44444H12.2222M17.7778 0H2.22222C1.63285 0 1.06762 0.234126 0.650874 0.650874C0.234126 1.06762 0 1.63285 0 2.22222V17.7778C0 18.3671 0.234126 18.9324 0.650874 19.3491C1.06762 19.7659 1.63285 20 2.22222 20H17.7778C18.3671 20 18.9324 19.7659 19.3491 19.3491C19.7659 18.9324 20 18.3671 20 17.7778V2.22222C20 1.63285 19.7659 1.06762 19.3491 0.650874C18.9324 0.234126 18.3671 0 17.7778 0Z" /></svg>
-                                <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[12px] font-[700] '>First Run</p>
+                                <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[0.75em] font-[700] '>First Run</p>
                             </div>
                         </div>}
                     <div className='flex flex-wrap px-[0.8em]'>
@@ -238,8 +238,8 @@ const Create = () => {
                                 type="checkbox"
                                 onChange={handleOptionalChange}
                                 checked={inputValues.priceType === 'auction'}
-                                className="peer/published w-[18px] h-[18px] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black" />
-                            <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[12px] font-[700] '>Auction</p>
+                                className="peer/published w-[1.125em] h-[1.125em] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black" />
+                            <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[0.75em] font-[700] '>Auction</p>
                         </div>
                         <div className='w-[50%]  mt-[0.9375em] flex items-center gap-[0.375em]'>
                             <input
