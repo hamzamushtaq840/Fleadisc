@@ -120,7 +120,7 @@ const Create = () => {
                                 value={inputValues.discName}
                                 onChange={handleOptionalChange} type="text" className='text-[0.75em] placeholder:font-[700] pl-[7px] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[1.938em] rounded-[2px]' placeholder='Disc Name *' />
                             <select name='brand' value={inputValues.brand}
-                                onChange={handleOptionalChange} className="w-full text-[0.75em] pl-[0.325em] font-[700] text-[#AAAAAA] border-[1px] border-[#595959] rounded-[2px] xsm:h-[23px] sm:h-[23px] h-[1.938em] outline-none leading-[14.63px] bg-[white]">
+                                onChange={handleOptionalChange} className="w-full text-[0.75em] xsm:pl-[7px] sm:pl-[7px] pl-[3px] font-[700] text-[#AAAAAA] border-[1px] border-[#595959]  rounded-[2px] xsm:h-[23px] sm:h-[23px] h-[1.938em] outline-none  leading-[14.63px] bg-[white]">
                                 <option disabled value="" selected hidden>Brand *</option>
                                 <option>Zara</option>
                                 <option>Gucci</option>
@@ -131,7 +131,7 @@ const Create = () => {
                                 value={inputValues.range}
                                 onChange={handleOptionalChange}
                                 list="rangeOptions"
-                                className="w-full text-[0.75em] bg-white border-[1px] border-[#595959] placeholder:font-[700] pl-[7px] rounded-[2px] xsm:h-[1.4375em] sm:h-[1.4375em] h-[1.938em]"
+                                className="w-full text-[0.75em] bg-white border-[1px] border-[#595959] placeholder:font-[700] pl-[7px] rounded-[2px] xsm:h-[23px] sm:h-[23px] h-[1.938em]"
                                 placeholder="Range *"
                             />
                             <datalist id="rangeOptions">
