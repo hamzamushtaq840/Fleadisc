@@ -1,6 +1,5 @@
 import moment from 'moment'
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import blank from '../../assets/blank.svg'
 import collectible from '../../assets/collectible.svg'
 import disc from '../../assets/disc.svg'
@@ -18,10 +17,11 @@ const SingleListCard = ({ val }) => {
     const [extra, setExtra] = useState(false)
     const [imageModal, setImageModal] = useState(false);
     const [modal, setModal] = useState(false)
+    const [error, setError] = useState(false)
+    const [errorText, setErrorText] = useState('')
     const [oldModal, setOldModal] = useState(false)
     const [price, setPrice] = useState(null)
     const [type, setType] = useState(null)
-    const navigate = useNavigate()
 
     function getRemainingTime(endDay, endTime) {
         const endDateTime = moment(`${endDay} ${endTime}`);
@@ -65,6 +65,18 @@ const SingleListCard = ({ val }) => {
 
     const handleBid = (e, type) => {
         e.preventDefault()
+        console.log(price);
+        if (price === null || price === '') {
+            setError(true)
+            setErrorText('Please enter a price')
+            return
+        }
+        if (price < val.minPrice) {
+            setError(true)
+            setErrorText('Enter higher price than min price')
+            return
+        }
+        setError(false)
         type === 'bid' ? setType('bid') : setType('buy')
         setModal(true)
     }
@@ -156,7 +168,20 @@ const SingleListCard = ({ val }) => {
                 </div>
                 {val.priceType === 'auction' &&
                     <form onSubmit={(e) => handleBid(e, 'bid')} className='flex flex-col mb-[6px] gap-[6px]'>
-                        <input value={price} onChange={(e) => setPrice(Number(e.target.value))} required type="number" className='w-full pl-[3px] py-[0.25em] rounded-[2px] text-[.65em] border-[1px] border-[#000000]' min={val.minPrice} placeholder={`Min Price - ${val.minPrice} kr`} />
+                        <input value={price} min={0} onChange={(e) => {
+                            setPrice(e.target.value);
+                            if (Number(e.target.value >= val.minPrice))
+                                setError(false)
+                            if (e.target.value && errorText === 'Please enter a price') {
+                                setErrorText('')
+                                setError(false)
+                            }
+                            if (e.target.value && errorText === 'Enter higher price than min price') {
+                                setErrorText('')
+                                setError(false)
+                            }
+                        }} type="number" className={`w-full pl-[3px] py-[0.25em] rounded-[2px] text-[.65em] border-[1px]  ${error ? "border-[#f21616]" : "border-[#000000]"}`} placeholder={`Min Price - ${val.minPrice} kr`} />
+                        {error && <p className='text-[0.45rem] text-[#eb0000] my-[-5px]'>{errorText}</p>}
                         <button type='submit' className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Place Bid</button>
                     </form>}
                 {val.priceType === 'fixedPrice' &&
