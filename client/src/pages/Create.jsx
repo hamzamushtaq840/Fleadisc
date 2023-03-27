@@ -109,8 +109,8 @@ const Create = () => {
                     </div>
                     <div className='flex justify-end mb-[0.1875em]'>
                         <div className='w-[50%] flex pl-[0.625em] items-center'>
-                            <h1 className=' font-sans text-[0.75em] font-[700] mr-[0.625em]'>Condition*</h1>
-                            <img src={info} className='' alt="information" />
+                            <h1 className=' font-sans text-[#595959] text-[0.75em] font-[700] mr-[0.625em]'>Condition*</h1>
+                            <img src={info} className='w-[0.5206em]' alt="information" />
                         </div>
                     </div>
 

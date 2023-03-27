@@ -20,7 +20,7 @@ const PrivateInfoEdit = () => {
 
     return (
         <div className='flex justify-center'>
-            <div className='flex flex-col xsm:w-[98%] sm:w-[98%] xsm:text-[1rem] sm:text-[1rem] text-[1.2rem] w-[80%] xsm:gap-[0.6875em] sm:gap-[0.6875em] gap-[1em] justify-center mt-[1.1875em]'>
+            <div className='flex flex-col xsm:w-[93%] sm:w-[93%] xsm:text-[1rem] sm:text-[1rem] text-[1.2rem] w-[80%] xsm:gap-[0.6875em] sm:gap-[0.6875em] gap-[1em] justify-center mt-[1.1875em]'>
                 <div className='flex w-full flex-col gap-[0.5em]'>
                     <label className='text-[0.75em] font-[600]' htmlFor="fullName">Full Name</label>
                     <input name='fullName'
@@ -55,7 +55,7 @@ const PrivateInfoEdit = () => {
                     </div>
                 </div>
                 <div className='flex w-full flex-col gap-[0.5em]'>
-                    <label className='text-[0.75em] font-[600]' htmlFor="fullName">Shipping Address (Sending from) <span className='text-[0.5em] text-[#595959BF] font-[500]'></span></label>
+                    <label className='text-[0.75em] font-[600] flex items-center gap-[5px]' htmlFor="fullName">Shipping Address (Sending from) <span className='text-[0.5em] text-[#595959BF] font-[500]'>Copy delivery address</span></label>
                     <input name='fullName' type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] xsm:w-[80%] sm:w-[80%] w-full placeholder:font-[700]  border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Address line 1' />
                     <input name='fullName' type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] xsm:w-[80%] sm:w-[80%] w-full placeholder:font-[700]  border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Address line 2' />
                     <div className='flex ml-[0.425em] xsm:w-[80%] sm:w-[80%] w-full gap-[0.9375em]'>

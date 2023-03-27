@@ -46,16 +46,16 @@ const PublicInfo = () => {
                 <div className='flex flex-col'>
                     <div className='flex flex-col'>
                         <h1 className='text-[0.75em] font-[600]'>Accepted payments</h1>
-                        <div className='w-[100%] mt-[10px] flex items-center gap-[6px]'>
+                        <div className='w-[100%] mt-[4px] flex items-center gap-[6px]'>
                             <p className='text-[#AAAAAA] text-[0.75em] font-[600]'>Swish</p>
                         </div>
-                        <div className='w-[100%] mt-[15px] flex items-center gap-[6px]'>
+                        <div className='w-[100%]  flex items-center gap-[6px]'>
                             <p className='text-[#AAAAAA] text-[0.75em] font-[600]'>Bank transaction</p>
                         </div>
                     </div>
                     <div className='flex flex-col mt-[30px]'>
                         <h1 className='text-[0.75em] font-[600]'>Who pays shipping? </h1>
-                        <div className='w-[100%] mt-[10px] flex items-center gap-[6px]'>
+                        <div className='w-[100%] mt-[4px] flex items-center gap-[6px]'>
                             <p className='text-[#AAAAAA] text-[0.70em] font-[600]'>Buyer</p>
                         </div>
                     </div>

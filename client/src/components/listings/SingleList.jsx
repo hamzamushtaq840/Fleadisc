@@ -86,8 +86,9 @@ const SingleList = ({ value, index }) => {
                     <img src={user} onClick={() => navigate('/profile/public')} className="cursor-pointer mt-1 xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] " alt="user" />
                     <div className='flex flex-col justify-start'>
                         <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate('/profile/public')} >{value.name}</h1>
-                        <div className='ml-[-0.2em]'>
+                        <div className='ml-[-0.2em] flex items-center gap-[0.3125em]'>
                             <Rating size='small' name="half-rating-read" onChange={(e) => console.log(e.target.value)} defaultValue={value.rating} precision={0.5} readOnly />
+                            <p className='text-[0.7em] font-[500]'>(23)</p>
                         </div>
                     </div>
                 </div>

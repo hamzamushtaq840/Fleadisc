@@ -255,7 +255,7 @@ const PrivateListings = () => {
                                             <span className='px-[0.5em] mt-[2px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
                                         </div>
                                         <div className='flex mt-[5px] flex-col text-[0.5em] text-[#595959]'>
-                                            <span className='font-[600]'>{value.endTime}</span>
+                                            <span className='font-[600]'>{value.endTime} - 28 Oct</span>
                                             <span className='font-[500] text-[#595959BF]'>23h 23 min</span>
                                         </div>
                                     </div>
@@ -263,8 +263,8 @@ const PrivateListings = () => {
                                         <button className='text-[0.5em] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
 
                                         <div className='flex flex-col'>
-                                            <span className='text-[0.75em] font-[600]'>{value.startingPrice}</span>
-                                            <span className='text-[0.5em] font-[500] text-[#595959bf]'>Final price</span>
+                                            <span className='text-[0.75em] font-[600]'>{value.startingPrice} kr</span>
+                                            <span className='text-[0.5em] font-[500] text-[#595959bf]'>15 bids</span>
                                         </div>
                                     </div>
                                 </div>
@@ -298,7 +298,7 @@ const PrivateListings = () => {
                                             <span className='px-[0.5em] mt-[2px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
                                         </div>
                                         <div className='flex mt-[5px] flex-col text-[0.5em] text-[#595959]'>
-                                            <span className='font-[600]'>{value.endTime}</span>
+                                            <span className='font-[600]'>{value.endTime} - 28 Oct</span>
                                             <span className='font-[500] text-[#595959BF]'>23h 23 min</span>
                                         </div>
                                     </div>
@@ -306,8 +306,9 @@ const PrivateListings = () => {
                                         <button className='text-[0.5em] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
 
                                         <div className='flex flex-col'>
-                                            <span className='text-[0.75em] font-[600]'>{value.startingPrice}</span>
-                                            <span className='text-[0.5em] font-[500] text-[#595959bf]'>Final price</span>
+                                            <span className='text-[0.75em] font-[600]'>{value.startingPrice} kr</span>
+                                            {value.bids.length === 0 && <span className='text-[0.5em] font-[500] text-[#595959bf]'>0 bids</span>}
+                                            {value.bids.length !== 0 && <span className='text-[0.5em] font-[500] text-[#595959bf]'>15 bids</span>}
                                         </div>
                                     </div>
                                 </div>

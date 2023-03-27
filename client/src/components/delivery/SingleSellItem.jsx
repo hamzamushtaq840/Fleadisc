@@ -52,8 +52,9 @@ const SingleSellItem = ({ value }) => {
                                 <img onClick={() => navigate('/profile/public')} src={user} className="cursor-pointer xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] " alt="user" />
                                 <div className='flex flex-col justify-start'>
                                     <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate('/profile/public')} >{value.seller.name}</h1>
-                                    <div className='ml-[-0.2em]'>
+                                    <div className='ml-[-0.2em] flex gap-[5px] mb-[6px]'>
                                         <Rating size='small' name="half-rating-read" onChange={(e) => console.log(e.target.value)} defaultValue={value.seller.rating} precision={0.5} readOnly />
+                                        <p className='text-[0.7em] font-[500]'>(23)</p>
                                     </div>
                                 </div>
                             </div>
@@ -66,7 +67,7 @@ const SingleSellItem = ({ value }) => {
                 <div className='mt-[55px] xsm:mt-[35px] sm:mt-[35px] mb-[20px]'>
                     <div className='flex gap-[0.688em] xsm:h-[55px] sm:h-[55px] h-[65px]'>
                         <div className='flex flex-col items-center '>
-                            <div className={`p-[0.463em] rounded-full border-[0.063em] ${value.purchaseConfirmed ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
+                            <div className={`p-[0.363em] mt-[2px] rounded-full border-[0.063em] ${value.purchaseConfirmed ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
                             <div className='div h-full flex flex-col'></div>
                         </div>
                         <div className='mt-[-0.3em]'>
@@ -89,7 +90,7 @@ const SingleSellItem = ({ value }) => {
 
                     <div className={`flex ${value.addressSent ? "xsm:h-[65px] sm:h-[65px] h-[85px]" : "xsm:h-[50px] sm:h-[50px] h-[55px]"} gap-[0.688em] `}>
                         <div className='flex flex-col items-center  '>
-                            <div className={`p-[0.463em] rounded-full border-[0.063em] ${value.addressSent === true ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
+                            <div className={`p-[0.363em] mt-[2px] rounded-full border-[0.063em] ${value.addressSent === true ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
                             <div className='div h-full flex flex-col'></div>
                         </div>
                         <div className='flex flex-col w-full items-start gap-[0em] '>
@@ -100,7 +101,7 @@ const SingleSellItem = ({ value }) => {
 
                     <div className='flex gap-[0.688em] h-[6.25em] sm:h-[6.25em] '>
                         <div className='flex flex-col items-center '>
-                            <div className={`p-[0.463em] rounded-full border-[0.063em] ${value.paymentAddressConfimed ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
+                            <div className={`p-[0.363em] mt-[2px] rounded-full border-[0.063em] ${value.paymentAddressConfimed ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
                             <div className='div h-full flex flex-col'></div>
                         </div>
                         <div className={`${value.paymentAddressConfimed === true ? "mt-[0em]" : 'mt-[-0.2em]'}`}>
@@ -132,7 +133,7 @@ const SingleSellItem = ({ value }) => {
 
                     <div className='flex gap-[0.688em] xsm:h-[60px] sm:h-[60px] h-[75px] '>
                         <div className='flex flex-col items-center '>
-                            <div className={`p-[0.463em] rounded-full border-[0.063em] ${value.paymentConfimed ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
+                            <div className={`p-[0.363em] mt-[2px] rounded-full border-[0.063em] ${value.paymentConfimed ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
                             <div className='div h-full flex flex-col'></div>
                         </div>
                         <div className='mt-[-0.3em]'>
@@ -143,7 +144,7 @@ const SingleSellItem = ({ value }) => {
 
                     <div className='flex gap-[0.688em] xsm:h-[60px] sm:h-[60px] h-[75px] '>
                         <div className='flex flex-col items-center '>
-                            <div className={`p-[0.463em] rounded-full border-[0.063em] ${value.parcelSent ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
+                            <div className={`p-[0.363em] mt-[2px] rounded-full border-[0.063em] ${value.parcelSent ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
                             <div className='div h-full flex flex-col'></div>
                         </div>
                         <div className='mt-[-0.3em]'>
@@ -153,7 +154,7 @@ const SingleSellItem = ({ value }) => {
 
                     <div className='flex gap-[0.688em] xsm:h-[60px] sm:h-[60px] h-[75px] '>
                         <div className='flex flex-col items-center '>
-                            <div className={`p-[0.463em] rounded-full border-[0.063em] ${value.parcelRecived ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
+                            <div className={`p-[0.363em] mt-[2px] rounded-full border-[0.063em] ${value.parcelRecived ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
                             <div className='div h-full flex flex-col'></div>
                         </div>
                         <div>
@@ -163,7 +164,7 @@ const SingleSellItem = ({ value }) => {
 
                     <div className='flex gap-[0.688em] h-[50px] '>
                         <div className='flex flex-col items-center '>
-                            <div className={`p-[0.463em] rounded-full border-[0.063em] ${value.parcelRecived ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
+                            <div className={`p-[0.363em] mt-[2px] rounded-full border-[0.063em] ${value.parcelRecived ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
                         </div>
                         <div >
                             <h1 className={`text-[0.75em] font-[300] ${value.parcelRecived ? 'text-[#000000]' : 'text-[#78636382]'}`}>{value.parcelRecived ? "Delievery Finished" : "Delievery Not Finished"}</h1>

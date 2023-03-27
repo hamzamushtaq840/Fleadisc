@@ -171,6 +171,7 @@ const SingleListCard = ({ val }) => {
                 </div>
                 {val.priceType === 'auction' &&
                     <form onSubmit={(e) => handleBid(e, 'bid')} className='flex flex-col mb-[6px] gap-[6px]'>
+                        <p className='text-[0.5em] text-[#595959] font-[400]'>Buyer pays shipping from, <span className='font-[700]'>Uppsala, Sweden</span></p>
                         <input value={price} min={0} onChange={(e) => {
                             setPrice(e.target.value);
                             if (Number(e.target.value >= val.minPrice))
@@ -188,7 +189,8 @@ const SingleListCard = ({ val }) => {
                         <button type='submit' className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Place Bid</button>
                     </form>}
                 {val.priceType === 'fixedPrice' &&
-                    <div className='flex mb-[5px] mt-[10px]'>
+                    <div className='flex mb-[5px] flex-col gap-[5px] mt-[5px]'>
+                        <p className='text-[0.5em] text-[#595959] font-[400]'>Buyer pays shipping from, <span className='font-[700]'>Uppsala, Sweden</span></p>
                         <button onClick={(e) => { handleBid(e, 'buy') }} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Buy</button>
                     </div>}
             </div>

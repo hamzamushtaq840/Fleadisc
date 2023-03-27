@@ -4,7 +4,7 @@ import ReactCountryFlag from "react-country-flag";
 import { getCountryInfoByISO } from '../../utils/iso-country-currency';
 
 const PrivateInfo = () => {
-    const [buyerChecked, setBuyerChecked] = useState(false);
+    const [buyerChecked, setBuyerChecked] = useState(true);
     const [meChecked, setMeChecked] = useState(false);
 
     function handleBuyerChange(event) {
@@ -61,21 +61,16 @@ const PrivateInfo = () => {
                     <div className='flex flex-col'>
                         <h1 className='text-[0.75em] min-w-[120px] font-[600]' >Accepted payments</h1>
                         <div className='w-[100%] mt-[10px] flex gap-[6px]'>
-                            <input name='collectible'
-                                id='collectible' type="checkbox"
-                                className="peer-published w-[18px] h-[18px] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black"
-                            />
+
                             <div className='flex flex-col mt-[-3px]'>
-                                <p className='peer-checked:text-[#000000] text-[#AAAAAA] text-[0.75em] font-[600]'>Swish</p>
+                                <p className='peer-checked:text-[#000000] text-[#000000] text-[0.75em] font-[600]'>Swish</p>
                                 <p className='peer-checked:text-[#000000] text-[#AAAAAA] text-[0.75em] font-[600]'>0707721066</p>
                             </div>
                         </div>
                         <div className='w-[100%] mt-[15px] flex gap-[6px]'>
-                            <input name='collectible'
-                                id='collectible' type="checkbox" className="peer/published w-[18px] h-[18px] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black" />
                             <div className='flex flex-col  mt-[-3px]'>
-                                <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[0.75em] font-[600]'>Bank transaction</p>
-                                <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[0.75em] font-[600]'>Handelsbanken</p>
+                                <p className='peer-checked/published:text-[#000000] text-[#000000] text-[0.75em] font-[600]'>Bank transaction</p>
+                                <p className='peer-checked/published:text-[#000000] text-[#595959] text-[0.75em] font-[500]'>Handelsbanken</p>
                                 <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[0.75em] font-[600]'>0707721066</p>
                             </div>
                         </div>

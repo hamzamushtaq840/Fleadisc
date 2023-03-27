@@ -243,9 +243,8 @@ const PublicListing = () => {
                 {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
             </div>
             <div className={`relative xsm:w-screen sm:w-screen w-[100%] ${screenSize.width > 768 ? "px-[25px]" : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                <div className='flex gap-[0.8125em]'>
-                    <h1 className='font-[700] pl-[4px] text-[1.25em] mb-[10px]'>Finished Listings</h1>
-                    <span className='text-[1.25em] font-[700] text-[#00000080]'>(1500 sek)</span>
+                <div className='flex'>
+                    <h1 className='font-[700] pl-[4px] text-[1.25em] mb-[5px]'>Finished Listings</h1>
                 </div>
                 {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
                 <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[4px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"} pb-[5px] gap-[10px] mt-[11px] `}>
@@ -274,8 +273,8 @@ const PublicListing = () => {
                                         <button className='text-[0.5em] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
 
                                         <div className='flex flex-col'>
-                                            <span className='text-[0.75em] font-[600]'>{value.startingPrice}</span>
-                                            <span className='text-[0.5em] font-[500] text-[#595959bf]'>Final price</span>
+                                            <span className='text-[0.75em] font-[600]'>{value.startingPrice} kr</span>
+                                            <span className='text-[0.5em] font-[500] text-[#595959bf]'>15 bids</span>
                                         </div>
                                     </div>
 

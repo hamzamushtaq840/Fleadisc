@@ -261,8 +261,8 @@ const PrivatePurchases = () => {
                                     <div className='flex flex-col justify-between'>
                                         <button className='text-[0.5em] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
                                         <div className='flex flex-col'>
-                                            <span className='text-[0.75em] font-[600]'>{value.startingPrice}</span>
-                                            <span className='text-[0.5em] font-[500] text-[#595959bf]'>Final price</span>
+                                            <span className='text-[0.75em] font-[600]'>{value.startingPrice} kr</span>
+                                            <span className='text-[0.5em] font-[500] text-[#595959bf]'>15 bids</span>
                                         </div>
                                     </div>
                                 </div>

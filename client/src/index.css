@@ -152,12 +152,12 @@ option:first-child {
 
 .ReactFlagsSelect-module_label__27pw9 {
   color: #000000;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.75em;
   /* background: #000; */
   display: flex;
   align-items: center;
-  letter-spacing: 1px;
+  letter-spacing: .5px;
   padding-top: 2px;
 }
 

@@ -12,14 +12,14 @@ const ChooseCountry = () => {
             <header><img src={back} alt="back button" onClick={() => navigate(-1)} className='hover:cursor-pointer p-[32px]' /></header>
             <div className='flex flex-1  flex-col mx-[46px]  items-center pt-[10rem]  '>
                 <h1 className='font-sans leading-[24.38px] font-[500] text-[1.2rem]'>What country are you primarily selling and buying discs in?</h1>
-                <div className='w-full mt-[19px] mb-[19px]'>
+                <div className='w-full  mt-[19px] mb-[19px]'>
                     <ReactFlagsSelect
                         selected={selected}
                         fullWidth={true}
                         searchable={true}
                         alignOptionsToRight={true}
                         onSelect={(code) => { setSelected(code); console.log(code); }}
-                        className='w-[90%] font-sans'
+                        className='w-[90%] pl-[4px] border-[1px] border-[#595959] rounded-[2px] font-sans'
                         placeholder="Choose a country"
                     />
                 </div>

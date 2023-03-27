@@ -50,12 +50,12 @@ const Signin = () => {
             <div className='flex flex-1 sm:items-center md:items-center lg:items-center xl:items-center 2xl:items-center pb-[200px] flex-col mx-[46px] justify-center'>
                 <h1 className='font-[700] max-w-[400px] font-sans leading-[39px] text-[1.55em] w-full'>Sign in</h1>
                 <div className='max-w-[400px] mt-[27px] flex flex-col items-center w-full'>
-                    <button onClick={() => login()} className='border max-w-[600px] bg-[#FFFFFF] rounded-[4px] border-[#D9D9D9] p-[0.75em] w-full font-[500] text-[0.875em] flex items-center'>
+                    <button className='border max-w-[600px] bg-[#FFFFFF] rounded-[4px] border-[#D9D9D9] p-[0.75em] w-full font-[500] text-[0.875em] flex items-center'>
                         <img src={google} alt="" />
                         <h1 className='flex-1 text-[0.875em]'>Sign in with Google</h1>
                     </button>
                     <p className='my-[11px] font-dmsans text-[8px] text-[#A5A5A5] flex justify-center'>OR</p>
-                    <form className='flex flex-col gap-[7px] w-full items-center' onSubmit={handleSignin}>
+                    <form className='flex flex-col gap-[7px] w-full items-center' >
                         <input required type="email" className='p-[0.75em] max-w-[600px] w-full bg-[#F5F5F5] font-sans font-[500] text-[0.875em] border rounded-[4px] border-[#D9D9D9]' placeholder='Email address' value={loginState.email} name="email" onChange={handleSigninChange} />
                         <input required type="password" className='p-[0.75em] max-w-[600px] w-full bg-[#F5F5F5] font-sans font-[500] text-[0.875em] border rounded-[4px] border-[#D9D9D9]' placeholder='Password' value={loginState.password} name="password" onChange={handleSigninChange} />
                         <div className='flex justify-center'>
