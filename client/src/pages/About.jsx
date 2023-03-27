@@ -2,6 +2,7 @@ import React from 'react'
 import Faq from './../components/about/Faq'
 
 const About = () => {
+
     const faq = [
         {
             title: 'Are offers binding',
