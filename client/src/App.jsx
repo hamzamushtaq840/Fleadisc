@@ -95,6 +95,7 @@ const App = () => {
             <Route path="selling" element={<Suspense fallback={Loader}><Selling /></Suspense>} />
           </Route>
         </Route>
+
       </Routes >
     </BrowserRouter >
   )
