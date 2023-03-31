@@ -5,6 +5,13 @@ import info from '../assets/info.svg'
 import plastic from '../assets/plastic.svg'
 import upload from '../assets/upload.svg'
 import NumofListing from '../components/create/NumofListing'
+import Select from 'react-select'
+
+const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' }
+]
 
 //will be in global auth of user 
 const userCountry = 'PK'
@@ -118,20 +125,21 @@ const Create = () => {
                         <div className='w-[50%] flex flex-col gap-[0.8625em] xsm:gap-[0.5625em] sm:gap-[0.5625em] mr-[0.625em]'>
                             <input name='discName'
                                 value={inputValues.discName}
-                                onChange={handleOptionalChange} type="text" className='text-[0.75em] placeholder:font-[700] pl-[7px] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[1.938em] rounded-[2px]' placeholder='Disc Name *' />
-                            <select name='brand' value={inputValues.brand}
-                                onChange={handleOptionalChange} className="w-full text-[0.75em] xsm:pl-[7px] sm:pl-[7px] pl-[3px] font-[700] text-[#AAAAAA] border-[1px] border-[#595959]  rounded-[2px] xsm:h-[23px] sm:h-[23px] h-[1.938em] outline-none  leading-[14.63px] bg-[white]">
+                                onChange={handleOptionalChange} type="text" className='text-[0.75em] placeholder:font-[500] pl-[7px] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[1.938em] rounded-[2px]' placeholder='Disc Name *' />
+                            {/* <select name='brand' value={inputValues.brand}
+                                onChange={handleOptionalChange} className="w-full text-[0.75em] xsm:pl-[7px] sm:pl-[7px] pl-[3px] font-[500] text-[#AAAAAA] border-[1px] border-[#595959]  rounded-[2px] xsm:h-[23px] sm:h-[23px] h-[1.938em] outline-none  leading-[14.63px] bg-[white]">
                                 <option disabled value="" selected hidden>Brand *</option>
                                 <option>Zara</option>
                                 <option>Gucci</option>
-                                <option>Leopard</option>
-                            </select>
+                                <option>Leopard</option> <Select options={options} />
+                            </select> */}
+                            <Select className="select2 w-full text-[0.75em] font-[500] text-[#AAAAAA] rounded-[2px] outline-none  leading-[14.63px] bg-[white]" closeMenuOnScroll={true} placeholder="Brand" options={options} />
                             <input
                                 name='range'
                                 value={inputValues.range}
                                 onChange={handleOptionalChange}
                                 list="rangeOptions"
-                                className="w-full text-[0.75em] bg-white border-[1px] border-[#595959] placeholder:font-[700] pl-[7px] rounded-[2px] xsm:h-[23px] sm:h-[23px] h-[1.938em]"
+                                className="w-full text-[0.75em] bg-white border-[1px] border-[#595959] placeholder:font-[500] pl-[7px] rounded-[2px] xsm:h-[23px] sm:h-[23px] h-[1.938em]"
                                 placeholder="Range *"
                             />
                             <datalist id="rangeOptions">
@@ -160,13 +168,13 @@ const Create = () => {
                                     <img src={plastic} className="h-[20px]" alt="plastic" />
                                     <input name='plastic'
                                         value={inputValues.plastic}
-                                        onChange={handleOptionalChange} type="text" className='border rounded-[2px] w-full mr-[20px]  xsm:h-[1.25em] m:h-[1.25em] h-[1.75em] text-[.75em] placeholder:font-[700] pl-[8px]' placeholder='Plastic...' />
+                                        onChange={handleOptionalChange} type="text" className='border rounded-[2px] w-full mr-[20px]  text-[.75em] placeholder:font-[500] pl-[8px]' placeholder='Plastic...' />
                                 </div>
                                 <div className='flex w-[50%] items-center gap-[0.375em]'>
                                     <img src={grams} className="h-[20px]" alt="plastic" />
                                     <input name='grams'
                                         value={inputValues.grams}
-                                        onChange={handleOptionalChange} type="number" className='border rounded-[2px] w-[50%] xsm:h-[1.25em] m:h-[1.25em] h-[1.75em] text-[.75em] placeholder:font-[700] pl-[8px]' placeholder='Grams' />
+                                        onChange={handleOptionalChange} type="number" className='border rounded-[2px] w-[50%] text-[.75em] placeholder:font-[500] pl-[8px]' placeholder='Grams' />
                                 </div>
                             </div>
 
@@ -241,12 +249,12 @@ const Create = () => {
                         <div className='w-[50%] pr-[0.625em] mt-[0.9375em] flex items-center'>
                             <input name='startingPrice'
                                 value={inputValues.startingPrice}
-                                onChange={handleOptionalChange} type="number" min={0} className='w-full text-[0.75em] h-[1.938em] placeholder:font-[700] pl-[0.4375em] border-[1px] font-sans border-[#595959] rounded-[2px]' placeholder={inputValues.priceType === 'auction' ? `Starting Price (Kr)` : "Price"} />
+                                onChange={handleOptionalChange} type="number" min={0} className='w-full text-[0.75em] h-[1.938em] placeholder:font-[500] pl-[0.4375em] border-[1px] font-sans border-[#595959] rounded-[2px]' placeholder={inputValues.priceType === 'auction' ? `Starting Price (Kr)` : "Price"} />
                         </div>
                         <div className='w-[50%] justify-start mt-[0.9375em] flex flex-col items-start'>
                             <input name='minPrice'
                                 value={inputValues.minPrice}
-                                onChange={handleOptionalChange} type="number" min={0} className={`w-full text-[0.75em] placeholder:font-[700] pl-[0.4375em] border-[1px] font-sans border-[#595959] h-[1.938em] rounded-[2px] ${inputValues.priceType !== 'auction' ? 'hidden' : ''}`} placeholder={`Min Price (Kr)`} />
+                                onChange={handleOptionalChange} type="number" min={0} className={`w-full text-[0.75em] placeholder:font-[500] pl-[0.4375em] border-[1px] font-sans border-[#595959] h-[1.938em] rounded-[2px] ${inputValues.priceType !== 'auction' ? 'hidden' : ''}`} placeholder={`Min Price (Kr)`} />
                             <p className={`font-[400] text-[.6em] mt-[.2em] text-[#AAAAAA] text-left ${inputValues.priceType !== 'auction' ? 'hidden' : ''}`}>5 Kr min price</p>
                         </div>
                     </div>

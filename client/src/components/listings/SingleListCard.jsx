@@ -74,7 +74,7 @@ const SingleListCard = ({ val }) => {
             }
             if (price < val.minPrice) {
                 setError(true)
-                setErrorText('Enter higher price than min price')
+                setErrorText('Enter higher price than min')
                 return
             }
         }
@@ -85,7 +85,7 @@ const SingleListCard = ({ val }) => {
     }
 
     return (
-        <div className={`flex relative mb-[10px] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[150px] sm:min-w-[150px] md:min-w-[190px] lg:min-w-[200px] xl:min-w-[210px] 2xl:min-w-[210px] h-[0%] flex-col`}>
+        <div className={`flex relative mb-[10px] xsm:text-[1.07rem] sm:text-[1.07rem] text-[1.2rem] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[163px] sm:min-w-[165px] md:min-w-[190px] lg:min-w-[200px] xl:min-w-[210px] 2xl:min-w-[210px] h-[0%] flex-col`}>
             <img src={disc} className=' w-full' alt="" onClick={() => setImageModal(true)} />
             <div onClick={() => setExtra(prev => !prev)} className='flex justify-between cursor-pointer px-[0.625em] pt-[0.425em]'>
                 <div className='flex flex-col justify-between'>
@@ -103,75 +103,75 @@ const SingleListCard = ({ val }) => {
                 </div>
 
                 <div className='flex flex-col justify-between'>
-                    <button className='text-[0.5em] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
+                    <button className='text-[0.60em]  px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
 
-                    <div className='flex flex-col'>
-                        <span className='text-[0.75em] font-[600]'>{val.startingPrice} kr</span>
-                        <span className='text-[0.5em] font-[500] text-[#595959bf]'>Final price</span>
+                    <div className='flex flex-col items-end'>
+                        <span className='text-[0.75em] mb-[-3px]  font-[600]'>{val.startingPrice} kr</span>
+                        {val.priceType === 'fixedPrice' && <span className='text-[0.5em] font-[500] text-[#595959bf]'>Fixed price</span>}
+                        {(val.priceType !== 'fixedPrice') &&
+                            <div className='flex items-center  text-[1em]'>
+                                <p onClick={(e) => { e.stopPropagation; setOldModal(true) }} className='text-[0.6em] cursor-pointer hover:underline hover:text-text font-[500] text-[#595959BF] '>{val.bids.length} Bids</p>
+                            </div>}
                     </div>
 
                 </div>
             </div>
-            {extra && <> <div className='mt-[5px] px-[0.625em]'>
+            {extra && <> <div className='mt-[10px] px-[0.625em]'>
                 <div className='flex w-full mb-[5px] justify-between gap-[5px] flex-wrap'>
 
                     {val.plastic !== '' &&
-                        <div className=' flex items-center gap-[3px] text-[1rem]'>
-                            <img src={plastic} alt="" className=" w-[13px]" />
+                        <div className='flex items-center gap-[3px]'>
+                            <img src={plastic} alt="" className=" w-[0.8125em]" />
                             <p className='text-[0.6em] font-[300]'>{val.plastic}</p>
                         </div>
                     }
                     {val.grams !== '' &&
-                        <div className=' flex items-center gap-[3px] text-[1rem]'>
-                            <img src={grams} alt="" className=" w-[12px]" />
+                        <div className='flex items-center gap-[3px]'>
+                            <img src={grams} alt="" className=" w-[0.75em]" />
                             <p className='text-[0.6em] font-[300]'>{val.grams}</p>
                         </div>
                     }
                     {val.named !== false &&
-                        <div className=' flex items-center gap-[3px] text-[1rem] '>
-                            <img src={named} alt="" className=" w-[10px]" />
+                        <div className='flex items-center gap-[3px]'>
+                            <img src={named} alt="" className=" w-[0.625em]" />
                             <p className='text-[0.6em] font-[300]'>Named</p>
                         </div>
                     }
                     {val.dyed !== false &&
-                        <div className=' flex items-center gap-[3px] text-[1rem] '>
-                            <img src={dyed} alt="" className=" w-[11px]" />
+                        <div className='flex items-center gap-[3px]'>
+                            <img src={dyed} alt="" className=" w-[0.6875em]" />
                             <p className='text-[0.6em] font-[300]'>Dyed</p>
                         </div>
                     }
                     {val.blank !== false &&
-                        <div className=' flex items-center gap-[3px] text-[1rem]'>
-                            <img src={blank} alt="" className=" w-[10px]" />
+                        <div className='flex items-center gap-[3px]'>
+                            <img src={blank} alt="" className={` w-[0.625em] ${extra ? "mt-[-0.0625em]" : ""} `} />
                             <p className='text-[0.6em] font-[300]'>Blank</p>
                         </div>
                     }
                     {val.glow !== false &&
-                        <div className=' flex items-center gap-[3px] text-[1rem]'>
-                            <img src={glow} alt="" className=" w-[12px]" />
+                        <div className='flex items-center gap-[3px]'>
+                            <img src={glow} alt="" className=" w-[0.75em]" />
                             <p className='text-[0.6em] font-[300]'>Glow</p>
                         </div>
                     }
                     {val.firstRun !== false &&
-                        <div className=' flex items-center gap-[3px] text-[1rem]'>
-                            <img src={firstRun} alt="" className=" w-[10px]" />
+                        <div className='flex items-center gap-[3px]'>
+                            <img src={firstRun} alt="" className=" w-[0.625em]" />
                             <p className='text-[0.6em] font-[300]'>Run</p>
                         </div>
                     }
                     {val.collectible !== false &&
-                        <div className=' flex items-center gap-[3px] text-[1rem]'>
-                            <img src={collectible} alt="" className=" w-[11px]" />
+                        <div className='flex items-center gap-[3px]'>
+                            <img src={collectible} alt="" className=" w-[0.6875em]" />
                             <p className='text-[0.6em] font-[300]'>Collectible</p>
                         </div>
                     }
-                    {val.bids.length !== 0 &&
-                        <div className=' flex items-center gap-[3px] text-[1rem]'>
-                            <p onClick={() => setOldModal(true)} className='text-[0.6em] cursor-pointer hover:text-text font-[700] text-[#5c5c5c] underline'>{val.bids.length} Bids</p>
-                        </div>
-                    }
+
                 </div>
                 {val.priceType === 'auction' &&
                     <form onSubmit={(e) => handleBid(e, 'bid')} className='flex flex-col mb-[6px] gap-[6px]'>
-                        <p className='text-[0.5em] text-[#595959] font-[400]'>Buyer pays shipping from, <span className='font-[700]'>Uppsala, Sweden</span></p>
+                        <p className='text-[0.55em] text-[#595959] py-[2px] font-[400]'>Buyer pays shipping from, <span className='font-[700]'>Uppsala, Sweden</span></p>
                         <input value={price} min={0} onChange={(e) => {
                             setPrice(e.target.value);
                             if (Number(e.target.value >= val.minPrice))
@@ -180,17 +180,17 @@ const SingleListCard = ({ val }) => {
                                 setErrorText('')
                                 setError(false)
                             }
-                            if (e.target.value && errorText === 'Enter higher price than min price') {
+                            if (e.target.value && errorText === 'Enter higher price than min') {
                                 setErrorText('')
                                 setError(false)
                             }
                         }} type="number" className={`w-full pl-[3px] py-[0.25em] rounded-[2px] text-[.65em] border-[1px]  ${error ? "border-[#f21616]" : "border-[#000000]"}`} placeholder={`Min Price - ${val.minPrice} kr`} />
-                        {error && <p className='text-[0.45rem] text-[#eb0000] my-[-5px]'>{errorText}</p>}
+                        {error && <p className='text-[0.5em] text-[#eb0000] my-[-5px]'>{errorText}</p>}
                         <button type='submit' className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Place Bid</button>
                     </form>}
                 {val.priceType === 'fixedPrice' &&
                     <div className='flex mb-[5px] flex-col gap-[5px] mt-[5px]'>
-                        <p className='text-[0.5em] text-[#595959] font-[400]'>Buyer pays shipping from, <span className='font-[700]'>Uppsala, Sweden</span></p>
+                        <p className='text-[0.5em] text-[#595959] py-[3px] font-[400]'>Buyer pays shipping from, <span className='font-[700]'>Uppsala, Sweden</span></p>
                         <button onClick={(e) => { handleBid(e, 'buy') }} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Buy</button>
                     </div>}
             </div>

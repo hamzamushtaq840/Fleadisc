@@ -200,3 +200,34 @@ option:first-child {
   color: #000000;
   font-size: 0.875em;
 }
+
+.css-13cymwt-control {
+  min-height: 10px !important;
+  max-height: 23px !important;
+  min-height: 23px !important;
+  border-color: #595959 !important;
+  border-radius: 2px !important;
+}
+
+.css-t3ipsp-control {
+  min-height: 10px !important;
+  max-height: 23px !important;
+  min-height: 23px !important;
+  border-color: #595959 !important;
+  border-radius: 2px !important;
+}
+
+.css-art2ul-ValueContainer2 {
+  /* background-color: #389668; */
+  margin-top: -6px;
+  padding-left: 6px !important;
+
+}
+
+.css-4xgw5l-IndicatorsContainer2 {
+  margin-top: -7px;
+}
+
+.css-1jqq78o-placeholder {
+  font-weight: 600;
+}
