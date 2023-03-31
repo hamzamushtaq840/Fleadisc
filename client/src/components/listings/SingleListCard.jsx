@@ -190,7 +190,7 @@ const SingleListCard = ({ val }) => {
                     </form>}
                 {val.priceType === 'fixedPrice' &&
                     <div className='flex mb-[5px] flex-col gap-[5px] mt-[5px]'>
-                        <p className='text-[0.5em] text-[#595959] py-[3px] font-[400]'>Buyer pays shipping from, <span className='font-[700]'>Uppsala, Sweden</span></p>
+                        <p className='text-[0.55em] text-[#595959] py-[3px] font-[400]'>Buyer pays shipping from, <span className='font-[700]'>Uppsala, Sweden</span></p>
                         <button onClick={(e) => { handleBid(e, 'buy') }} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Buy</button>
                     </div>}
             </div>

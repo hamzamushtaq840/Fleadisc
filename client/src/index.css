@@ -220,7 +220,7 @@ option:first-child {
 .css-art2ul-ValueContainer2 {
   /* background-color: #389668; */
   margin-top: -6px;
-  padding-left: 6px !important;
+  padding-left: 4px !important;
 
 }
 
@@ -229,5 +229,54 @@ option:first-child {
 }
 
 .css-1jqq78o-placeholder {
-  font-weight: 600;
+  font-weight: 400;
+}
+
+.ReactFlagsSelect-module_fullWidthOptions__1XeR6 {
+  width: 200px;
+}
+
+@media screen and (min-width: 767px) {
+
+  .css-13cymwt-control {
+    max-height: 1.938em !important;
+    min-height: 1.938em !important;
+    border-color: #595959 !important;
+    border-radius: 2px !important;
+  }
+
+  .css-t3ipsp-control {
+    max-height: 1.938em !important;
+    min-height: 1.938em !important;
+    border-color: #595959 !important;
+    border-radius: 2px !important;
+  }
+
+  .css-art2ul-ValueContainer2 {
+    /* background-color: #389668; */
+    margin-top: -5px;
+    padding-left: 4px !important;
+
+  }
+
+  .css-4xgw5l-IndicatorsContainer2 {
+    margin-top: -5px;
+  }
+}
+
+.abc:hover .helpDiv[data-title]:after {
+  text-align: center;
+  min-width: 60px;
+  background-color: #8D959D;
+  color: white !important;
+  font-size: 10px;
+  content: attr(data-title);
+  position: absolute;
+  /* left: 100%; */
+  top: 27px;
+  left: -25px;
+  word-wrap: normal;
+  z-index: 10000;
+  border-radius: 2px;
+  padding: 5px 0;
 }

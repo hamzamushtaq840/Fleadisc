@@ -7,8 +7,13 @@ import plastic from '../../assets/plastic.svg'
 import upload from '../../assets/upload.svg'
 import { getCountryInfoByISO } from '../../utils/iso-country-currency'
 import RemoveModel from './RemoveModel'
+import Select from 'react-select'
 
-
+const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' }
+]
 const userCountry = 'PK'
 const countryInfo = getCountryInfoByISO(userCountry);
 const ranges = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -115,13 +120,7 @@ const EditList = () => {
                             <input name='discName'
                                 value={inputValues.discName}
                                 onChange={handleOptionalChange} type="text" className='text-[0.75em] placeholder:font-[500] pl-[7px] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[1.938em] rounded-[2px]' placeholder='Disc Name *' />
-                            <select name='brand' value={inputValues.brand}
-                                onChange={handleOptionalChange} className="w-full text-[0.75em] xsm:pl-[7px] sm:pl-[7px] pl-[3px] font-[500] text-[#AAAAAA] border-[1px] border-[#595959]  rounded-[2px] xsm:h-[23px] sm:h-[23px] h-[1.938em] outline-none  leading-[14.63px] bg-[white]">
-                                <option disabled value="" selected hidden>Brand *</option>
-                                <option>Zara</option>
-                                <option>Gucci</option>
-                                <option>Leopard</option>
-                            </select>
+                            <Select className="select2 w-full text-[0.75em] font-[500] text-[#AAAAAA] rounded-[2px] outline-none  leading-[14.63px] bg-[white]" closeMenuOnScroll={true} placeholder="Brand" options={options} />
                             <input
                                 name='range'
                                 value={inputValues.range}
