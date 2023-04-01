@@ -23,43 +23,73 @@ const SingleSellItem = ({ value }) => {
     return (
         <>
             <div className='flex flex-col '>
-                <div className='flex w-full justify-start mt-[20px] xsm:gap-[1.875em] sm:gap-[1.875em] '>
-
-                    <img src={disc} className='sm:h-[9.375em] xsm:h-[9.375em] rounded-[8px] md:h-[11em] h-[12em]' alt="disc image" />
-                    <div className='flex max-w-[17%] flex-col flex-1 ml-[3rem] sm:ml-[0] xsm:ml-[0] md:ml-[0]'>
-                        <div className=' flex flex-col  min-w-[150px] h-full '>
-                            <div className='flex items-start xsm:justify-start sm:justify-start justify-between'>
-                                <div className='flex flex-col mr-[0.625em]'>
-                                    <h1 className='text-[0.85em] font-[700] ' >{value.discName}</h1>
-                                    <h1 className='text-[0.7em] font-[500] mt-[-0.313em] text-[#595959bf]' >{value.brand}</h1>
-                                </div>
-                                <span className='px-[0.5em] sm:mt-[3px] xsm:mt-[3px] mt-[5px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
-                            </div>
-
-                            <div className=' justify-between w-full items-end flex '>
-                                <div className='flex flex-col text-[0.5em] text-[#595959]'>
-                                    <span>Ended</span>
-                                    <span>{value.endTime}</span>
-                                </div>
-
-                                <div className='flex flex-col justify-start '>
-                                    <span className='text-[0.75em] font-[600]'>{value.bidWonPrice} Kr</span>
-                                    <span className='text-[0.5em] font-[500] min-w-[40px] text-[#595959bf]'>Final price</span>
+                <div className='flex flex-col w-full justify-start mt-[20px] gap-[1em] xsm:gap-[1.275em] sm:gap-[1.575em]'>
+                    <div className='flex gap-[20px] items-center'>
+                        <div className='flex gap-[0.563em] '>
+                            <img onClick={() => navigate('/profile/public')} src={user} className="cursor-pointer mt-[3px] xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] " alt="user" />
+                            <div className='flex flex-col justify-start'>
+                                <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate('/profile/public')} >{value.seller.name}</h1>
+                                <div className='ml-[-0.2em] flex gap-[5px] mb-[6px]'>
+                                    <Rating size='small' name="half-rating-read" onChange={(e) => console.log(e.target.value)} defaultValue={value.seller.rating} precision={0.5} readOnly />
+                                    <p className='text-[0.7em] font-[500]'>(23)</p>
                                 </div>
                             </div>
+                        </div>
+                        <div className='flex'><button className='text-[#ffffff]  button rounded-[4px] text-[.75em] py-[0.5em] px-[1.125em] bg-primary'>Message Buyer</button></div>
+                    </div>
+                    <div className='flex  gap-[20px] '>
 
-                            <div className='flex gap-[0.563em] mt-[1.063em]'>
-                                <img onClick={() => navigate('/profile/public')} src={user} className="cursor-pointer xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] " alt="user" />
-                                <div className='flex flex-col justify-start'>
-                                    <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate('/profile/public')} >{value.seller.name}</h1>
-                                    <div className='ml-[-0.2em] flex gap-[5px] mb-[6px]'>
-                                        <Rating size='small' name="half-rating-read" onChange={(e) => console.log(e.target.value)} defaultValue={value.seller.rating} precision={0.5} readOnly />
-                                        <p className='text-[0.7em] font-[500]'>(23)</p>
+                        <div className='flex flex-col items-center gap-[10px]'>
+                            <div className={`flex flex-col card  mb-[10px] pb-[8px] card rounded-[8px] bg-[#ffffff] xsm:min-w-[150px] sm:min-w-[150px] md:min-w-[200px] lg:min-w-[210px] xl:min-w-[220px] 2xl:min-w-[240px]`}>
+                                <img src={disc} className=' w-full' alt="" />
+                                <div className='flex flex-col  justify-between px-[0.625em] pt-[0.425em]'>
+                                    <div className='flex  justify-between'>
+                                        <div className='flex items-start'>
+                                            <div className='flex flex-col mr-[0.425em]'>
+                                                <h1 className='text-[0.75em] font-[700]' >{value.discName}</h1>
+                                                <h1 className='text-[0.5em] font-[500] mt-[-0.413em] text-[##595959]'>{value.brand}</h1>
+                                            </div>
+                                            <span className='px-[0.5em] mt-[2px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
+                                        </div>
+                                        <div className='flex flex-col items-end'>
+                                            <span className='text-[0.75em] font-[600]'>{value.startingPrice}125 kr</span>
+                                            {value.bids.length === 0 && <span className='text-[0.5em] mt-[-0.313em] font-[500] text-[#595959bf] min-w-[45px]'>Fixed Price</span>}
+                                        </div>
+                                    </div>
+                                    <div className='flex flex-col '>
+                                        <div className='flex mt-[5px] flex-col text-[0.5em] text-[#595959]'>
+                                            <span className='font-[600]'>Ended {value.endTime} </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className='flex'><button className='text-[#ffffff] w-full xsm:w-auto sm:w-auto button rounded-[4px] text-[.75em] py-[0.375em] px-[1em] bg-primary '>Message </button></div>
-
+                            <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} className='bg-[#F21111] font-[600] text-[0.75em] text-[white] rounded-[4px] py-[0.45em] px-[1em] ' onClick={() => { setModel(true) }}>Cancel Sale</button>
+                        </div>
+                        <div className='flex flex-col items-center gap-[10px]'>
+                            <div className={`flex flex-col card  mb-[10px] pb-[8px] card rounded-[8px] bg-[#ffffff] xsm:min-w-[150px] sm:min-w-[150px] md:min-w-[200px] lg:min-w-[210px] xl:min-w-[220px] 2xl:min-w-[240px]`}>
+                                <img src={disc} className=' w-full' alt="" />
+                                <div className='flex flex-col  justify-between px-[0.625em] pt-[0.425em]'>
+                                    <div className='flex  justify-between'>
+                                        <div className='flex items-start'>
+                                            <div className='flex flex-col mr-[0.425em]'>
+                                                <h1 className='text-[0.75em] font-[700]' >{value.discName}</h1>
+                                                <h1 className='text-[0.5em] font-[500] mt-[-0.413em] text-[##595959]' >{value.brand}</h1>
+                                            </div>
+                                            <span className='px-[0.5em] mt-[2px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
+                                        </div>
+                                        <div className='flex flex-col items-end'>
+                                            <span className='text-[0.75em] font-[600]'>{value.startingPrice}125 kr</span>
+                                            {value.bids.length === 0 && <span className='text-[0.5em] mt-[-0.313em] font-[500] text-[#595959bf] min-w-[45px]  '>Fixed Price</span>}
+                                        </div>
+                                    </div>
+                                    <div className='flex flex-col '>
+                                        <div className='flex mt-[5px] flex-col text-[0.5em] text-[#595959]'>
+                                            <span className='font-[600]'>Ended {value.endTime} </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} className='bg-[#F21111] font-[600] text-[0.75em] text-[white] rounded-[4px] py-[0.45em] px-[1em] ' onClick={() => { setModel(true) }}>Cancel Sale</button>
                         </div>
                     </div>
                 </div>
@@ -121,8 +151,10 @@ const SingleSellItem = ({ value }) => {
                                 {value.addressSent && <div className='flex flex-col'>
                                     <div className='flex items-center'>
                                         <div className='flex flex-col items-start justify-start'>
+                                            {/* <img src={swish} className='w-[3.75em] h-[2.5em] mt-[-.7em]' alt="" /> */}
+                                            <p className='text-[#000000] text-[12px] font-[600]'>Swish</p>
+
                                             <input ref={textareaRef} disabled className={`w-[100%] text-[0.75em] bg-[#fafafa00] ${value.addressSent ? 'text-[#000000]' : 'text-[#78636382]'} ${value.addressSent === true ? " overflow-hidden" : ""}`} onChange={(e) => setAccountNo(e.target.value)} value={accountNo} />
-                                            <img src={swish} className='w-[3.75em] h-[2.5em] mt-[-.7em]' alt="" />
                                         </div>
                                         <button className={`pb-[1.1em] text-[0.6em] ${value.paymentAddressConfimed === true || value.addressSent === false ? 'hidden' : 'text-[#000000] hover:underline '}`} onClick={handleButtonClick} disabled={value.paymentAddressConfimed === true || value.addressSent === false ? true : false}>Change</button>
                                     </div>
@@ -173,7 +205,6 @@ const SingleSellItem = ({ value }) => {
                     <div className='flex flex-col justify-center items-center'>
                         <p className='text-[0.75em] mb-[6px]'>Leave a rating of<span className='text-[#000000] font-[700]'> buyer</span></p>
                         <Rating size="large" className='mb-[10px]' name="half-rating-read" onChange={(e) => console.log(e.target.value)} precision={0.5} />
-                        <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} className='bg-[#F21111] text-[0.75em] text-[white] font-[600] rounded-[4px] py-[0.45em] px-[1em] ' onClick={() => { setModel(true) }}>Cancel Purchase</button>
                     </div>
                 </div>
                 {model && <CancelSeller setModel={setModel} />}

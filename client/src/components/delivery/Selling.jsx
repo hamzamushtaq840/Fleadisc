@@ -28,6 +28,7 @@ const Selling = () => {
             givenBuyerRating: null,
             givenSellerRating: null,
             cancelPayment: false,
+            bids: []
         },
         {
             id: '123',
@@ -54,6 +55,7 @@ const Selling = () => {
             givenBuyerRating: null,
             givenSellerRating: null,
             cancelPayment: false,
+            bids: []
         },
         {
             id: '123',
@@ -80,6 +82,7 @@ const Selling = () => {
             givenBuyerRating: null,
             givenSellerRating: null,
             cancelPayment: false,
+            bids: []
         },
 
         {
@@ -107,6 +110,7 @@ const Selling = () => {
             givenBuyerRating: null,
             givenSellerRating: null,
             cancelPayment: false,
+            bids: []
         },
         {
             id: '123',
@@ -133,6 +137,7 @@ const Selling = () => {
             givenBuyerRating: null,
             givenSellerRating: null,
             cancelPayment: false,
+            bids: []
         },
         {
             id: '123',
@@ -159,6 +164,7 @@ const Selling = () => {
             givenBuyerRating: null,
             givenSellerRating: null,
             cancelPayment: false,
+            bids: []
         },
         {
             id: '123',
@@ -185,6 +191,7 @@ const Selling = () => {
             givenBuyerRating: null,
             givenSellerRating: null,
             cancelPayment: false,
+            bids: []
         },
         {
             id: '123',
@@ -211,6 +218,7 @@ const Selling = () => {
             givenBuyerRating: null,
             givenSellerRating: null,
             cancelPayment: false,
+            bids: []
         },
     ]
 

@@ -242,7 +242,7 @@ const PrivatePurchases = () => {
                 <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[4px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"} pb-[5px] gap-[10px] mt-[11px]`}>
                     {activeDiscs.map((value, index) => {
                         return (
-                            <div className={`flex relative mb-[10px] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[150px] sm:min-w-[150px] md:min-w-[190px] lg:min-w-[200px] xl:min-w-[210px] 2xl:min-w-[210px] h-[0%] flex-col`}>
+                            <div className={`flex relative mb-[10px] xsm:text-[1.07rem] sm:text-[1.07rem] text-[1.2rem] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[165px] sm:min-w-[165px] md:min-w-[200px] lg:min-w-[210px] xl:min-w-[220px] 2xl:min-w-[240px]  h-[0%] flex-col`}>
                                 <img src={disc} className=' w-full' alt="" />
                                 <div className='flex justify-between px-[0.625em] py-[0.425em]'>
                                     <div className='flex flex-col justify-between'>
