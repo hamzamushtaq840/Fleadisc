@@ -15,15 +15,15 @@ const SingleList = ({ value, index }) => {
     });
 
     function handleScrollRight() {
-        let value = 220;
+        let value = 245;
         if (screenSize.width > 1279) {
-            value = 220
+            value = 245
         }
         if (screenSize.width < 1279) {
-            value = 210
+            value = 215
         }
         if (screenSize.width < 1023) {
-            value = 200
+            value = 205
         }
         if (screenSize.width < 767) {
             value = 160
@@ -37,15 +37,15 @@ const SingleList = ({ value, index }) => {
     }
 
     function handleScrollLeft() {
-        let value = 220;
+        let value = 245;
         if (screenSize.width > 1279) {
-            value = 220
+            value = 245
         }
         if (screenSize.width < 1279) {
-            value = 210
+            value = 215
         }
         if (screenSize.width < 1023) {
-            value = 200
+            value = 205
         }
         if (screenSize.width < 767) {
             value = 160
