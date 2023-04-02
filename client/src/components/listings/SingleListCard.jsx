@@ -1,5 +1,5 @@
 import moment from 'moment'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import blank from '../../assets/blank.svg'
 import collectible from '../../assets/collectible.svg'
 import disc from '../../assets/disc.svg'
@@ -22,6 +22,14 @@ const SingleListCard = ({ val }) => {
     const [oldModal, setOldModal] = useState(false)
     const [price, setPrice] = useState(null)
     const [type, setType] = useState(null)
+    const [remainingTime, setRemainingTime] = useState(getRemainingTime(val.endDay, val.endTime));
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setRemainingTime(getRemainingTime(val.endDay, val.endTime));
+        }, 100);
+        return () => clearInterval(intervalId);
+    }, [val.endDay, val.endTime]);
 
     function getRemainingTime(endDay, endTime) {
         const endDateTime = moment(`${endDay} ${endTime}`);
@@ -98,7 +106,7 @@ const SingleListCard = ({ val }) => {
                     </div>
                     <div className='flex mt-[5px] flex-col text-[0.5em] text-[#595959]'>
                         <span className='font-[600]'>{getMonthAndDate(val.endDay)} - {val.endTime} </span>
-                        <span className='font-[500] text-[#595959BF]'>{getRemainingTime(val.endDay, val.endTime)}</span>
+                        <span className='font-[500] text-[#595959BF]'>{remainingTime}</span>
                     </div>
                 </div>
 
@@ -110,7 +118,7 @@ const SingleListCard = ({ val }) => {
                         {val.priceType === 'fixedPrice' && <span className='text-[0.5em] font-[500] text-[#595959bf]'>Fixed price</span>}
                         {(val.priceType !== 'fixedPrice') &&
                             <div className='flex items-center  text-[1em]'>
-                                <p onClick={(e) => { e.stopPropagation; setOldModal(true) }} className='text-[0.6em] cursor-pointer hover:underline hover:text-text font-[500] text-[#595959BF] '>{val.bids.length} Bids</p>
+                                <p onClick={(e) => { e.stopPropagation; setOldModal(true) }} className='text-[0.5em] cursor-pointer hover:underline hover:text-text font-[500] text-[#595959BF] '>{val.bids.length} Bids</p>
                             </div>}
                     </div>
 

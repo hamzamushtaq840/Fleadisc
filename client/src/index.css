@@ -135,14 +135,11 @@ option:first-child {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.2);
-  /* set the background color with alpha */
   z-index: 1;
-  /* make sure the layer is on top of the background image */
 }
 
 .ReactFlagsSelect-module_selectBtn__19wW7 {
   border: 0 !important;
-  /* padding-top: 0 !important; */
   padding-bottom: 0 !important;
 }
 
@@ -154,7 +151,6 @@ option:first-child {
   color: #000000;
   font-weight: 500;
   font-size: 0.75em;
-  /* background: #000; */
   display: flex;
   align-items: center;
   letter-spacing: .5px;
@@ -163,7 +159,6 @@ option:first-child {
 
 .nav-link2.active {
   background-color: white;
-  /* padding: 0.5rem 2rem; */
   border-radius: 7px;
   border: 0.1px solid #ccc;
   box-shadow: 3px 4px 19px -17px rgba(0, 0, 0, 0.35);
@@ -174,10 +169,6 @@ option:first-child {
 .nav-link2.active h2 {
   font-weight: 600;
   color: black;
-  /* text-decoration: underline; */
-  /* padding-bottom: 2px; */
-  /* border-bottom: 2px solid #389668 */
-
 }
 
 #dotted-line {
@@ -236,6 +227,24 @@ option:first-child {
   width: 200px;
 }
 
+.abc:hover .helpDiv[data-title]:after {
+  text-align: center;
+  min-width: 100px;
+  background-color: #8D959D;
+  color: white !important;
+  font-size: 10px;
+  font-weight: 600;
+  content: attr(data-title);
+  position: absolute;
+  /* left: 100%; */
+  top: 27px;
+  left: -45px;
+  word-wrap: normal;
+  z-index: 10000;
+  border-radius: 2px;
+  padding: 10px 10px;
+}
+
 @media screen and (min-width: 767px) {
 
   .css-13cymwt-control {
@@ -262,22 +271,4 @@ option:first-child {
   .css-4xgw5l-IndicatorsContainer2 {
     margin-top: -5px;
   }
-}
-
-.abc:hover .helpDiv[data-title]:after {
-  text-align: center;
-  min-width: 100px;
-  background-color: #8D959D;
-  color: white !important;
-  font-size: 10px;
-  font-weight: 600;
-  content: attr(data-title);
-  position: absolute;
-  /* left: 100%; */
-  top: 27px;
-  left: -45px;
-  word-wrap: normal;
-  z-index: 10000;
-  border-radius: 2px;
-  padding: 10px 10px;
 }
