@@ -118,7 +118,7 @@ const SingleListCard = ({ val }) => {
                         {val.priceType === 'fixedPrice' && <span className='text-[0.5em] font-[500] text-[#595959bf]'>Fixed price</span>}
                         {(val.priceType !== 'fixedPrice') &&
                             <div className='flex items-center  text-[1em]'>
-                                <p onClick={(e) => { e.stopPropagation; setOldModal(true) }} className='text-[0.5em] cursor-pointer hover:underline hover:text-text font-[500] text-[#595959BF] '>{val.bids.length} Bids</p>
+                                <p onClick={(e) => { setOldModal(true); e.stopPropagation; }} className='text-[0.5em] cursor-pointer hover:underline hover:text-text font-[500] text-[#595959BF] '>{val.bids.length} Bids</p>
                             </div>}
                     </div>
 
