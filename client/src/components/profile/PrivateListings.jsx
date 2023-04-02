@@ -243,30 +243,31 @@ const PrivateListings = () => {
                     {activeDiscs.map((value, index) => {
                         return (
                             <div className={`flex relative mb-[10px] xsm:text-[1.07rem] sm:text-[1.07rem] text-[1.2rem] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[165px] sm:min-w-[165px] md:min-w-[200px] lg:min-w-[210px] xl:min-w-[220px] 2xl:min-w-[240px]  h-[0%] flex-col`}>
-                                <img src={disc} className='w-full' alt="" />
+                                <img src={disc} className=' w-full' alt="" />
                                 <div className='flex justify-between px-[0.625em] py-[0.425em]'>
                                     <div className='flex flex-col justify-between'>
 
                                         <div className='flex items-start'>
                                             <div className='flex flex-col mr-[0.425em]'>
-                                                <h1 className='text-[0.75em] font-[700]'>{value.discName}</h1>
-                                                <h1 className='text-[0.5em] font-[500] mt-[-0.413em] text-[##595959]' >{value.brand}</h1>
+                                                <h1 className='text-[0.75em] font-[700]' >{value.discName}</h1>
+                                                <h1 className='text-[0.55em] font-[500] mt-[-0.413em] text-[##595959]' >{value.brand}</h1>
                                             </div>
                                             <span className='px-[0.5em] mt-[2px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
                                         </div>
-                                        <div className='flex mt-[5px] flex-col text-[0.5em] text-[#595959]'>
-                                            <span className='font-[600]'>{value.endTime} - 28 Oct</span>
-                                            <span className='font-[500] text-[#595959BF]'>23h 23 min</span>
+                                        <div className='flex mt-[5px] flex-col  text-[#595959]'>
+                                            <span className='font-[600] text-[0.6em]'>{value.endTime}</span>
+                                            <span className='font-[500] text-[0.55em] text-[#595959BF]'>23h 23 min</span>
                                         </div>
                                     </div>
-                                    <div className='flex flex-col justify-between'>
-                                        <button className='text-[0.5em] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
 
+                                    <div className='flex flex-col justify-between items-end'>
+                                        <button className='text-[0.60em] xsm:w-[50px] sm:w-[50px] w-[80px] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
                                         <div className='flex flex-col'>
                                             <span className='text-[0.75em] font-[600]'>{value.startingPrice} kr</span>
-                                            <span className='text-[0.5em] font-[500] text-[#595959bf]'>15 bids</span>
+                                            <span className='text-[0.6em] font-[500] text-[#595959bf]'>15 bids</span>
                                         </div>
                                     </div>
+
                                 </div>
                                 <div className='px-[10px]'>
                                     <button onClick={() => navigate('/create/edit')} className='w-full py-[.3em] rounded-[4px] text-[#ffffff] bg-primary mb-[0.6em] text-[0.75em]'>Edit</button>
@@ -290,27 +291,28 @@ const PrivateListings = () => {
                                 <img src={disc} className=' w-full' alt="" />
                                 <div className='flex justify-between px-[0.625em] py-[0.425em]'>
                                     <div className='flex flex-col justify-between'>
+
                                         <div className='flex items-start'>
                                             <div className='flex flex-col mr-[0.425em]'>
                                                 <h1 className='text-[0.75em] font-[700]' >{value.discName}</h1>
-                                                <h1 className='text-[0.5em] font-[500] mt-[-0.413em] text-[##595959]' >{value.brand}</h1>
+                                                <h1 className='text-[0.55em] font-[500] mt-[-0.413em] text-[##595959]' >{value.brand}</h1>
                                             </div>
                                             <span className='px-[0.5em] mt-[2px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
                                         </div>
-                                        <div className='flex mt-[5px] flex-col text-[0.5em] text-[#595959]'>
-                                            <span className='font-[600]'>{value.endTime} - 28 Oct</span>
-                                            <span className='font-[500] text-[#595959BF]'>23h 23 min</span>
+                                        <div className='flex mt-[5px] flex-col  text-[#595959]'>
+                                            <span className='font-[600] text-[0.6em]'>{value.endTime}</span>
+                                            <span className='font-[500] text-[0.55em] text-[#595959BF]'>23h 23 min</span>
                                         </div>
                                     </div>
-                                    <div className='flex flex-col justify-between'>
-                                        <button className='text-[0.5em] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
 
+                                    <div className='flex flex-col justify-between items-end'>
+                                        <button className='text-[0.60em] xsm:w-[50px] sm:w-[50px] w-[80px] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
                                         <div className='flex flex-col'>
                                             <span className='text-[0.75em] font-[600]'>{value.startingPrice} kr</span>
-                                            {value.bids.length === 0 && <span className='text-[0.5em] font-[500] text-[#595959bf]'>0 bids</span>}
-                                            {value.bids.length !== 0 && <span className='text-[0.5em] font-[500] text-[#595959bf]'>15 bids</span>}
+                                            <span className='text-[0.6em] font-[500] text-[#595959bf]'>15 bids</span>
                                         </div>
                                     </div>
+
                                 </div>
                                 {value.bids.length === 0 && <div className='px-[10px]'>
                                     <button onClick={() => navigate('/create/relist')} className='w-full py-[.3em] rounded-[4px] text-[#ffffff] bg-[#F21111] mb-[0.6em] text-[0.75em]'>Re-list</button>

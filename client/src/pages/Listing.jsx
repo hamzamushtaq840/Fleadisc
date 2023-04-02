@@ -587,7 +587,7 @@ const Listing = () => {
                 <input style={{ boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)' }} className='border-[1px] w-[64.10vw] max-w-[500px] min-w-[250px] border-[#81B29A] absolute bottom-[-24px] bg-[white] z-10 h-[47px] rounded-lg px-[14px] font-sans' type='text' placeholder='Search...'></input>
             </div>
             <div className='mt-[35px] xsm:mb-[5px] sm:mb-[5px] mb-[10px] px-[5px] xsm:px-0 flex gap-[10px] xsm:gap-[5px] items-center xsm:justify-start justify-center flex-wrap xsm:w-[320px] w-full m-auto '>
-                <div className='pl-[4px] border-[1px] rounded-[2px] h-[27px] flex items-center '>
+                <div className='pl-[4px] h-[27px] flex items-center '>
                     <ReactFlagsSelect
                         selected={selected}
                         fullWidth={true}
@@ -610,7 +610,7 @@ const Listing = () => {
                     <option selected disabled value={null}>Condition</option>
                 </select>
             </div>
-            <div className='px-[5px] xsm:px-0 flex gap-[10px] xsm:gap-[5px] items-center justify-start flex-wrap xsm:w-[320px] w-[370px] m-auto'>
+            <div className='px-[5px] xsm:px-0 flex gap-[10px] xsm:gap-[5px] items-center xsm:justify-start justify-center flex-wrap xsm:w-[320px] w-[405px]  m-auto'>
                 <button className='w-[57px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>New</button>
                 <button className='w-[66px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>Popular</button>
                 <button className='w-[77px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>Following</button>
@@ -625,8 +625,8 @@ const Listing = () => {
                     <button className='w-[51px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>Glow</button>
                 </>}
             </div>
-            <div className='flex justify-center'>
-                <div className='w-full max-w-[330px] flex justify-start'>
+            <div className='flex xsm:justify-start sm:justify-start justify-center xsm:w-[320px] w-[405px] m-auto'>
+                <div className='flex justify-start'>
                     <p onClick={() => setMoreFilters((prev) => !prev)} className='text-[0.75em] text-[#595959] mt-[10px] cursor-pointer'>{moreFilters ? 'Close more filters' : 'Show more filters'}</p>
                 </div>
             </div>

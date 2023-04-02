@@ -6,14 +6,11 @@ import plastic from '../assets/plastic.svg'
 import upload from '../assets/upload.svg'
 import NumofListing from '../components/create/NumofListing'
 import Select from 'react-select'
-// import Tooltip from '@mui/material/Tooltip';
-import { Tooltip } from '@mui/material';
-
 
 const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
+    { value: 'Annax', label: 'Annax' },
+    { value: 'Xannax', label: 'Xannax' },
+    { value: 'Trannax', label: 'Trannax' }
 ]
 //will be in global auth of user 
 const userCountry = 'PK'

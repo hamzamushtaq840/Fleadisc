@@ -47,59 +47,59 @@ const SingleBuyItem = ({ value }) => {
                     <div className='flex'><button className='text-[#ffffff]  button rounded-[4px] text-[.75em] py-[0.5em] px-[1.125em] bg-primary '>Message Seller</button></div>
                 </div>
                 <div className='flex  gap-[20px] '>
+                    <div className='flex flex-col items-center gap-[10px]'>
+                        <div className={`flex flex-col card  mb-[10px] pb-[8px] card rounded-[8px] bg-[#ffffff] xsm:min-w-[150px] sm:min-w-[150px] md:min-w-[200px] lg:min-w-[210px] xl:min-w-[220px] 2xl:min-w-[240px] `}>
+                            <img src={disc} className=' w-full' alt="" />
+                            <div className='flex flex-col  justify-between px-[0.625em] pt-[0.425em]'>
+                                <div className='flex  justify-between'>
+                                    <div className='flex items-start'>
+                                        <div className='flex flex-col mr-[0.425em]'>
+                                            <h1 className='text-[0.75em] font-[700]' >{value.discName}</h1>
+                                            <h1 className='text-[0.55em] font-[500] mt-[-0.413em] text-[##595959]' >{value.brand}</h1>
+                                        </div>
+                                        <span className='px-[0.5em] mt-[2px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
+                                    </div>
+                                    <div className='flex flex-col items-end'>
+                                        <span className='text-[0.75em] font-[600]'>{value.startingPrice}125 kr</span>
+                                        {value.bids.length === 0 && <span className='text-[0.6em] mt-[-0.313em] font-[500] text-[#595959bf] min-w-[45px]  '>Fixed Price</span>}
+                                    </div>
+                                </div>
+                                <div className='flex flex-col '>
+                                    <div className='flex mt-[5px] flex-col text-[0.55em] text-[#595959]'>
+                                        <span className='font-[600]'>Ended {value.endTime} </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} className='bg-[#F21111] font-[600] text-[0.75em] text-[white] rounded-[4px] py-[0.45em] px-[1em] ' onClick={() => { setModel(true) }}>Cancel Purchase</button>
+                    </div>
+                    <div className='flex flex-col items-center gap-[10px]'>
+                        <div className={`flex flex-col card  mb-[10px] pb-[8px] card rounded-[8px] bg-[#ffffff] xsm:min-w-[150px] sm:min-w-[150px] md:min-w-[200px] lg:min-w-[210px] xl:min-w-[220px] 2xl:min-w-[240px] `}>
+                            <img src={disc} className=' w-full' alt="" />
+                            <div className='flex flex-col  justify-between px-[0.625em] pt-[0.425em]'>
+                                <div className='flex  justify-between'>
+                                    <div className='flex items-start'>
+                                        <div className='flex flex-col mr-[0.425em]'>
+                                            <h1 className='text-[0.75em] font-[700]' >{value.discName}</h1>
+                                            <h1 className='text-[0.55em] font-[500] mt-[-0.413em] text-[##595959]' >{value.brand}</h1>
+                                        </div>
+                                        <span className='px-[0.5em] mt-[2px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
+                                    </div>
+                                    <div className='flex flex-col items-end'>
+                                        <span className='text-[0.75em] font-[600]'>{value.startingPrice}125 kr</span>
+                                        {value.bids.length === 0 && <span className='text-[0.6em] mt-[-0.313em] font-[500] text-[#595959bf] min-w-[45px]  '>Fixed Price</span>}
+                                    </div>
+                                </div>
+                                <div className='flex flex-col '>
+                                    <div className='flex mt-[5px] flex-col text-[0.55em] text-[#595959]'>
+                                        <span className='font-[600]'>Ended {value.endTime} </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} className='bg-[#F21111] font-[600] text-[0.75em] text-[white] rounded-[4px] py-[0.45em] px-[1em] ' onClick={() => { setModel(true) }}>Cancel Purchase</button>
+                    </div>
 
-                    <div className='flex flex-col items-center gap-[10px]'>
-                        <div className={`flex flex-col card  mb-[10px] pb-[8px] card rounded-[8px] bg-[#ffffff] xsm:min-w-[150px] sm:min-w-[150px] md:min-w-[200px] lg:min-w-[210px] xl:min-w-[220px] 2xl:min-w-[240px] `}>
-                            <img src={disc} className=' w-full' alt="" />
-                            <div className='flex flex-col  justify-between px-[0.625em] pt-[0.425em]'>
-                                <div className='flex  justify-between'>
-                                    <div className='flex items-start'>
-                                        <div className='flex flex-col mr-[0.425em]'>
-                                            <h1 className='text-[0.75em] font-[700]' >{value.discName}</h1>
-                                            <h1 className='text-[0.5em] font-[500] mt-[-0.413em] text-[##595959]' >{value.brand}</h1>
-                                        </div>
-                                        <span className='px-[0.5em] mt-[2px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
-                                    </div>
-                                    <div className='flex flex-col items-end'>
-                                        <span className='text-[0.75em] font-[600]'>{value.startingPrice}125 kr</span>
-                                        {value.bids.length === 0 && <span className='text-[0.5em] mt-[-0.313em] font-[500] text-[#595959bf] min-w-[45px]  '>Fixed Price</span>}
-                                    </div>
-                                </div>
-                                <div className='flex flex-col '>
-                                    <div className='flex mt-[5px] flex-col text-[0.5em] text-[#595959]'>
-                                        <span className='font-[600]'>Ended {value.endTime} </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} className='bg-[#F21111] font-[600] text-[0.75em] text-[white] rounded-[4px] py-[0.45em] px-[1em] ' onClick={() => { setModel(true) }}>Cancel Purchase</button>
-                    </div>
-                    <div className='flex flex-col items-center gap-[10px]'>
-                        <div className={`flex flex-col card  mb-[10px] pb-[8px] card rounded-[8px] bg-[#ffffff] xsm:min-w-[150px] sm:min-w-[150px] md:min-w-[200px] lg:min-w-[210px] xl:min-w-[220px] 2xl:min-w-[240px] `}>
-                            <img src={disc} className=' w-full' alt="" />
-                            <div className='flex flex-col  justify-between px-[0.625em] pt-[0.425em]'>
-                                <div className='flex  justify-between'>
-                                    <div className='flex items-start'>
-                                        <div className='flex flex-col mr-[0.425em]'>
-                                            <h1 className='text-[0.75em] font-[700]' >{value.discName}</h1>
-                                            <h1 className='text-[0.5em] font-[500] mt-[-0.413em] text-[##595959]' >{value.brand}</h1>
-                                        </div>
-                                        <span className='px-[0.5em] mt-[2px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
-                                    </div>
-                                    <div className='flex flex-col items-end'>
-                                        <span className='text-[0.75em] font-[600]'>{value.startingPrice}125 kr</span>
-                                        {value.bids.length === 0 && <span className='text-[0.5em] mt-[-0.313em] font-[500] text-[#595959bf] min-w-[45px]  '>Fixed Price</span>}
-                                    </div>
-                                </div>
-                                <div className='flex flex-col '>
-                                    <div className='flex mt-[5px] flex-col text-[0.5em] text-[#595959]'>
-                                        <span className='font-[600]'>Ended {value.endTime} </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} className='bg-[#F21111] font-[600] text-[0.75em] text-[white] rounded-[4px] py-[0.45em] px-[1em] ' onClick={() => { setModel(true) }}>Cancel Purchase</button>
-                    </div>
 
                 </div>
             </div>

@@ -8,14 +8,27 @@ import upload from './../../assets/upload.svg'
 import Select from 'react-select'
 
 const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
+    { value: 'Annax', label: 'Annax' },
+    { value: 'Xannax', label: 'Xannax' },
+    { value: 'Trannax', label: 'Trannax' }
 ]
 //will be in global auth of user 
 const userCountry = 'PK'
 const countryInfo = getCountryInfoByISO(userCountry);
-const ranges = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+const ranges = [
+    { condition: 11, info: "In unopened original packaging" },
+    { condition: 10, info: "\"Mint\", no scratches/damage" },
+    { condition: 9, info: "Unused, but possibly some small scratches in print from handling/storage, marked with name/decal below to" },
+    { condition: 8, info: "Test thrown without direct damage, only light scratches" },
+    { condition: 7, info: "Barely recorded, use a few rounds without heavy nicks" },
+    { condition: 6, info: "Recorded with minor damage, but still in good condition" },
+    { condition: 5, info: "Used disc, but not wind, with some light nicks and some scratches" },
+    { condition: 4, info: "Well used disc a little wind maybe, but still usable" },
+    { condition: 3, info: "Disc at the end of its life, pressure almost worn out, wind after some decent tree/rock hits" },
+    { condition: 2, info: "The disc has cracks or is properly winded or worn" },
+    { condition: 1, info: "Larger cracks or disc's original form partially worn away" },
+    { condition: 0, info: "My dog/crocodile has chewed on it, the disc in parts and/or holes in the disc" }
+]
 
 const ReList = () => {
     const [imageUrl, setImageUrl] = useState(null);
@@ -138,13 +151,9 @@ const ReList = () => {
                             </datalist>
                         </div>
                         <div className="w-[50%] grid grid-cols-4 xsm:gap-x-2 sm:gap-x-2 gap-x-10 xsm:gap-y-[0.375em] sm:gap-y-[0.375em] gap-y-[0.675em]">
-                            {ranges.map((condition) => (
-                                <div
-                                    key={condition}
-                                    className={`flex justify-center items-center rounded-full px-[8px] py-[3px] ${inputValues.condition === condition ? 'bg-[#81b29a2f]' : ''} border border-[#595959] cursor-pointer`}
-                                    onClick={() => handleCondition(condition)}
-                                >
-                                    <span className="text-[12px]">{condition}</span>
+                            {ranges.map((value, index) => (
+                                <div key={index} className={`abc flex justify-center items-center rounded-full px-[8px] py-[3px] ${inputValues.condition === value.condition ? 'bg-[#81b29a2f]' : ''} border border-[#595959] cursor-pointer`} onClick={() => handleCondition(value.condition)}>
+                                    <span className="text-[12px] absolute"><div data-title={value.info} className="helpDiv relative">{value.condition}</div></span>
                                 </div>
                             ))}
                         </div>

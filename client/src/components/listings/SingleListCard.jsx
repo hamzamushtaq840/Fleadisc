@@ -100,31 +100,31 @@ const SingleListCard = ({ val }) => {
                     <div className='flex items-start'>
                         <div className='flex flex-col mr-[0.425em]'>
                             <h1 className='text-[0.75em] font-[700]' >{val.discName}</h1>
-                            <h1 className='text-[0.5em] font-[500] mt-[-0.413em] text-[##595959]' >{val.brand}</h1>
+                            <h1 className='text-[0.55em] font-[500] mt-[-0.413em] text-[##595959]' >{val.brand}</h1>
                         </div>
                         <span className='px-[0.5em] mt-[2px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{val.condition}</span>
                     </div>
-                    <div className='flex mt-[5px] flex-col text-[0.5em] text-[#595959]'>
-                        <span className='font-[600]'>{getMonthAndDate(val.endDay)} - {val.endTime} </span>
-                        <span className='font-[500] text-[#595959BF]'>{remainingTime}</span>
+                    <div className='flex mt-[5px] flex-col  text-[#595959]'>
+                        <span className='font-[600] text-[0.6em]'>{getMonthAndDate(val.endDay)} - {val.endTime} </span>
+                        <span className='font-[500] text-[#595959BF] text-[0.55em]'>{remainingTime}</span>
                     </div>
                 </div>
 
-                <div className='flex flex-col justify-between'>
-                    <button className='text-[0.60em]  px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
+                <div className='flex flex-col justify-between items-end'>
+                    <button className='text-[0.60em] xsm:w-[50px] sm:w-[50px] w-[80px] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
 
                     <div className='flex flex-col items-end'>
                         <span className='text-[0.75em] mb-[-3px]  font-[600]'>{val.startingPrice} kr</span>
-                        {val.priceType === 'fixedPrice' && <span className='text-[0.5em] font-[500] text-[#595959bf]'>Fixed price</span>}
+                        {val.priceType === 'fixedPrice' && <span className='text-[0.6em] font-[500] text-[#595959bf]'>Fixed price</span>}
                         {(val.priceType !== 'fixedPrice') &&
                             <div className='flex items-center  text-[1em]'>
-                                <p onClick={(e) => { setOldModal(true); e.stopPropagation; }} className='text-[0.5em] cursor-pointer hover:underline hover:text-text font-[500] text-[#595959BF] '>{val.bids.length} Bids</p>
+                                <p onClick={(e) => { setOldModal(true); e.stopPropagation(); }} className='text-[0.6em] cursor-pointer hover:underline hover:text-text font-[500] text-[#595959BF] '>{val.bids.length} Bids</p>
                             </div>}
                     </div>
 
                 </div>
             </div>
-            {extra && <> <div className='mt-[10px] px-[0.625em]'>
+            {extra && <> <div className='mt-[10px] text-[1.3rem] xsm:text-[1rem] sm:text-[1rem] px-[0.625em]'>
                 <div className='flex w-full mb-[5px] justify-between gap-[5px] flex-wrap'>
 
                     {val.plastic !== '' &&
