@@ -12,8 +12,12 @@ import named from '../../assets/named.svg'
 import plastic from '../../assets/plastic.svg'
 import ConfirmBid from './ConfirmBid'
 import OlderBids from './OlderBids'
+import useAuth from '../../hooks/useAuth'
+import { useNavigate } from 'react-router-dom'
 
 const SingleListCard = ({ val }) => {
+    const { auth } = useAuth();
+    const navigate = useNavigate();
     const [extra, setExtra] = useState(false)
     const [imageModal, setImageModal] = useState(false);
     const [modal, setModal] = useState(false)
@@ -180,7 +184,7 @@ const SingleListCard = ({ val }) => {
                 {val.priceType === 'auction' &&
                     <form onSubmit={(e) => handleBid(e, 'bid')} className='flex flex-col mb-[6px] gap-[6px]'>
                         <p className='text-[0.55em] text-[#595959] py-[2px] font-[400]'>Buyer pays shipping from, <span className='font-[700]'>Uppsala, Sweden</span></p>
-                        <input value={price} min={0} onChange={(e) => {
+                        {Object.keys(auth).length !== 0 && <input value={price} min={0} onChange={(e) => {
                             setPrice(e.target.value);
                             if (Number(e.target.value >= val.minPrice))
                                 setError(false)
@@ -192,15 +196,18 @@ const SingleListCard = ({ val }) => {
                                 setErrorText('')
                                 setError(false)
                             }
-                        }} type="number" className={`w-full pl-[3px] py-[0.25em] rounded-[2px] text-[.65em] border-[1px]  ${error ? "border-[#f21616]" : "border-[#000000]"}`} placeholder={`Min Price - ${val.minPrice} kr`} />
+                        }} type="number" className={`w-full pl-[3px] py-[0.25em] rounded-[2px] text-[.65em] border-[1px]  ${error ? "border-[#f21616]" : "border-[#000000]"}`} placeholder={`Min Price - ${val.minPrice} kr`} />}
                         {error && <p className='text-[0.5em] text-[#eb0000] my-[-5px]'>{errorText}</p>}
-                        <button type='submit' className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Place Bid</button>
+                        {Object.keys(auth).length !== 0 ? <button type='submit' className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Place Bid</button> : <button onClick={() => { navigate('/signin') }} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Sign in to bid</button>}
                     </form>}
-                {val.priceType === 'fixedPrice' &&
+                {(val.priceType === 'fixedPrice') &&
                     <div className='flex mb-[5px] flex-col gap-[5px] mt-[5px]'>
                         <p className='text-[0.55em] text-[#595959] py-[3px] font-[400]'>Buyer pays shipping from, <span className='font-[700]'>Uppsala, Sweden</span></p>
-                        <button onClick={(e) => { handleBid(e, 'buy') }} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Buy</button>
-                    </div>}
+                        {(Object.keys(auth).length !== 0) ?
+                            <button onClick={(e) => { handleBid(e, 'buy') }} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Buy</button> :
+                            <button onClick={() => { navigate('/signin') }} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Sign in to buy</button>}
+                    </div>
+                }
             </div>
             </>
             }

@@ -49,8 +49,8 @@ const Listing = () => {
                     priceType: 'auction',
                     startingPrice: 125,
                     minPrice: 130,
-                    endDay: "2023-04-03",
-                    endTime: "21:48",
+                    endDay: "2023-04-13",
+                    endTime: "23:59",
                     bids: [{ sa: 1 }, { bd: 1 }]
                 },
                 {
@@ -586,7 +586,7 @@ const Listing = () => {
                 <h1 className='text-[35px] sm:text-[20px] xsm:text-[20px] w-[80%] md:text-[30px] text-[white] font-logo text-center relative z-10 sm:mt-[30px] my-auto xsm:mt-[30px]'>Disc-over your game with pre-loved gear</h1>
                 <input style={{ boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)' }} className='border-[1px] w-[64.10vw] max-w-[500px] min-w-[250px] border-[#81B29A] absolute bottom-[-24px] bg-[white] z-10 h-[47px] rounded-lg px-[14px] font-sans' type='text' placeholder='Search...'></input>
             </div>
-            <div className='mt-[35px] xsm:mb-[5px] sm:mb-[5px] mb-[10px] px-[5px] xsm:px-0 flex gap-[10px] xsm:gap-[5px] items-center xsm:justify-start  justify-center  xsm:w-[310px] w-full m-auto '>
+            <div className='mt-[45px] xsm:mt-[35px] sm:mt-[35px] xsm:mb-[5px] sm:mb-[5px] mb-[10px] px-[5px] xsm:px-0 flex gap-[10px] xsm:gap-[5px] items-center xsm:justify-start  justify-center  xsm:w-[310px] w-full m-auto '>
                 <div className='pl-[4px] xsm:border-[0px] border-[1px] rounded-[2px] h-[27px] flex items-center '>
                     <ReactFlagsSelect
                         selected={selected}
@@ -600,14 +600,14 @@ const Listing = () => {
                         showOptionLabel={true}
                     />
                 </div>
-                <select className='outline-none w-[74px] text-[#1E1E21] text-center border-[1px] border-[#000000] text-[12px] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
-                    <option selected disabled value={null}>Range</option>
+                <select defaultValue='range' className='outline-none w-[74px] text-[#1E1E21] text-center border-[1px] border-[#000000] text-[12px] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
+                    <option disabled value='range'>Range</option>
                 </select>
-                <select className='outline-none w-[76px]  text-[#1E1E21] text-center border-[1px] border-[#000000] text-[12px] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
-                    <option selected disabled value={null}>Brand</option>
+                <select defaultValue='brand' className='outline-none w-[76px]  text-[#1E1E21] text-center border-[1px] border-[#000000] text-[12px] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
+                    <option disabled value='brand'>Brand</option>
                 </select>
-                <select className='outline-none w-[92px] text-[#1E1E21] text-center border-[1px] border-[#000000] text-[12px] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
-                    <option selected disabled value={null}>Condition</option>
+                <select defaultValue='condition' className='outline-none w-[92px] text-[#1E1E21] text-center border-[1px] border-[#000000] text-[12px] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
+                    <option disabled value='condition'>Condition</option>
                 </select>
             </div>
             <div className='px-[5px] xsm:px-0 flex gap-[10px] xsm:gap-[5px] items-center xsm:justify-start justify-center flex-wrap xsm:w-[320px] w-[405px]  m-auto'>

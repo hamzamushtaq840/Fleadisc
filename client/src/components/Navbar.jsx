@@ -1,9 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import signin from './../assets/signin.svg';
+import useAuth from '../hooks/useAuth';
+import { Avatar, Box, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
+import AuthContext from '../context/AuthProvider';
+
+const settings = ['Profile', 'Logout'];
 
 const Navbar = () => {
+    const location = useLocation();
     const [showShadow, setShowShadow] = useState(false);
+    const [anchorElUser, setAnchorElUser] = useState(null);
+    const { auth } = useAuth();
+    const { setAuth } = useContext(AuthContext)
+
+    const handleOpenUserMenu = (event) => {
+        setAnchorElUser(event.currentTarget);
+    };
+
+    const handleCloseUserMenu = (e) => {
+        setAnchorElUser(null);
+        e.stopPropagation();
+    };
 
     useEffect(() => {
         window.addEventListener("scroll", handleScroll);
@@ -31,30 +49,44 @@ const Navbar = () => {
                     <NavLink to="/delivery" className="nav-link flex flex-col gap-[3px] min-w-[50px] items-center text-[#00000]" activeclassname="active">
                         <div className='mt-[-3px]'>
                             <svg width="25" height="25">
-                                <path d="M8.7625 16.0714H0V19.6429H8.7625V25L13.75 17.8571L8.7625 10.7143V16.0714ZM16.2375 14.2857V8.92857H25V5.35714H16.2375V0L11.25 7.14286L16.2375 14.2857Z" fill-opacity="0.7" />
+                                <path d="M8.7625 16.0714H0V19.6429H8.7625V25L13.75 17.8571L8.7625 10.7143V16.0714ZM16.2375 14.2857V8.92857H25V5.35714H16.2375V0L11.25 7.14286L16.2375 14.2857Z" />
                             </svg>
                         </div>
                         <h1 className='text-[.75em] mt-[-3px]'>Delivery</h1>
                     </NavLink>
                     <NavLink to="/create" className="nav-link flex flex-col gap-[3px] mt-[1px] min-w-[50px] items-center text-[#00000]" activeclassname="active">
                         <svg width="19" height="19" viewBox="0 0 19 19" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M16.7917 0.125H2.20833C1.05208 0.125 0.125 1.0625 0.125 2.20833V16.7917C0.125 17.9375 1.05208 18.875 2.20833 18.875H16.7917C17.9375 18.875 18.875 17.9375 18.875 16.7917V2.20833C18.875 1.0625 17.9375 0.125 16.7917 0.125ZM14.7083 10.5417H10.5417V14.7083H8.45833V10.5417H4.29167V8.45833H8.45833V4.29167H10.5417V8.45833H14.7083V10.5417Z" fill-opacity="0.7" />
+                            <path d="M16.7917 0.125H2.20833C1.05208 0.125 0.125 1.0625 0.125 2.20833V16.7917C0.125 17.9375 1.05208 18.875 2.20833 18.875H16.7917C17.9375 18.875 18.875 17.9375 18.875 16.7917V2.20833C18.875 1.0625 17.9375 0.125 16.7917 0.125ZM14.7083 10.5417H10.5417V14.7083H8.45833V10.5417H4.29167V8.45833H8.45833V4.29167H10.5417V8.45833H14.7083V10.5417Z" />
                         </svg>
                         <h1 className='text-[.75em] leading-[14.63px]'>Create</h1>
                     </NavLink>
                     <NavLink to="/messages" className="nav-link flex flex-col gap-[3px] min-w-[60px] items-center text-[#00000]" activeclassname="active">
                         <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M18 0H2C0.9 0 0 0.9 0 2V20L4 16H18C19.1 16 20 15.1 20 14V2C20 0.9 19.1 0 18 0ZM18 14H3.2L2 15.2V2H18V14Z" fill-opacity="0.7" />
+                            <path d="M18 0H2C0.9 0 0 0.9 0 2V20L4 16H18C19.1 16 20 15.1 20 14V2C20 0.9 19.1 0 18 0ZM18 14H3.2L2 15.2V2H18V14Z" />
                         </svg>
                         <h1 className='text-[.75em] mt-[-2px]'>Messages</h1>
                     </NavLink>
-                    <NavLink to="/signin" className="flex flex-col gap-[3px] min-w-[50px] items-center">
+                    {Object.keys(auth).length === 0 ? <NavLink to="/signin" className="flex flex-col gap-[3px] min-w-[50px] items-center">
                         <img src={signin} className="h-[22px]" alt='delivery' />
                         <h1 className='text-[.75em] mt-[-2px]'>Sign In</h1>
-                    </NavLink>
+                    </NavLink> :
+                        <div onClick={handleOpenUserMenu} className='cursor-pointer flex flex-col gap-[3px] min-w-[50px] items-center'>
+                            <img src={auth.profilePicture === null ? signin : auth.profilePicture} className="h-[22px] cursor-pointer" alt='profile' />
+                            <Menu sx={{ mt: '45px' }} id="menu-appbar" anchorEl={anchorElUser} anchorOrigin={{ vertical: 'top', horizontal: 'right', }} keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right', }} open={Boolean(anchorElUser)} onClose={handleCloseUserMenu}>
+                                <MenuItem onClick={handleCloseUserMenu}>
+                                    <NavLink to="/profile/private" className="nav-link flex flex-col gap-[3px] min-w-[50px] items-center" activeclassname="active">
+                                        Profile
+                                    </NavLink>
+                                </MenuItem>
+                                <MenuItem onClick={handleCloseUserMenu}>
+                                    <h1 onClick={() => setAuth({})}>Logout</h1>
+                                </MenuItem>
+                            </Menu>
+                            <h1 className={`${location.pathname === "/profile/private" ? "text-primary font-[600] text-[.75em] mt-[-2px]" : 'text-[.75em] mt-[-2px] font-[400]'}`}>Profile</h1>
+                        </div>
+                    }
                 </div>
             </div>
-
             <div className='pt-[67px]'>
                 <Outlet />
             </div>

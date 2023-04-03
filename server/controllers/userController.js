@@ -42,12 +42,12 @@ export const signinController = tryCatch(async (req, res) => {
 
         // check if user exists
         const user = await User.findOne({ email });
-        if (!user) { throw new AppError('account_not_found', 'Email not found, please create an account', 401) }
+        if (!user) { throw new AppError('account_not_found', 'Please create an account', 401) }
         if (user && user.password === undefined) { throw new AppError('gmail_account', 'Sign in with gmail', 401) }
 
         // match password
         const isPasswordOk = await bcrypt.compare(password, user.password);
-        if (!isPasswordOk) { throw new AppError('account_not_exist', 'Email not found', 401) }
+        if (!isPasswordOk) { throw new AppError('inccorect_password', 'Password is inncorrect', 401) }
         const accessToken = jwt.sign(
             { UserInfo: { userId: user._id.toString(), roles: user.roles } },
             process.env.JWT_SECRET,
@@ -64,7 +64,7 @@ export const signinController = tryCatch(async (req, res) => {
             }
         );
         // save refresh token to database
-        await RefreshToken.create({ userId: user._id, token: refreshToken, roles: user.roles });
+        // await RefreshToken.create({ userId: user._id, token: refreshToken, roles: user.roles });
 
         //maxAge is 24 hours
         res.cookie('refreshToken', refreshToken, { domain: 'localhost', path: '/', sameSite: 'Lax', httpOnly: true, secure: false, maxAge: 24 * 60 * 60 * 1000 })
@@ -75,7 +75,7 @@ export const signinController = tryCatch(async (req, res) => {
         //     maxAge: 24 * 60 * 60 * 1000
         // });
 
-        res.status(200).json({ message: 'Login successful', accessToken: accessToken, userId: user._id.toString(), email: user.email, profilePicture: user.profilePicture, roles: user.roles });
+        res.status(200).json({ message: 'Login successful', accessToken: accessToken, userId: user._id.toString(), email: user.email, profilePicture: user.profilePicture, roles: user.roles, country: user.country });
     }
 })
 
@@ -94,7 +94,7 @@ export const signupController = tryCatch(async (req, res) => {
         res.status(201).json({ message: 'User registered successfully' });
     }
     else {
-        const { email, password } = req.body;
+        const { name, email, password, country } = req.body;
         // check if email already exists
         const user = await User.findOne({ email });
         if (user) {
@@ -102,7 +102,16 @@ export const signupController = tryCatch(async (req, res) => {
         }
         const hashedPassword = await bcrypt.hash(password, 12)
         // create new user
-        await User.create({ email, password: hashedPassword });
+        await User.create({ name, email, password: hashedPassword, country });
         res.status(201).json({ message: 'User registered successfully' });
     }
+})
+
+export const checkEmail = tryCatch(async (req, res) => {
+    const user = await User.findOne({ email: req.body.email });
+    if (user) {
+        throw new AppError('account_exist', 'Email already exists', 401)
+    }
+    else
+        res.status(200).json({ message: 'User not registered before' });
 })

@@ -4,10 +4,15 @@ import { useNavigate } from "react-router-dom";
 import axios from '../api/axios';
 import back from './../assets/back.svg';
 import google from './../assets/google.svg';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
 const Signup = () => {
     const navigate = useNavigate();
     const [registrationState, setRegistrationState] = useState({ name: '', email: '', password: '' })
+    const { mutate, isLoading } = useMutation((formData) => {
+        return axios.post('/user/checkEmail', formData);
+    });
 
     const handleRegistrationChange = (e) => {
         setRegistrationState({ ...registrationState, [e.target.name]: e.target.value })
@@ -15,12 +20,14 @@ const Signup = () => {
 
     const handleRegistration = (e) => {
         e.preventDefault()
-        axios.post('/user/register', { email: registrationState.email, password: registrationState.password })
-            .then((res) => {
-                if (res.status === 201)
-                    navigate('/signup/country')
-            })
-            .catch(e => console.log(e))
+        mutate({ email: registrationState.email }, {
+            onSuccess: (res) => {
+                navigate('/signup/country', { state: registrationState })
+            },
+            onError: (err) => {
+                toast.error(err.response.data.message);
+            },
+        });
     }
 
     const register = useGoogleLogin({
@@ -28,7 +35,7 @@ const Signup = () => {
             axios.post('/user/register', { googleAccessToken: tokenResponse.access_token })
                 .then((res) => {
                     if (res.status === 201)
-                        navigate('/signin/country')
+                        navigate('/signup/country')
                 })
                 .catch(e => console.log(e))
         },
@@ -46,12 +53,12 @@ const Signup = () => {
                         <h1 className='flex-1 text-[0.875em]'>Sign up with Google</h1>
                     </button>
                     <p className='my-[11px] font-dmsans text-[8px] text-[#A5A5A5] flex justify-center'>OR</p>
-                    <form className='flex flex-col gap-[7px] w-full items-center' >
-                        <input required type="email" className='p-[0.75em] max-w-[600px] w-full bg-[#F5F5F5] font-sans font-[500] text-[0.875em] border rounded-[4px] border-[#D9D9D9]' placeholder='Full Name' value={registrationState.name} name="name" onChange={handleRegistrationChange} />
+                    <form className='flex flex-col gap-[7px] w-full items-center' onSubmit={handleRegistration}>
+                        <input required type="text" className='p-[0.75em] max-w-[600px] w-full bg-[#F5F5F5] font-sans font-[500] text-[0.875em] border rounded-[4px] border-[#D9D9D9]' placeholder='Full Name' value={registrationState.name} name="name" onChange={handleRegistrationChange} />
                         <input required type="email" className='p-[0.75em] max-w-[600px] w-full bg-[#F5F5F5] font-sans font-[500] text-[0.875em] border rounded-[4px] border-[#D9D9D9]' placeholder='Email address' value={registrationState.email} name="email" onChange={handleRegistrationChange} />
                         <input required type="password" className='p-[0.75em] max-w-[600px] w-full bg-[#F5F5F5] font-sans font-[500] text-[0.875em] border rounded-[4px] border-[#D9D9D9]' placeholder='Password' value={registrationState.password} name="password" onChange={handleRegistrationChange} />
                         <div className='flex justify-center'>
-                            <button type="submit" className='buttonAnimation w-[7.5em] h-[2.3125em] mt-[9px] text-[0.875em] font-[700] bg-primary text-[#ffff] shadow-2xl rounded-[6px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Sign Up</button>
+                            <button type="submit" className='buttonAnimation w-[7.5em] h-[2.3125em] mt-[9px] text-[0.875em] font-[700] bg-primary text-[#ffff] shadow-2xl rounded-[6px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>{isLoading ? "wait..." : "Sign Up"}</button>
                         </div>
                     </form>
                 </div>

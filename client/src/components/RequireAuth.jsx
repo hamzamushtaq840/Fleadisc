@@ -5,15 +5,13 @@ const RequireAuth = ({ allowedRoles }) => {
     const { auth } = useAuth();
     const location = useLocation();
 
-    console.log(auth);
-
     if (Object.keys(auth).length === 0)
         return <Navigate to="/signin" state={{ from: location }} replace />
     else if (auth?.roles?.find(role => allowedRoles.includes(role)))
         return <Outlet />
-    else
+    else {
         return <Navigate to="/unauthorized" state={{ from: location }} replace />
-
+    }
 }
 
 export default RequireAuth;

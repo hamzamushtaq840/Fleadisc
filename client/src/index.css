@@ -147,10 +147,12 @@ option:first-child {
   padding: 0 !important;
 }
 
+/* .ReactFlagsSelect-module_secondaryLabel__37t1D */
+
 .ReactFlagsSelect-module_label__27pw9 {
   color: #000000;
   font-weight: 500;
-  font-size: 0.75em;
+  font-size: 0.75em !important;
   display: flex;
   align-items: center;
   letter-spacing: .5px;
@@ -224,7 +226,7 @@ option:first-child {
 }
 
 .ReactFlagsSelect-module_fullWidthOptions__1XeR6 {
-  width: 200px;
+  min-width: 200px;
 }
 
 .abc:hover .helpDiv[data-title]:after {
@@ -271,7 +273,6 @@ option:first-child {
   }
 
   .css-art2ul-ValueContainer2 {
-    /* background-color: #389668; */
     margin-top: -5px;
     padding-left: 4px !important;
 

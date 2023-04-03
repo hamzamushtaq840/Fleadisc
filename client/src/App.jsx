@@ -1,8 +1,9 @@
 import React, { Suspense } from 'react';
 import { ColorRing } from 'react-loader-spinner';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import ReList from './components/create/ReList';
-import PrivateInfoEdit from './components/profile/PrivateInfoEdit';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import RequireAuth from './components/RequireAuth';
 
 const Listing = React.lazy(() => import('./pages/Listing'))
 const Navbar = React.lazy(() => import('./components/Navbar'))
@@ -11,8 +12,6 @@ const Delivery = React.lazy(() => import('./pages/Delivery'))
 const Messages = React.lazy(() => import('./pages/Messages'))
 const Signin = React.lazy(() => import('./pages/Signin'))
 const Signup = React.lazy(() => import('./pages/Signup'));
-const RequireAuth = React.lazy(() => import('./components/RequireAuth'))
-const ChooseCountry = React.lazy(() => import('./components/signin/ChooseCountry'))
 const About = React.lazy(() => import('./pages/About'))
 const Buying = React.lazy(() => import('./components/delivery/Buying'));
 const Selling = React.lazy(() => import('./components/delivery/Selling'));
@@ -25,6 +24,9 @@ const PrivatePurchases = React.lazy(() => import('./components/profile/PrivatePu
 const PublicInfo = React.lazy(() => import('./components/profile/PublicInfo'));
 const PublicListing = React.lazy(() => import('./components/profile/PublicListings'));
 const PublicProfile = React.lazy(() => import('./components/profile/PublicProfile'));
+const ReList = React.lazy(() => import('./components/create/ReList'));
+const ChooseCountry = React.lazy(() => import('./components/signin/ChooseCountry'))
+const PrivateInfoEdit = React.lazy(() => import('./components/profile/PrivateInfoEdit'));
 
 const ROLES = {
   'User': 2001,
@@ -49,54 +51,54 @@ const App = () => {
     <BrowserRouter>
       <Routes>
 
+        {/* Public Routes */}
         <Route path="/signin" element={<Suspense fallback={Loader}>< Signin /></Suspense>} />
-        <Route path="/signup" element={<Suspense fallback={Loader}>< Signup /></Suspense>} />
-
         <Route path="/signup">
+          <Route index element={<Suspense fallback={Loader}>< Signup /></Suspense>} />
           <Route path="country" element={<Suspense fallback={Loader}><ChooseCountry /></Suspense>} />
         </Route>
 
         <Route path='/' element={<Navbar />}>
           <Route index element={<Suspense fallback={Loader}><Listing /></Suspense>} />
-          <Route path="/create" element={<Suspense fallback={Loader}><Create /></Suspense>} />
-          <Route path="/delivery" element={<Suspense fallback={Loader}><Delivery /></Suspense >} />
-          <Route path="/messages" element={<Suspense fallback={Loader}><Messages /></Suspense >} />
-          <Route path="/about" element={<Suspense fallback={Loader}><About /></Suspense>} />
+          {/* Private Routes */}
+          <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
+            <Route path="/create" element={<Suspense fallback={Loader}><Create /></Suspense>} />
+            <Route path="/delivery" element={<Suspense fallback={Loader}><Delivery /></Suspense >} />
+            <Route path="/messages" element={<Suspense fallback={Loader}><Messages /></Suspense >} />
+            <Route path="/about" element={<Suspense fallback={Loader}><About /></Suspense>} />
 
-          <Route path="/profile">
-            <Route path="public" element={<Suspense fallback={Loader}><PublicProfile /></Suspense>} >
-              <Route index element={<Suspense fallback={Loader}><PublicInfo /></Suspense>} />
-              <Route path="listings" element={<Suspense fallback={Loader}><PublicListing /></Suspense>} />
+            <Route path="/profile">
+              <Route path="public" element={<Suspense fallback={Loader}><PublicProfile /></Suspense>} >
+                <Route index element={<Suspense fallback={Loader}><PublicInfo /></Suspense>} />
+                <Route path="listings" element={<Suspense fallback={Loader}><PublicListing /></Suspense>} />
+              </Route>
+
+              <Route path="private" element={<Suspense fallback={Loader}><PrivateProfile /></Suspense>} >
+                <Route index element={<Suspense fallback={Loader}><PrivateInfo /></Suspense>} />
+                <Route path="edit" element={<Suspense fallback={Loader}><PrivateInfoEdit /></Suspense>} />
+                <Route path="listings" element={<Suspense fallback={Loader}><PrivateListings /></Suspense>} />
+                <Route path="purchases" element={<Suspense fallback={Loader}><PrivatePurchases /></Suspense>} />
+              </Route>
             </Route>
 
-            <Route path="private" element={<Suspense fallback={Loader}><PrivateProfile /></Suspense>} >
-              <Route index element={<Suspense fallback={Loader}><PrivateInfo /></Suspense>} />
-              <Route path="edit" element={<Suspense fallback={Loader}><PrivateInfoEdit /></Suspense>} />
-              <Route path="listings" element={<Suspense fallback={Loader}><PrivateListings /></Suspense>} />
-              <Route path="purchases" element={<Suspense fallback={Loader}><PrivatePurchases /></Suspense>} />
+            <Route path="/create">
+              <Route path="edit" element={<Suspense fallback={Loader}><EditList /></Suspense>} />
+              <Route path="relist" element={<Suspense fallback={Loader}><ReList /></Suspense>} />
             </Route>
-          </Route>
 
-          <Route path="/create">
-            <Route path="edit" element={<Suspense fallback={Loader}><EditList /></Suspense>} />
-            <Route path="relist" element={<Suspense fallback={Loader}><ReList /></Suspense>} />
-          </Route>
+            <Route path="/messages">
+              <Route path="chat" element={<Suspense fallback={Loader}><SingleChat /></Suspense>} />
+            </Route>
 
-          <Route path="/messages">
-            <Route path="chat" element={<Suspense fallback={Loader}><SingleChat /></Suspense>} />
-          </Route>
-
-          <Route path="/messages">
-            <Route path="chat" element={<Suspense fallback={Loader}><SingleChat /></Suspense>} />
-          </Route>
-
-          <Route path="/delivery" element={<Suspense fallback={Loader}><Delivery /></Suspense>}>
-            <Route index element={<Suspense fallback={Loader}><Buying /></Suspense>} />
-            <Route path="selling" element={<Suspense fallback={Loader}><Selling /></Suspense>} />
+            <Route path="/delivery" element={<Suspense fallback={Loader}><Delivery /></Suspense>}>
+              <Route index element={<Suspense fallback={Loader}><Buying /></Suspense>} />
+              <Route path="selling" element={<Suspense fallback={Loader}><Selling /></Suspense>} />
+            </Route>
           </Route>
         </Route>
 
       </Routes >
+      <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" className='xsm:max-w-[300px] sm:max-w-[300px] xsm:ml-auto sm:ml-auto' />
     </BrowserRouter >
   )
 }
