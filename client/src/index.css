@@ -134,7 +134,7 @@ option:first-child {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.3);
   z-index: 1;
 }
 
@@ -245,6 +245,15 @@ option:first-child {
   padding: 10px 10px;
 }
 
+.css-hlgwow {
+  padding: 2px 5px !important;
+  margin-top: -6px !important;
+}
+
+.css-1wy0on6 {
+  margin-top: -7px !important;
+}
+
 @media screen and (min-width: 767px) {
 
   .css-13cymwt-control {
@@ -271,4 +280,15 @@ option:first-child {
   .css-4xgw5l-IndicatorsContainer2 {
     margin-top: -5px;
   }
+
+  .css-hlgwow {
+    padding: 2px 5px !important;
+    margin-bottom: 1px !important;
+    margin-top: 0px !important;
+  }
+
+  .css-1wy0on6 {
+    margin-top: -5px !important;
+  }
+
 }

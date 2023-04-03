@@ -16,18 +16,18 @@ const options = [
 const userCountry = 'PK'
 const countryInfo = getCountryInfoByISO(userCountry);
 const ranges = [
-    { condition: 11, info: "In unopened original packaging" },
-    { condition: 10, info: "\"Mint\", no scratches/damage" },
-    { condition: 9, info: "Unused, but possibly some small scratches in print from handling/storage, marked with name/decal below to" },
-    { condition: 8, info: "Test thrown without direct damage, only light scratches" },
-    { condition: 7, info: "Barely recorded, use a few rounds without heavy nicks" },
-    { condition: 6, info: "Recorded with minor damage, but still in good condition" },
-    { condition: 5, info: "Used disc, but not wind, with some light nicks and some scratches" },
-    { condition: 4, info: "Well used disc a little wind maybe, but still usable" },
-    { condition: 3, info: "Disc at the end of its life, pressure almost worn out, wind after some decent tree/rock hits" },
-    { condition: 2, info: "The disc has cracks or is properly winded or worn" },
+    { condition: 0, info: "My dog/crocodile has chewed on it, the disc in parts and/or holes in the disc" },
     { condition: 1, info: "Larger cracks or disc's original form partially worn away" },
-    { condition: 0, info: "My dog/crocodile has chewed on it, the disc in parts and/or holes in the disc" }
+    { condition: 2, info: "The disc has cracks or is properly winded or worn" },
+    { condition: 3, info: "Disc at the end of its life, pressure almost worn out, wind after some decent tree/rock hits" },
+    { condition: 4, info: "Well used disc a little wind maybe, but still usable" },
+    { condition: 5, info: "Used disc, but not wind, with some light nicks and some scratches" },
+    { condition: 6, info: "Recorded with minor damage, but still in good condition" },
+    { condition: 7, info: "Barely recorded, use a few rounds without heavy nicks" },
+    { condition: 8, info: "Test thrown without direct damage, only light scratches" },
+    { condition: 9, info: "Unused, but possibly some small scratches in print from handling/storage, marked with name/decal below to" },
+    { condition: 10, info: "\"Mint\", no scratches/damage" },
+    { condition: 11, info: "In unopened original packaging" },
 ]
 
 const ReList = () => {
