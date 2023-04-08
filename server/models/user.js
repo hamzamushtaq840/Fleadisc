@@ -31,6 +31,7 @@ const userSchema = mongoose.Schema({
     },
     profilePicture: {
         type: String,
+        default: null,
         required: false,
     },
     country: {

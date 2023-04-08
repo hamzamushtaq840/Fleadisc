@@ -6,10 +6,12 @@ import axios from './../../api/axios';
 
 const NumofListing = ({ setModel, discs, clearForm }) => {
     const [isLoading, setIsLoading] = useState(false);
+    console.log(discs);
 
     const handleUpload = async (file) => {
         try {
-            const storageRef = ref(Storage, `/courseImages/${file.name}`);
+            const uniqueFileName = `${file.name}_${Math.random().toString(36).substring(2)}`;
+            const storageRef = ref(Storage, `/courseImages/${uniqueFileName}`);
             const uploadTask = uploadBytesResumable(storageRef, file);
             const url = await new Promise((resolve, reject) => {
                 uploadTask.on(
@@ -24,6 +26,7 @@ const NumofListing = ({ setModel, discs, clearForm }) => {
                     () => {
                         getDownloadURL(uploadTask.snapshot.ref)
                             .then((url) => {
+                                console.log(url);
                                 resolve(url);
                             })
                             .catch((error) => {
@@ -43,14 +46,29 @@ const NumofListing = ({ setModel, discs, clearForm }) => {
     const handlePublish = async () => {
         setIsLoading(true);
         try {
+            // Create an array to hold promises for all uploads
+            const uploadPromises = [];
+
+            // Loop through all discs and create a promise to upload each disc's picture
             for (let i = 0; i < discs.length; i++) {
                 const disc = discs[i];
                 if (disc.pictureURL) {
-                    const url = await handleUpload(disc.pictureURL);
-                    disc.pictureURL = url;
+                    uploadPromises.push(handleUpload(disc.pictureURL));
                 }
             }
 
+            // Wait for all uploads to complete
+            const urls = await Promise.all(uploadPromises);
+
+            // Update each disc's pictureURL property with the corresponding URL from the array
+            for (let i = 0; i < discs.length; i++) {
+                const disc = discs[i];
+                if (disc.pictureURL) {
+                    disc.pictureURL = urls[i];
+                }
+            }
+
+            // Save the discs array to your database
             const promises = discs.map(async (disc) => {
                 const { data } = await axios.post('/disc', disc);
                 return data;
@@ -58,13 +76,12 @@ const NumofListing = ({ setModel, discs, clearForm }) => {
 
             const results = await Promise.all(promises);
             toast.success(`${discs.length > 1 ? "Discs" : "Disc"} published successfully`);
-            clearForm();
+            // clearForm();
             setIsLoading(false);
             setModel(false)
         } catch (error) {
             console.log(error);
         }
-
     };
 
     return (
@@ -76,6 +93,7 @@ const NumofListing = ({ setModel, discs, clearForm }) => {
                     <h1 className='text-[.95em] mt-[1px] font-[800]'>{discs.length}</h1>
                 </span>
                 <div className='flex justify-center'><button className='w-[10em] h-[2.3125em] mt-[10px] text-[0.750em] font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }} onClick={handlePublish}>{isLoading ? "wait" : "Confirm Listing"}</button></div>
+
             </div>
         </>
     )

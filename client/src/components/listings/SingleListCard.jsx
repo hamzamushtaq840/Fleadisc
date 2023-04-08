@@ -97,8 +97,8 @@ const SingleListCard = ({ val }) => {
     }
 
     return (
-        <div className={`flex relative mb-[10px] xsm:text-[1.07rem] sm:text-[1.07rem] text-[1.2rem] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[165px] sm:min-w-[165px] md:min-w-[200px] lg:min-w-[210px] xl:min-w-[220px] 2xl:min-w-[240px]  h-[0%] flex-col`}>
-            <img src={disc} className=' w-full' alt="" onClick={() => setImageModal(true)} />
+        <div className={`flex relative mb-[10px]  xsm:text-[1.07rem] sm:text-[1.07rem] text-[1.2rem] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[165px] xsm:max-w-[165px] sm:min-w-[165px] sm:max-w-[165px] md:min-w-[200px] md:max-w-[200px] lg:min-w-[210px] lg:max-w-[210px] xl:min-w-[220px] xl:max-w-[220px] 2xl:min-w-[240px] 2xl:max-w-[240px]  h-[0%] flex-col`}>
+            <div className='flex justify-center'><img src={val.pictureURL} className=' w-[165px]' alt="" onClick={() => setImageModal(true)} /></div>
             <div onClick={() => setExtra(prev => !prev)} className='flex justify-between cursor-pointer px-[0.625em] pt-[0.425em]'>
                 <div className='flex flex-col justify-between'>
                     <div className='flex items-start'>
@@ -214,7 +214,7 @@ const SingleListCard = ({ val }) => {
             {imageModal && (
                 <div onClick={() => setImageModal(false)} className="fixed  bg-[#000000CC] z-50 top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center">
                     <div className="w-[50%] xsm:w-full sm:w-full max-h-[80%]">
-                        <img onClick={(e) => e.stopPropagation()} src={disc2} alt="" className="w-full object-contain" />
+                        <img onClick={(e) => e.stopPropagation()} src={val.pictureURL} alt="" className="w-full object-contain" />
                     </div>
                 </div>
             )}

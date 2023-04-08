@@ -2,15 +2,23 @@ import React, { useEffect, useState } from 'react'
 import ReactFlagsSelect from "react-flags-select";
 import { Us } from "react-flags-select";
 import SingleList from '../components/listings/SingleList';
+import { useQuery } from '@tanstack/react-query'
+import axios from '../api/axios';
 
 const Listing = () => {
     const [selected, setSelected] = useState('SE');
     const [moreFilters, setMoreFilters] = useState(false)
-
     const [screenSize, setScreenSize] = useState({
         width: window.innerWidth,
         height: window.innerHeight
     });
+    //array contains unique key that this query represents i.e cahching,refectching,etc
+    const { isLoading, error, data } = useQuery(["listings"], async () => {
+        const response = await axios.get('/disc')
+        console.log(response);
+        return response.data;
+    })
+
 
     useEffect(() => {
         const handleResize = () => {
@@ -631,7 +639,7 @@ const Listing = () => {
                 </div>
             </div>
             <div className='flex flex-col xsm:w-full sm:w-full w-[90%] m-auto overflow-hidden mb-[50px]'>
-                {listings.map((value, index) => {
+                {data?.map((value, index) => {
                     return (
                         <>
                             <SingleList value={value} index={index} />

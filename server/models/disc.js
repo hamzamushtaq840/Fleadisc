@@ -25,7 +25,7 @@ const discSchema = mongoose.Schema({
     priceType: { type: String, required: true },
     startingPrice: { type: String, required: true },
     minPrice: { type: String, required: false },
-    endDay: { type: Date, required: true },
+    endDay: { type: String, required: true },
     endTime: { type: String, required: true },
     createdAt: { type: Date, default: Date.now, required: true },
     bids: {

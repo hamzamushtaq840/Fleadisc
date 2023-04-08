@@ -12,6 +12,10 @@
   box-sizing: border-box;
 }
 
+html {
+  background-color: #FAFAFA;
+}
+
 .ReactFlagsSelect-module_selectValue__152eS {
   color: #AAAAAA;
   font-family: sans-serif;
