@@ -6,14 +6,17 @@ import plastic from '../assets/plastic.svg'
 import upload from '../assets/upload.svg'
 import NumofListing from '../components/create/NumofListing'
 import Select from 'react-select'
+import CropEasy from '../components/create/cropEasy'
+import { toast } from 'react-toastify'
+
+import useAuth from '../hooks/useAuth'
+import { getCountryInfoByISO } from '../utils/iso-country-currency'
 
 const options = [
     { value: 'Annax', label: 'Annax' },
     { value: 'Xannax', label: 'Xannax' },
     { value: 'Trannax', label: 'Trannax' }
 ]
-//will be in global auth of user 
-const userCountry = 'PK'
 const ranges = [
     { condition: 0, info: "My dog/crocodile has chewed on it, the disc in parts and/or holes in the disc" },
     { condition: 1, info: "Larger cracks or disc's original form partially worn away" },
@@ -28,17 +31,31 @@ const ranges = [
     { condition: 10, info: "\"Mint\", no scratches/damage" },
     { condition: 11, info: "In unopened original packaging" },
 ]
+const requiredFields = {
+    quantity: 'Quantity is required',
+    discName: 'Disc Name is required',
+    brand: 'Brand is required',
+    range: 'Range is required',
+    startingPrice: 'Starting price is required',
+    minPrice: 'Minimum price is required',
+    endDay: 'End day is required',
+    endTime: 'End time is required',
+    pictureURL: 'Please add a picture',
+}
 
 const Create = () => {
+    const { auth } = useAuth();
+    const userCountry = getCountryInfoByISO(auth?.country).currency.toLowerCase();
     const [optional, setOptional] = useState(false);
     const [model, setModel] = useState(false)
-    const [imageUrl, setImageUrl] = useState(null);
+    const [openCrop, setOpenCrop] = useState(false)
     const [inputValues, setInputValues] = useState({
-        discimage: null,
+        seller: auth.userId,
+        pictureURL: null,
         quantity: 1,
         discName: '',
         brand: '',
-        range: null,
+        range: '',
         condition: null,
         plastic: '',
         grams: '',
@@ -49,11 +66,21 @@ const Create = () => {
         collectible: false,
         firstRun: false,
         priceType: 'auction',
-        startingPrice: null,
-        minPrice: null,
-        endDay: null,
-        endTime: null,
+        startingPrice: '',
+        minPrice: '',
+        endDay: '',
+        endTime: '',
     });
+    const [photoURL, setPhotoURL] = useState(null);
+    const [multipleDiscs, setMultipleDiscs] = useState([]);
+    const [added, setAdded] = useState(false)
+    const [files, setFile] = useState(null)
+
+    const handleFileUpload = (event) => {
+        setFile(event.target.files[0])
+        setPhotoURL(URL.createObjectURL(event.target.files[0]))
+        setOpenCrop(true)
+    }
 
     const handleOptionalChange = (event) => {
         if (event.target.name === 'priceType') {
@@ -85,21 +112,153 @@ const Create = () => {
         }));
     };
 
-    const handlePublish = () => {
+    const handleAddMore = () => {
+        if (
+            inputValues.quantity === '' ||
+            inputValues.discName === '' ||
+            inputValues.brand === '' ||
+            inputValues.range === '' ||
+            (inputValues.priceType === 'auction' && inputValues.startingPrice === '') ||
+            (inputValues.priceType === 'fixedPrice' && inputValues.startingPrice === '') ||
+            inputValues.endDay === '' ||
+            inputValues.endTime === '' ||
+            inputValues.pictureURL === null
+        ) {
+            toast.error('Fill this disc detail first');
+            return;
+        }
+        if (inputValues.priceType === 'auction' && inputValues.minPrice === '') {
+            inputValues.minPrice = 1
+        }
+        setAdded(false)
+        if (multipleDiscs.length === 0) {
+            setMultipleDiscs([...multipleDiscs, inputValues])
+        }
+        setInputValues({
+            seller: auth.userId,
+            pictureURL: null,
+            quantity: 1,
+            discName: '',
+            brand: '',
+            range: '',
+            condition: null,
+            plastic: '',
+            grams: '',
+            named: false,
+            dyed: false,
+            blank: false,
+            glow: false,
+            collectible: false,
+            firstRun: false,
+            priceType: 'auction',
+            startingPrice: '',
+            minPrice: '',
+            endDay: '',
+            endTime: '',
+        })
+        setPhotoURL(null)
+    }
+
+    const handlePublish = (e) => {
+        e.preventDefault()
+        if (inputValues.quantity === '') {
+            toast.error('Quantity is required')
+            return
+        }
+        if (inputValues.discName === '') {
+            toast.error('Disc Name is required')
+            return
+        }
+        if (inputValues.brand === '') {
+            toast.error('Brand is required')
+            return
+        }
+        if (inputValues.range === '') {
+            toast.error('Range is required')
+            return
+        }
+        if (inputValues.priceType === 'auction' && inputValues.startingPrice === '') {
+            toast.error('Starting price is required')
+            return
+        }
+        if (inputValues.priceType === 'fixedPrice' && inputValues.startingPrice === '') {
+            toast.error('Price is required')
+            return
+        }
+        if (inputValues.endDay === '') {
+            toast.error('End day is required')
+            return
+        }
+        if (inputValues.endTime === '') {
+            toast.error('End time is required')
+            return
+        }
+        if (inputValues.pictureURL === null) {
+            toast.error('Please add a picture')
+            return
+        }
+        if (inputValues.priceType === 'auction' && inputValues.minPrice === '') {
+            inputValues.minPrice = 1
+        }
         console.log(inputValues);
+        console.log(multipleDiscs.length);
+        console.log(added);
+        if (multipleDiscs.length > 0 && added === true) {
+            console.log('i am here 3');
+            const updatedDiscs = [...multipleDiscs];
+            updatedDiscs.pop();
+            updatedDiscs.push(inputValues);
+            setMultipleDiscs(updatedDiscs);
+        }
+        if (multipleDiscs.length > 0 && added === false) {
+            setAdded(true)
+            console.log('i am here 2');
+            setMultipleDiscs([...multipleDiscs, inputValues])
+        }
+        if (multipleDiscs.length === 0 && added === false) {
+            console.log('i am here');
+            setAdded(true)
+            setMultipleDiscs([...multipleDiscs, inputValues])
+        }
         setModel(true)
     }
 
-    const handleAddMore = () => {
+    const clearForm = () => {
+        setPhotoURL(null)
+        setAdded(false)
+        setMultipleDiscs({})
         setInputValues({
-            discimage: null, quantity: 1, discName: '', brand: '', range: '', condition: null, plastic: '', grams: '', named: false, dyed: false, blank: false, glow: false, collectible: false, firstRun: false, priceType: inputValues.priceType, startingPrice: null, minPrice: null, endDay: null, endTime: null,
+            seller: auth.userId,
+            pictureURL: null,
+            quantity: 1,
+            discName: '',
+            brand: '',
+            range: '',
+            condition: null,
+            plastic: '',
+            grams: '',
+            named: false,
+            dyed: false,
+            blank: false,
+            glow: false,
+            collectible: false,
+            firstRun: false,
+            priceType: 'auction',
+            startingPrice: '',
+            minPrice: '',
+            endDay: '',
+            endTime: '',
         })
     }
 
-    const handleFileUpload = (event) => {
-        const file = event.target.files[0];
-        const url = URL.createObjectURL(file);
-        setImageUrl(url);
+    const handleCropped = (file, url) => {
+        setPhotoURL(url)
+        inputValues.pictureURL = file;
+    }
+
+    const dontCrop = (url) => {
+        setPhotoURL(url)
+        inputValues.pictureURL = files;
     }
 
     return (
@@ -112,10 +271,10 @@ const Create = () => {
                 <div className='bg-[#FFFFFF] rounded-[8px] pb-[2.5em] px-[1.25em] xsm:px-[0] sm:px-[0] border-[#0000001f] border-[0.5px]'>
                     <div className="flex justify-center items-center px-[0.625em] h-[13.6875em]">
                         <label htmlFor="file-upload" className="cursor-pointer">
-                            {imageUrl ? (
-                                <img src={imageUrl} className='w-full h-[12.5em] rounded-[4px]' alt="uploaded picture" />
+                            {photoURL !== null ? (
+                                <img src={photoURL} className='w-full h-[12.5em] rounded-[4px]' alt="uploaded picture" />
                             ) : (
-                                <img src={upload} alt="upload a picture" />
+                                <img src={upload} className='w-[84px]' alt="upload a picture" />
                             )}
                         </label>
                         <input id="file-upload" type="file" className="hidden" onChange={handleFileUpload} />
@@ -137,23 +296,19 @@ const Create = () => {
                             <input name='discName'
                                 value={inputValues.discName}
                                 onChange={handleOptionalChange} type="text" className='text-[0.75em] placeholder:font-[500] pl-[7px] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[1.938em] rounded-[2px]' placeholder='Disc Name *' />
-                            <Select className="select2 w-full text-[0.75em] font-[500] text-[#AAAAAA] rounded-[2px] outline-none  leading-[14.63px] bg-[white]" closeMenuOnScroll={true} placeholder="Brand" options={options} />
+                            <Select value={options.find((option) => option.value === inputValues.brand) || null} className="select2 w-full text-[0.75em] font-[500] text-[#AAAAAA] rounded-[2px] outline-none  leading-[14.63px] bg-[white]" closeMenuOnScroll={true} placeholder="Brand" options={options} onChange={(selectedOption) => {
+                                setInputValues((prevInputValues) => ({
+                                    ...prevInputValues,
+                                    brand: selectedOption ? selectedOption.value : '', // use '' if no option is selected
+                                }));
+                            }} />
                             <input
                                 name='range'
                                 value={inputValues.range}
                                 onChange={handleOptionalChange}
-                                list="rangeOptions"
                                 className="w-full text-[0.75em] bg-white border-[1px] border-[#595959] placeholder:font-[500] pl-[7px] rounded-[2px] xsm:h-[23px] sm:h-[23px] h-[1.938em]"
                                 placeholder="Range *"
                             />
-                            <datalist id="rangeOptions">
-                                <option value="Zara" />
-                                <option value="Gucci" />
-                                <option value="Leopard" />
-                                <option value="" disabled>
-                                    Type something else
-                                </option>
-                            </datalist>
                         </div>
                         <div className="w-[50%] grid grid-cols-4 xsm:gap-x-2 sm:gap-x-2 gap-x-10 xsm:gap-y-[0.375em] sm:gap-y-[0.375em] gap-y-[0.675em]">
                             {ranges.map((value, index) => (
@@ -253,13 +408,13 @@ const Create = () => {
                         <div className='w-[50%] pr-[0.625em] mt-[0.9375em] flex items-center'>
                             <input name='startingPrice'
                                 value={inputValues.startingPrice}
-                                onChange={handleOptionalChange} type="number" min={0} className='w-full text-[0.75em] h-[1.938em] placeholder:font-[500] pl-[0.4375em] border-[1px] font-sans border-[#595959] rounded-[2px]' placeholder={inputValues.priceType === 'auction' ? `Starting Price (Kr)` : "Price"} />
+                                onChange={handleOptionalChange} type="number" min={0} className='w-full text-[0.75em] h-[1.938em] placeholder:font-[500] pl-[0.4375em] border-[1px] font-sans border-[#595959] rounded-[2px]' placeholder={inputValues.priceType === 'auction' ? `Starting Price (${userCountry})` : `Price (${userCountry})`} />
                         </div>
                         <div className='w-[50%] justify-start mt-[0.9375em] flex flex-col items-start'>
                             <input name='minPrice'
                                 value={inputValues.minPrice}
-                                onChange={handleOptionalChange} type="number" min={0} className={`w-full text-[0.75em] placeholder:font-[500] pl-[0.4375em] border-[1px] font-sans border-[#595959] h-[1.938em] rounded-[2px] ${inputValues.priceType !== 'auction' ? 'hidden' : ''}`} placeholder={`Min Price (Kr)`} />
-                            <p className={`font-[400] text-[.6em] mt-[.2em] text-[#AAAAAA] text-left ${inputValues.priceType !== 'auction' ? 'hidden' : ''}`}>5 Kr min price</p>
+                                onChange={handleOptionalChange} type="number" min={0} className={`w-full text-[0.75em] placeholder:font-[500] pl-[0.4375em] border-[1px] font-sans border-[#595959] h-[1.938em] rounded-[2px] ${inputValues.priceType !== 'auction' ? 'hidden' : ''}`} placeholder={`Min Increase (${userCountry})`} />
+                            {inputValues.minPrice === '' && <p className={`font-[400] text-[.6em] mt-[.2em] text-[#AAAAAA] text-left ${inputValues.priceType !== 'auction' ? 'hidden' : ''}`}> 1 {`${userCountry} default`}</p>}
                         </div>
                     </div>
                     <div className='flex flex-wrap mx-[0.8em] mt-[0.625em] gap-[0.625em] w-full'>
@@ -274,12 +429,12 @@ const Create = () => {
                             onChange={handleOptionalChange} className='min-w-[80px] ml-2 text-[#595959bf] rounded-[2px] border-[1px] border-[#000000]' type="time" id="time" /></label>
                     </div>
                 </div>
-
                 <div className='flex justify-center xsm:pt-[0em] sm:pt-[0em] pt-[1.2em] pb-[1.25em]'><button onClick={handlePublish} className='w-[7.5em] h-[2.4125em] mt-[1.125em] text-[0.875em] button font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[4px]' style={{ boxShadow: "0 4px 0.375em -1px rgba(0, 0, 0, 0.1), 0 0.375em 4px -1px rgba(0, 0, 0, 0.06)" }}>Publish</button></div>
-
             </div>
-            {model && <NumofListing setModel={setModel} />}
+            {model && <NumofListing setModel={setModel} discs={multipleDiscs} clearForm={clearForm} />}
+            {openCrop && <CropEasy photoURL={photoURL} setOpenCrop={setOpenCrop} dontCrop={dontCrop} onFinish={handleCropped} />}
         </div>
+
     )
 }
 

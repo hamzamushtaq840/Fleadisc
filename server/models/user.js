@@ -1,6 +1,14 @@
 import mongoose from "mongoose";
 import { UserRole } from '../config/role_list.js';
 
+const ratingSchema = mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    rating: { type: Number, required: true },
+});
+const followingSchema = mongoose.Schema({
+    disc: { type: mongoose.Schema.Types.ObjectId, ref: 'Disc', required: true },
+});
+
 const userSchema = mongoose.Schema({
     name: {
         type: String,
@@ -33,8 +41,14 @@ const userSchema = mongoose.Schema({
         type: String,
         required: false,
     },
-    dateOfBirth: {
-        type: Date,
+    rating: {
+        type: [ratingSchema],
+        default: [],
+        required: false,
+    },
+    following: {
+        type: [followingSchema],
+        default: [],
         required: false,
     },
     billingAddress: {
@@ -94,3 +108,4 @@ const userSchema = mongoose.Schema({
 });
 
 export const User = mongoose.model("User", userSchema);
+

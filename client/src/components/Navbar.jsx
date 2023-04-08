@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import signin from './../assets/signin.svg';
 import useAuth from '../hooks/useAuth';
 import { Avatar, Box, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
@@ -11,6 +11,7 @@ const Navbar = () => {
     const location = useLocation();
     const [showShadow, setShowShadow] = useState(false);
     const [anchorElUser, setAnchorElUser] = useState(null);
+    const navigate = useNavigate()
     const { auth } = useAuth();
     const { setAuth } = useContext(AuthContext)
 
@@ -40,8 +41,8 @@ const Navbar = () => {
 
     return (
         <>
-            <div style={showShadow ? { boxShadow: "0px 2px 12px rgba(0,0,0,0.1)" } : {}} className='flex items-center fixed w-full h-[67px] justify-center bg-[#FAFAFA] z-50'>
-                <div className='h-[67px] w-full text-[1.2rem] sm:text-[0.75rem] xsm:text-[0.75rem]  font-sans font-[400] xsm:max-w-[100vw] sm:max-w-[100vw] max-w-[70vw] m-auto flex items-center justify-around gap-[1.256em] px-[1.125em]'>
+            <div style={showShadow ? { boxShadow: "0px 2px 12px rgba(0,0,0,0.1)" } : {}} className='flex items-center fixed w-full h-[67px] justify-center bg-[#FAFAFA] z-20'>
+                <div className='h-[67px] w-full text-[1.2rem] sm:text-[0.75rem] xsm:text-[0.75rem] font-sans font-[400] xsm:max-w-[100vw] sm:max-w-[100vw] max-w-[70vw] m-auto flex items-center justify-around gap-[1.256em] px-[1.125em]'>
                     <NavLink to="/" className="nav-link flex flex-col gap-[3px] min-w-[50px] items-center text-[#00000]" activeclassname="active">
                         <svg width="19" height="19"><path d="M0.125 0.125V8.45833H8.45833V0.125H0.125ZM6.375 6.375H2.20833V2.20833H6.375V6.375ZM0.125 10.5417V18.875H8.45833V10.5417H0.125ZM6.375 16.7917H2.20833V12.625H6.375V16.7917ZM10.5417 0.125V8.45833H18.875V0.125H10.5417ZM16.7917 6.375H12.625V2.20833H16.7917V6.375ZM10.5417 10.5417V18.875H18.875V10.5417H10.5417ZM16.7917 16.7917H12.625V12.625H16.7917V16.7917Z" /></svg>
                         <h1 className='text-[.75em]'>Listings</h1>
@@ -73,16 +74,16 @@ const Navbar = () => {
                         <div onClick={handleOpenUserMenu} className='cursor-pointer flex flex-col gap-[3px] min-w-[50px] items-center'>
                             <img src={auth.profilePicture === null ? signin : auth.profilePicture} className="h-[22px] cursor-pointer" alt='profile' />
                             <Menu sx={{ mt: '45px' }} id="menu-appbar" anchorEl={anchorElUser} anchorOrigin={{ vertical: 'top', horizontal: 'right', }} keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right', }} open={Boolean(anchorElUser)} onClose={handleCloseUserMenu}>
-                                <MenuItem onClick={handleCloseUserMenu}>
-                                    <NavLink to="/profile/private" className="nav-link flex flex-col gap-[3px] min-w-[50px] items-center" activeclassname="active">
+                                <MenuItem onClick={(e) => { handleCloseUserMenu(e); navigate('/profile/private') }}>
+                                    <h1 className=" flex flex-col font-sans text-[.8em] gap-[3px] min-w-[80px] items-center" activeclassname="active">
                                         Profile
-                                    </NavLink>
+                                    </h1>
                                 </MenuItem>
-                                <MenuItem onClick={handleCloseUserMenu}>
-                                    <h1 onClick={() => setAuth({})}>Logout</h1>
+                                <MenuItem onClick={(e) => { handleCloseUserMenu(e); setAuth({}) }}>
+                                    <h1 className='min-w-[80px] text-center font-sans text-[.8em]' >Logout</h1>
                                 </MenuItem>
                             </Menu>
-                            <h1 className={`${location.pathname === "/profile/private" ? "text-primary font-[600] text-[.75em] mt-[-2px]" : 'text-[.75em] mt-[-2px] font-[400]'}`}>Profile</h1>
+                            <h1 className={` ${location.pathname === "/profile/private" ? "text-primary font-[600] text-[.75em] mt-[-2px]" : 'text-[.75em] mt-[-2px] font-[400]'}`}>Profile</h1>
                         </div>
                     }
                 </div>

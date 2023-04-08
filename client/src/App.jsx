@@ -98,7 +98,7 @@ const App = () => {
         </Route>
 
       </Routes >
-      <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" className='xsm:max-w-[300px] sm:max-w-[300px] xsm:ml-auto sm:ml-auto' />
+      <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" className='xsm:max-w-[300px] font-sans text-[.9em] sm:max-w-[300px] xsm:ml-auto sm:ml-auto' />
     </BrowserRouter >
   )
 }

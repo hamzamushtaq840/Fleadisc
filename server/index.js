@@ -1,15 +1,14 @@
-import express from 'express'
-import mongoose from "mongoose"
-import dotenv from 'dotenv'
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import dotenv from 'dotenv'
+import express from 'express'
+import helmet from 'helmet'
+import mongoose from "mongoose"
 import { corsOptions } from './config/corsOptions.js'
 import { errorHandler } from './middlewares/errorHandler.js'
-import verifyJWT from './middlewares/verifyJWT.js'
-import userRoutes from './routes/userRoutes.js'
-import helmet from 'helmet'
+import discRoutes from './routes/discRoutes.js'
 import token from './routes/tokenRoutes.js'
-import listing from './routes/listingRoutes.js'
-import cookieParser from 'cookie-parser'
+import userRoutes from './routes/userRoutes.js'
 
 const app = express()
 
@@ -30,7 +29,7 @@ app.use(cors(corsOptions))
 
 app.use('/user', userRoutes)
 app.use('/token', token)
-app.use('/listing', listing)
+app.use('/disc', discRoutes)
 
 const PORT = process.env.PORT || 5000
 
