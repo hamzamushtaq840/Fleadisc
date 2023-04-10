@@ -29,8 +29,14 @@ const SingleListCard = ({ val, seller }) => {
     const [type, setType] = useState(null)
     const [remainingTime, setRemainingTime] = useState(getRemainingTime(val.endDay, val.endTime));
     const [currentTime, setCurrentTime] = useState("")
-    const modalComponent = useMemo(() => <ConfirmBid price={price} val={val} seller={seller} type={type} setModel={setModal} currentTime={currentTime} />, [price, val, type, currentTime, setModal]);
-    const oldModalComponent = useMemo(() => <OlderBids setModel={setOldModal} />, [setOldModal]);
+
+    const clearForm = () => {
+        setPrice("")
+        setType(null)
+    }
+
+    const modalComponent = useMemo(() => <ConfirmBid price={price} val={val} seller={seller} type={type} setModel={setModal} currentTime={currentTime} clearForm={clearForm} />, [price, val, type, currentTime, setModal]);
+    const oldModalComponent = useMemo(() => <OlderBids setModel={setOldModal} discId={val._id} />, [setOldModal]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -101,7 +107,7 @@ const SingleListCard = ({ val, seller }) => {
 
     return (
         <div className={`flex relative mb-[10px]  xsm:text-[1.07rem] sm:text-[1.07rem] text-[1.2rem] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[165px] xsm:max-w-[165px] sm:min-w-[165px] sm:max-w-[165px] md:min-w-[200px] md:max-w-[200px] lg:min-w-[210px] lg:max-w-[210px] xl:min-w-[220px] xl:max-w-[220px] 2xl:min-w-[240px] 2xl:max-w-[240px]  h-[0%] flex-col`}>
-            <div className='flex justify-center'><img src={val.pictureURL} className='w-[165px] rounded-t-[8px] cursor-pointer' alt="" onClick={() => setImageModal(true)} /></div>
+            <div className='flex justify-center'><img src={val.pictureURL} className='xsm:h-[165px] sm:h-[165px] md:h-[200px] lg:h-[210px] xsm:min-w-[165px] xsm:max-w-[165px] sm:min-w-[165px] sm:max-w-[165px] md:min-w-[200px] md:max-w-[200px] lg:min-w-[210px] lg:max-w-[210px] xl:min-w-[220px] xl:h-[220px] xl:max-w-[220px] 2xl:min-w-[240px] 2xl:max-w-[240px] 2xl:h-[240px] rounded-t-[8px] cursor-pointer' alt="" onClick={() => setImageModal(true)} /></div>
             <div onClick={() => setExtra(prev => !prev)} className='flex justify-between cursor-pointer px-[0.625em] pt-[0.425em]'>
                 <div className='flex flex-col justify-between'>
                     <div className='flex items-start'>
@@ -210,11 +216,12 @@ const SingleListCard = ({ val, seller }) => {
             </>
             }
             {imageModal && (
-                <div onClick={() => setImageModal(false)} className="fixed  bg-[#000000CC] z-50 top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center">
-                    <div className="w-[50%] xsm:w-full sm:w-full max-h-[80%]">
-                        <img onClick={(e) => e.stopPropagation()} src={val.pictureURL} alt="image" className="w-full object-contain" />
+                <>
+                    <div className='modalBackground' onClick={() => setImageModal(false)}></div>
+                    <div className='modalContainer2   sm:w-[100%] xsm:w-[100%]  flex justify-center items-center w-[60%]  '>
+                        <img onClick={(e) => e.stopPropagation()} src={val.pictureURL} alt="image" className=" md:max-h-[300px] lg:max-h-[300px] xl:max-h-[300px] 2xl:max-h-[300px]  object-contain" />
                     </div>
-                </div>
+                </>
             )}
             {modal && modalComponent}
             {oldModal && oldModalComponent}

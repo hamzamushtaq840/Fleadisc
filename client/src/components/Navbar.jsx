@@ -14,6 +14,7 @@ const Navbar = () => {
     const navigate = useNavigate()
     const { auth } = useAuth();
     const { setAuth } = useContext(AuthContext)
+    const [notifications, setNotifications] = useState([{}, {}])
 
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -48,10 +49,11 @@ const Navbar = () => {
                         <h1 className='text-[.75em]'>Listings</h1>
                     </NavLink>
                     <NavLink to="/delivery" className="nav-link flex flex-col gap-[3px] min-w-[50px] items-center text-[#00000]" activeclassname="active">
-                        <div className='mt-[-3px]'>
-                            <svg width="25" height="25">
+                        <div className='mt-[-3px] relative'>
+                            <svg width="25" height="25" >
                                 <path d="M8.7625 16.0714H0V19.6429H8.7625V25L13.75 17.8571L8.7625 10.7143V16.0714ZM16.2375 14.2857V8.92857H25V5.35714H16.2375V0L11.25 7.14286L16.2375 14.2857Z" />
                             </svg>
+                            {notifications.length > 0 && <span className='absolute bg-[#f71c1cd2] right-[-20px] text-[#ffff] flex justify-center items-center rounded-full top-0 w-[18px] h-[18px] text-[9px]'>{notifications.length}</span>}
                         </div>
                         <h1 className='text-[.75em] mt-[-3px]'>Delivery</h1>
                     </NavLink>

@@ -4,12 +4,39 @@ import AppError from '../utils/AppError.js';
 import { groupBy } from 'lodash-es';
 import CurrencyConverter from 'currency-converter-lt';
 import { io } from '../index.js';
+import { BoughtDisc } from '../models/boughtDisc.js';
 
 export const postDisc = tryCatch(async (req, res) => {
     const { seller, pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime } = req.body;
     console.log(req.body);
     const disc = await Disc.create({ seller, pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime, });
     res.status(201).json({ message: 'Disc created successfully', disc });
+});
+
+export const postBid = tryCatch(async (req, res) => {
+    const { listingId, userId, price, time, fromCurrency, toCurrency } = req.body;
+
+    // Convert bid price to the requested currency
+    const currencyConverter = new CurrencyConverter({
+        from: fromCurrency,
+        to: toCurrency,
+        amount: Number(price),
+    });
+    const convertedPrice = await currencyConverter.convert();
+
+    const disc = await Disc.findById(listingId);
+    if (!disc) {
+        throw new AppError('invalid_id', 'Invalid Listing ID', 404);
+    }
+    const bid = {
+        user: userId,
+        bidPrice: convertedPrice,
+        createdAt: time
+    };
+    disc.bids.push(bid);
+    await disc.save();
+    io.emit("bid_added", { listingId: disc._id, bid });
+    res.status(201).json({ message: 'Bid added successfully' });
 });
 
 export const getAllDiscsWithSellers = tryCatch(async (req, res) => {
@@ -47,7 +74,7 @@ export const getAllDiscsWithSellers = tryCatch(async (req, res) => {
 
                 return {
                     ...disc.toObject(),
-                    startingPrice: Math.round(convertedStartingPrice)
+                    startingPrice: convertedStartingPrice
 
                 };
             }
@@ -68,8 +95,8 @@ export const getAllDiscsWithSellers = tryCatch(async (req, res) => {
 
             return {
                 ...disc.toObject(),
-                startingPrice: Math.round(convertedStartingPrice),
-                minPrice: Math.round(convertedMinPrice),
+                startingPrice: convertedStartingPrice,
+                minPrice: convertedMinPrice,
             };
         }));
         return {
@@ -81,20 +108,51 @@ export const getAllDiscsWithSellers = tryCatch(async (req, res) => {
     res.status(200).json(result);
 });
 
+export const getDiscBids = tryCatch(async (req, res) => {
+    const { discId } = req.params;
+    const { userCurrency } = req.query;
 
-export const postBid = tryCatch(async (req, res) => {
-    const { listingId, userId, price, time } = req.body;
-    const disc = await Disc.findById(listingId);
+    const disc = await Disc.findById(discId).populate('seller').populate('bids.user').exec();
+
     if (!disc) {
-        throw new AppError('invalid_id', 'Invalid Listing ID', 404);
+        return res.status(404).json({ message: 'Disc not found' });
     }
-    const bid = {
-        user: userId,
-        bidPrice: price,
-        createdAt: time
-    };
-    disc.bids.push(bid);
-    await disc.save();
-    io.emit("bid_added", { listingId: disc._id, bid });
-    res.status(201).json({ message: 'Bid added successfully' });
+
+    // convert prices of each bid to requested currency
+    const convertedBids = await Promise.all(disc.bids.map(async (bid) => {
+        const bidderCurrency = disc.seller.currency;
+        const bidPrice = Number(bid.bidPrice)
+
+        const currencyConverter = new CurrencyConverter({
+            from: bidderCurrency,
+            to: userCurrency,
+            amount: bidPrice,
+        });
+        const convertedPrice = await currencyConverter.convert();
+
+        return {
+            ...bid.toObject(),
+            bidPrice: convertedPrice,
+        };
+    }));
+
+    res.status(200).json(convertedBids);
+});
+
+export const buyDisc = tryCatch(async (req, res) => {
+    const { listingId, userId, time } = req.body;
+    const disc = await Disc.findOneAndRemove({ _id: listingId });
+    if (!disc) {
+        return res.status(404).json({ error: "Disc not found" });
+    }
+    const boughtDisc = await BoughtDisc.create({
+        buyer: userId,
+        disc: {
+            ...disc.toObject(),
+            seller: disc.seller._id,
+        },
+        time,
+    });
+    io.emit("bid_added");
+    res.status(201).json({ success: true, data: boughtDisc });
 });

@@ -43,7 +43,6 @@ const Signin = () => {
         onSuccess: async (tokenResponse) => {
             axios.post('/user/login', { googleAccessToken: tokenResponse.access_token })
                 .then((res) => {
-                    console.log(res.data);
                     setAuth(res.data)
                     navigate('/')
                 })

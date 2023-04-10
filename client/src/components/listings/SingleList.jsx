@@ -16,11 +16,11 @@ const SingleList = ({ value, index }) => {
         width: window.innerWidth,
         height: window.innerHeight
     });
-    const currentTimeRef = useRef(moment());
+    const [currentTime, setCurrentTime] = useState(moment());
 
     useEffect(() => {
         const intervalId = setInterval(() => {
-            currentTimeRef.current = moment();
+            setCurrentTime(moment());
         }, 1000); // trigger update every second
 
         return () => {
@@ -43,7 +43,6 @@ const SingleList = ({ value, index }) => {
             value = 160
         }
 
-        console.log(value);
         scrollableDivRef.current.scrollBy({
             left: value,
             behavior: 'smooth',
@@ -94,7 +93,7 @@ const SingleList = ({ value, index }) => {
         <>
             <div key={index} className='flex flex-col'>
                 <div className='flex px-[19px] mb-[2px] gap-[0.563em] mt-[1.063em]'>
-                    <img src={auth.profilePicture !== null ? auth.profilePicture : signin} onClick={() => navigate('/profile/public')} className="cursor-pointer mt-1 xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em]" alt="user" />
+                    <img src={value.seller.profilePicture !== null ? value.seller.profilePicture : signin} onClick={() => navigate('/profile/public')} className="cursor-pointer mt-1 xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em]" alt="user" />
                     <div className='flex flex-col justify-start'>
                         <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate('/profile/public')} >{value.seller.name}</h1>
                         <div className='ml-[-0.2em] flex items-center gap-[0.3125em]'>
@@ -109,7 +108,7 @@ const SingleList = ({ value, index }) => {
                     <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[4px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"}  pb-[5px] gap-[10px] mt-[11px] `}>
                         {value.discs.map((val, index) => {
                             const combinedDate = moment(`${val.endDay} ${val.endTime}`, "YYYY-MM-DD HH:mm");
-                            const isExpired = combinedDate.isBefore(currentTimeRef);
+                            const isExpired = combinedDate.isBefore(currentTime);
                             return isExpired ? null : (
                                 <SingleListCard key={index} seller={value.seller} val={val} index={index} />
                             );

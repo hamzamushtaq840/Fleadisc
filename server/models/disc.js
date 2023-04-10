@@ -31,10 +31,11 @@ const discSchema = mongoose.Schema({
     bids: {
         type: [bidSchema],
         required: function () {
-            return this.priceType === "auction";
+            return this.priceType !== "fixedPrice";
         },
     },
 
 });
+
 
 export const Disc = mongoose.model("Disc", discSchema);

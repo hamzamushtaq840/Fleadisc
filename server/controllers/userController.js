@@ -75,7 +75,7 @@ export const signinController = tryCatch(async (req, res) => {
         //     maxAge: 24 * 60 * 60 * 1000
         // });
 
-        res.status(200).json({ message: 'Login successful', accessToken: accessToken, userId: user._id.toString(), email: user.email, profilePicture: user.profilePicture, roles: user.roles, country: user.country });
+        res.status(200).json({ message: 'Login successful', accessToken: accessToken, name: user.name, userId: user._id.toString(), email: user.email, profilePicture: user.profilePicture, roles: user.roles, country: user.country });
     }
 })
 

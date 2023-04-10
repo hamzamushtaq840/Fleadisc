@@ -1,14 +1,28 @@
 import React from 'react'
-import user from '../../assets/user.svg'
+import signin from '../../assets/signin.svg'
 import axios from '../../api/axios'
 import useAuth from '../../hooks/useAuth';
 import { toast } from 'react-toastify'
 import { useMutation } from '@tanstack/react-query';
+import { getCountryInfoByISO } from '../../utils/iso-country-currency';
 
-const ConfirmBid = ({ setModel, price, type, val, currentTime, seller }) => {
+const ConfirmBid = ({ setModel, price, type, val, currentTime, seller, clearForm }) => {
     const { auth } = useAuth();
-    const { mutate, isLoading, isSuccess, isError, error } = useMutation((data) => axios.post('/disc/bid', data), {
+    const fromCurrency = auth?.country ? getCountryInfoByISO(auth.country).currency.toUpperCase() : "SEK";
+    const toCurrency = seller.currency.toUpperCase();
+    const bidMutation = useMutation((data) => axios.post('/disc/bid', data), {
         onSuccess: () => {
+            clearForm()
+            setModel(false);
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+
+    const buyMutation = useMutation((data) => axios.post('/disc/buy', data), {
+        onSuccess: () => {
+            clearForm()
             setModel(false);
         },
         onError: (error) => {
@@ -17,17 +31,34 @@ const ConfirmBid = ({ setModel, price, type, val, currentTime, seller }) => {
     });
 
     const handleBid = () => {
-        if (seller._id === auth.userId) {
-            toast.error("You can't bid on your own disc");
-            return;
+        if (type === 'buy') {
+            console.log(val.startingPrice);
+            if (seller._id === auth.userId) {
+                toast.error("You can't buy on your own disc");
+                return;
+            }
+            const data = {
+                listingId: val._id,
+                userId: auth.userId,
+                time: currentTime,
+            }
+            buyMutation.mutate(data)
         }
-        const data = {
-            listingId: val._id,
-            userId: auth.userId,
-            price: price,
-            time: currentTime
+        else {
+            if (seller._id === auth.userId) {
+                toast.error("You can't bid on your own disc");
+                return;
+            }
+            const data = {
+                listingId: val._id,
+                userId: auth.userId,
+                price: price,
+                time: currentTime,
+                fromCurrency,
+                toCurrency
+            }
+            bidMutation.mutate(data)
         }
-        mutate(data)
     }
 
     return (
@@ -38,14 +69,14 @@ const ConfirmBid = ({ setModel, price, type, val, currentTime, seller }) => {
                     <div className='flex flex-col gap-[8px] '>
                         <h1 className='text-[0.9375em] font-[500] '>{type === 'bid' ? "Bidder" : "Buyer"}</h1>
                         <div className='flex gap-[6px] items-center'>
-                            <img src={user} className="h-[25px]" alt="" />
-                            <p className='text-[0.75em] font-[400]'>Fred Isaksson</p>
+                            <img src={auth.profilePicture !== null ? auth.profilePicture : signin} className="h-[25px]" alt="" />
+                            <p className='text-[0.75em] font-[400]'>{auth.name}</p>
                         </div>
                     </div>
-                    <div className='flex flex-col gap-[8px] items-center'>
-                        <h1 className='text-[0.9375em] font-[500] text-center'>Price</h1>
+                    <div className='flex flex-col gap-[8px]  '>
+                        <h1 className='text-[0.9375em] font-[500] '>Price</h1>
                         <div className='flex min-h-[25px] items-center'>
-                            <p className='text-[0.75em] font-[400]'>{type === 'bid' ? price : val.startingPrice}</p>
+                            <p className='text-[0.75em] font-[400]'>{type === 'bid' ? price : val.startingPrice} {fromCurrency}</p>
                         </div>
                     </div>
                     <div className='flex flex-col gap-[8px]'>
@@ -57,7 +88,7 @@ const ConfirmBid = ({ setModel, price, type, val, currentTime, seller }) => {
                 </div>
                 <div className='w-[95%] my-[15px] py-[0.3px] bg-[#323232]'></div>
                 <div className='flex justify-center mt-[.5em]'>
-                    <button onClick={handleBid} className='button rounded-[4px] py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary'>{isLoading ? "wait.." : type === 'bid' ? "Confirm Bid" : "Confirm Buy"}</button>
+                    <button onClick={handleBid} className='button rounded-[4px] py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary'>{(bidMutation.isLoading || buyMutation.isLoading) ? "wait.." : type === 'bid' ? "Confirm Bid" : "Confirm Buy"}</button>
                 </div>
             </div>
         </>

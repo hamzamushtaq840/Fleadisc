@@ -84,13 +84,11 @@ option:first-child {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 21;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
 
 }
 
 .modalContainer {
-  /* width: 70%; */
-  /* height: 15%; */
   border-radius: 6px;
   border: 1px solid #81B29A;
   background-color: white;
@@ -101,8 +99,26 @@ option:first-child {
   transform: translate(-50%, -50%);
   z-index: 30;
   animation-name: animateModal;
-  animation-duration: 0.5s;
-  animation-timing-function: ease-out;
+  animation-duration: 0.6s;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.modalContainer2 {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 30;
+}
+
+@keyframes animateModal {
+  0% {
+    top: -20px;
+  }
+
+  100% {
+    top: 50%;
+  }
 }
 
 .button {
