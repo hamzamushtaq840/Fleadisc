@@ -200,11 +200,7 @@ const Create = () => {
         if (inputValues.priceType === 'auction' && inputValues.minPrice === '') {
             inputValues.minPrice = 1
         }
-        console.log(inputValues);
-        console.log(multipleDiscs.length);
-        console.log(added);
         if (multipleDiscs.length > 0 && added === true) {
-            console.log('i am here 3');
             const updatedDiscs = [...multipleDiscs];
             updatedDiscs.pop();
             updatedDiscs.push(inputValues);
@@ -212,11 +208,9 @@ const Create = () => {
         }
         if (multipleDiscs.length > 0 && added === false) {
             setAdded(true)
-            console.log('i am here 2');
             setMultipleDiscs([...multipleDiscs, inputValues])
         }
         if (multipleDiscs.length === 0 && added === false) {
-            console.log('i am here');
             setAdded(true)
             setMultipleDiscs([...multipleDiscs, inputValues])
         }

@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from '../../api/axios';
 import back from './../../assets/back.svg';
 import { toast } from 'react-toastify';
+import { getCountryInfoByISO } from '../../utils/iso-country-currency';
 
 const ChooseCountry = () => {
     const navigate = useNavigate();
@@ -21,6 +22,7 @@ const ChooseCountry = () => {
             email: registrationState.email,
             password: registrationState.password,
             country: selected,
+            currency: getCountryInfoByISO(selected).currency,
         };
         mutate(formData, {
             onSuccess: (res) => {

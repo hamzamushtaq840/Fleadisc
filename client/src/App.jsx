@@ -4,8 +4,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import RequireAuth from './components/RequireAuth';
+import Listing from './pages/Listing';
 
-const Listing = React.lazy(() => import('./pages/Listing'))
 const Navbar = React.lazy(() => import('./components/Navbar'))
 const Create = React.lazy(() => import('./pages/Create'))
 const Delivery = React.lazy(() => import('./pages/Delivery'))
@@ -59,7 +59,7 @@ const App = () => {
         </Route>
 
         <Route path='/' element={<Navbar />}>
-          <Route index element={<Suspense fallback={Loader}><Listing /></Suspense>} />
+          <Route index element={<Listing />} />
           {/* Private Routes */}
           <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
             <Route path="/create" element={<Suspense fallback={Loader}><Create /></Suspense>} />

@@ -4,21 +4,60 @@ import { Us } from "react-flags-select";
 import SingleList from '../components/listings/SingleList';
 import { useQuery } from '@tanstack/react-query'
 import axios from '../api/axios';
+import useAuth from '../hooks/useAuth';
+import { getCountryInfoByISO } from '../utils/iso-country-currency';
+import { ColorRing } from 'react-loader-spinner';
+import { io } from 'socket.io-client'
+
+const Loader =
+    <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>
+        <ColorRing
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="blocks-loading"
+            wrapperStyle={{}}
+            wrapperClass="blocks-wrapper"
+            colors={['#494949', '#494949', '#494949', '#494949', '#494949']}
+        />
+    </div>
 
 const Listing = () => {
     const [selected, setSelected] = useState('SE');
     const [moreFilters, setMoreFilters] = useState(false)
+    const { auth } = useAuth();
+    const userCurrency = auth?.country ? getCountryInfoByISO(auth.country).currency.toUpperCase() : "SEK";
     const [screenSize, setScreenSize] = useState({
         width: window.innerWidth,
         height: window.innerHeight
     });
     //array contains unique key that this query represents i.e cahching,refectching,etc
-    const { isLoading, error, data } = useQuery(["listings"], async () => {
-        const response = await axios.get('/disc')
-        console.log(response);
-        return response.data;
-    })
+    const [socket, setSocket] = useState(null);
 
+    const { isLoading, error, data, refetch } = useQuery(
+        ['listings', { userCurrency }],
+        async () => {
+            const response = await axios.get(`/disc?userCurrency=${userCurrency}`);
+            return response.data;
+        }
+    );
+
+    useEffect(() => {
+        const newSocket = io('http://localhost:5001');
+        setSocket(newSocket);
+
+        return () => {
+            newSocket.close();
+        };
+    }, []);
+
+    useEffect(() => {
+        if (socket) {
+            socket.on('bid_added', () => {
+                refetch();
+            });
+        }
+    }, [socket, refetch]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -32,561 +71,6 @@ const Listing = () => {
         };
     }, []);
 
-    const [listings, setListings] = useState([
-        {
-            userId: 9898,
-            name: 'Fred Isaksson',
-            rating: 5,
-            image: null,
-            activelistings: [
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: true,
-                    dyed: true,
-                    blank: true,
-                    glow: true,
-                    collectible: true,
-                    firstRun: true,
-                    priceType: 'auction',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-04-13",
-                    endTime: "23:59",
-                    bids: [{ sa: 1 }, { bd: 1 }]
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: false,
-                    dyed: true,
-                    blank: false,
-                    glow: true,
-                    collectible: false,
-                    firstRun: true,
-                    priceType: 'fixedPrice',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-05-22",
-                    endTime: "12:35",
-                    bids: []
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: false,
-                    dyed: true,
-                    blank: false,
-                    glow: true,
-                    collectible: false,
-                    firstRun: false,
-                    priceType: 'auction',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-04-29",
-                    endTime: "13:48",
-                    bids: [{ sa: 1 }, { bd: 1 }]
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: false,
-                    dyed: true,
-                    blank: false,
-                    glow: true,
-                    collectible: false,
-                    firstRun: false,
-                    priceType: 'fixedPrice',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-05-22",
-                    endTime: "12:35",
-                    bids: []
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: 'Plastic',
-                    grams: '174',
-                    named: true,
-                    dyed: true,
-                    blank: true,
-                    glow: true,
-                    collectible: true,
-                    firstRun: true,
-                    priceType: 'fixedPrice',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-05-22",
-                    endTime: "12:35",
-                    bids: []
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: false,
-                    dyed: true,
-                    blank: false,
-                    glow: true,
-                    collectible: false,
-                    firstRun: false,
-                    priceType: 'auction',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-05-04",
-                    endTime: "13:48",
-                    bids: [{ sa: 1 }, { bd: 1 }]
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: true,
-                    dyed: false,
-                    blank: true,
-                    glow: true,
-                    collectible: false,
-                    firstRun: true,
-                    priceType: 'auction',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-07-24",
-                    endTime: "13:48",
-                    bids: []
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: false,
-                    dyed: true,
-                    blank: false,
-                    glow: true,
-                    collectible: false,
-                    firstRun: true,
-                    priceType: 'auction',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-07-24",
-                    endTime: "13:48",
-                    bids: []
-                },
-            ]
-        },
-        {
-            userId: 9898,
-            name: 'Fred Isaksson',
-            rating: 5,
-            image: null,
-            activelistings: [
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: true,
-                    dyed: true,
-                    blank: true,
-                    glow: true,
-                    collectible: true,
-                    firstRun: true,
-                    priceType: 'auction',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-05-02",
-                    endTime: "13:48",
-                    bids: [{ sa: 1 }, { bd: 1 }]
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: false,
-                    dyed: true,
-                    blank: false,
-                    glow: true,
-                    collectible: false,
-                    firstRun: true,
-                    priceType: 'fixedPrice',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-05-22",
-                    endTime: "12:35",
-                    bids: []
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: false,
-                    dyed: true,
-                    blank: false,
-                    glow: true,
-                    collectible: false,
-                    firstRun: false,
-                    priceType: 'auction',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-03-29",
-                    endTime: "13:48",
-                    bids: [{ sa: 1 }, { bd: 1 }]
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: false,
-                    dyed: true,
-                    blank: false,
-                    glow: true,
-                    collectible: false,
-                    firstRun: false,
-                    priceType: 'fixedPrice',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-05-22",
-                    endTime: "12:35",
-                    bids: []
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: 'Plastic',
-                    grams: '174',
-                    named: true,
-                    dyed: true,
-                    blank: true,
-                    glow: true,
-                    collectible: true,
-                    firstRun: true,
-                    priceType: 'fixedPrice',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-05-22",
-                    endTime: "12:35",
-                    bids: []
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: false,
-                    dyed: true,
-                    blank: false,
-                    glow: true,
-                    collectible: false,
-                    firstRun: false,
-                    priceType: 'auction',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-03-24",
-                    endTime: "13:48",
-                    bids: [{ sa: 1 }, { bd: 1 }]
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: true,
-                    dyed: false,
-                    blank: true,
-                    glow: true,
-                    collectible: false,
-                    firstRun: true,
-                    priceType: 'auction',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-03-24",
-                    endTime: "13:48",
-                    bids: []
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: false,
-                    dyed: true,
-                    blank: false,
-                    glow: true,
-                    collectible: false,
-                    firstRun: true,
-                    priceType: 'auction',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-03-24",
-                    endTime: "13:48",
-                    bids: []
-                },
-            ]
-        },
-        {
-            userId: 9898,
-            name: 'Fred Isaksson',
-            rating: 5,
-            image: null,
-            activelistings: [
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: true,
-                    dyed: true,
-                    blank: true,
-                    glow: true,
-                    collectible: true,
-                    firstRun: true,
-                    priceType: 'auction',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-05-02",
-                    endTime: "13:48",
-                    bids: [{ sa: 1 }, { bd: 1 }]
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: false,
-                    dyed: true,
-                    blank: false,
-                    glow: true,
-                    collectible: false,
-                    firstRun: true,
-                    priceType: 'fixedPrice',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-05-22",
-                    endTime: "12:35",
-                    bids: []
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: false,
-                    dyed: true,
-                    blank: false,
-                    glow: true,
-                    collectible: false,
-                    firstRun: false,
-                    priceType: 'auction',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-03-29",
-                    endTime: "13:48",
-                    bids: [{ sa: 1 }, { bd: 1 }]
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: false,
-                    dyed: true,
-                    blank: false,
-                    glow: true,
-                    collectible: false,
-                    firstRun: false,
-                    priceType: 'fixedPrice',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-05-22",
-                    endTime: "12:35",
-                    bids: []
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: 'Plastic',
-                    grams: '174',
-                    named: true,
-                    dyed: true,
-                    blank: true,
-                    glow: true,
-                    collectible: true,
-                    firstRun: true,
-                    priceType: 'fixedPrice',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-05-22",
-                    endTime: "12:35",
-                    bids: []
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: false,
-                    dyed: true,
-                    blank: false,
-                    glow: true,
-                    collectible: false,
-                    firstRun: false,
-                    priceType: 'auction',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-03-24",
-                    endTime: "13:48",
-                    bids: [{ sa: 1 }, { bd: 1 }]
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: true,
-                    dyed: false,
-                    blank: true,
-                    glow: true,
-                    collectible: false,
-                    firstRun: true,
-                    priceType: 'auction',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-03-24",
-                    endTime: "13:48",
-                    bids: []
-                },
-                {
-                    discimage: null,
-                    quantity: 1,
-                    discName: "Annax",
-                    brand: 'Discart',
-                    range: null,
-                    condition: 8,
-                    plastic: '',
-                    grams: '174',
-                    named: false,
-                    dyed: true,
-                    blank: false,
-                    glow: true,
-                    collectible: false,
-                    firstRun: true,
-                    priceType: 'auction',
-                    startingPrice: 125,
-                    minPrice: 130,
-                    endDay: "2023-03-24",
-                    endTime: "13:48",
-                    bids: []
-                },
-            ]
-        },
-
-    ])
 
     return (
         <div className=' w-full m-auto text-[1.2rem] sm:text-[1rem] xsm:text-[1rem]'>
@@ -638,15 +122,22 @@ const Listing = () => {
                     <p onClick={() => setMoreFilters((prev) => !prev)} className='text-[0.75em] text-[#595959] mt-[10px] cursor-pointer'>{moreFilters ? 'Close more filters' : 'Show more filters'}</p>
                 </div>
             </div>
-            <div className='flex flex-col xsm:w-full sm:w-full w-[90%] m-auto overflow-hidden mb-[50px]'>
-                {data?.map((value, index) => {
-                    return (
-                        <>
-                            <SingleList value={value} index={index} />
-                        </>
-                    )
-                })}
-            </div>
+            {isLoading ? (
+                <div style={{ position: "relative", minHeight: "200px" }}>
+                    {Loader}
+                </div>
+            ) : (
+                <div className='flex flex-col xsm:w-full sm:w-full w-[90%] m-auto overflow-hidden mb-[50px]'>
+                    {data?.length > 0 ?
+                        data?.map((value, index) => {
+                            return (
+                                <React.Fragment key={index}>
+                                    <SingleList value={value} index={index} />
+                                </React.Fragment>
+                            )
+                        }) : <p className='mt-[20px] text-[1em] font-[500] text-center'>No discs found</p>}
+                </div>
+            )}
         </div >
     )
 }

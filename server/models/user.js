@@ -36,7 +36,11 @@ const userSchema = mongoose.Schema({
     },
     country: {
         type: String,
-        required: false,
+        required: true,
+    },
+    currency: {
+        type: String,
+        required: true,
     },
     phone: {
         type: String,

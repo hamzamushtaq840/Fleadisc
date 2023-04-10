@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const bidSchema = mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     bidPrice: { type: Number, required: true },
-    createdAt: { type: Date, default: Date.now, required: true },
+    createdAt: { type: String, required: true },
 });
 
 const discSchema = mongoose.Schema({

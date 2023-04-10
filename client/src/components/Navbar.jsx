@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import signin from './../assets/signin.svg';
 import useAuth from '../hooks/useAuth';
-import { Avatar, Box, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
+import { Menu, MenuItem } from '@mui/material';
 import AuthContext from '../context/AuthProvider';
 
 const settings = ['Profile', 'Logout'];

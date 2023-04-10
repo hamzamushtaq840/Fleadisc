@@ -1,9 +1,7 @@
 import moment from 'moment'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import blank from '../../assets/blank.svg'
 import collectible from '../../assets/collectible.svg'
-import disc from '../../assets/disc.svg'
-import disc2 from '../../assets/disc2.svg'
 import dyed from '../../assets/dyed.svg'
 import firstRun from '../../assets/firstRun.svg'
 import glow from '../../assets/glow.svg'
@@ -14,9 +12,12 @@ import ConfirmBid from './ConfirmBid'
 import OlderBids from './OlderBids'
 import useAuth from '../../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
+import { getCountryInfoByISO } from '../../utils/iso-country-currency'
 
-const SingleListCard = ({ val }) => {
+
+const SingleListCard = ({ val, seller }) => {
     const { auth } = useAuth();
+    const userCurrency = auth?.country ? getCountryInfoByISO(auth.country).currency.toUpperCase() : "SEK";
     const navigate = useNavigate();
     const [extra, setExtra] = useState(false)
     const [imageModal, setImageModal] = useState(false);
@@ -24,9 +25,12 @@ const SingleListCard = ({ val }) => {
     const [error, setError] = useState(false)
     const [errorText, setErrorText] = useState('')
     const [oldModal, setOldModal] = useState(false)
-    const [price, setPrice] = useState(null)
+    const [price, setPrice] = useState("")
     const [type, setType] = useState(null)
     const [remainingTime, setRemainingTime] = useState(getRemainingTime(val.endDay, val.endTime));
+    const [currentTime, setCurrentTime] = useState("")
+    const modalComponent = useMemo(() => <ConfirmBid price={price} val={val} seller={seller} type={type} setModel={setModal} currentTime={currentTime} />, [price, val, type, currentTime, setModal]);
+    const oldModalComponent = useMemo(() => <OlderBids setModel={setOldModal} />, [setOldModal]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -77,7 +81,6 @@ const SingleListCard = ({ val }) => {
 
     const handleBid = (e, type) => {
         e.preventDefault()
-        console.log(price);
         if (type === 'bid') {
             if (price === null || price === '') {
                 setError(true)
@@ -91,14 +94,14 @@ const SingleListCard = ({ val }) => {
             }
         }
         setError(false)
-        console.log(type);
         type === 'bid' ? setType('bid') : setType('buy')
+        setCurrentTime(new Date().toLocaleString())
         setModal(true)
     }
 
     return (
         <div className={`flex relative mb-[10px]  xsm:text-[1.07rem] sm:text-[1.07rem] text-[1.2rem] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[165px] xsm:max-w-[165px] sm:min-w-[165px] sm:max-w-[165px] md:min-w-[200px] md:max-w-[200px] lg:min-w-[210px] lg:max-w-[210px] xl:min-w-[220px] xl:max-w-[220px] 2xl:min-w-[240px] 2xl:max-w-[240px]  h-[0%] flex-col`}>
-            <div className='flex justify-center'><img src={val.pictureURL} className=' w-[165px]' alt="" onClick={() => setImageModal(true)} /></div>
+            <div className='flex justify-center'><img src={val.pictureURL} className='w-[165px] rounded-t-[8px] cursor-pointer' alt="" onClick={() => setImageModal(true)} /></div>
             <div onClick={() => setExtra(prev => !prev)} className='flex justify-between cursor-pointer px-[0.625em] pt-[0.425em]'>
                 <div className='flex flex-col justify-between'>
                     <div className='flex items-start'>
@@ -113,24 +116,20 @@ const SingleListCard = ({ val }) => {
                         <span className='font-[500] text-[#595959BF] text-[0.55em]'>{remainingTime}</span>
                     </div>
                 </div>
-
                 <div className='flex flex-col justify-between items-end'>
                     <button className='text-[0.60em] xsm:w-[50px] sm:w-[50px] w-[80px] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
-
                     <div className='flex flex-col items-end'>
-                        <span className='text-[0.75em] mb-[-3px]  font-[600]'>{val.startingPrice} kr</span>
+                        <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{val.startingPrice} {userCurrency}</span>
                         {val.priceType === 'fixedPrice' && <span className='text-[0.6em] font-[500] text-[#595959bf]'>Fixed price</span>}
                         {(val.priceType !== 'fixedPrice') &&
                             <div className='flex items-center  text-[1em]'>
                                 <p onClick={(e) => { setOldModal(true); e.stopPropagation(); }} className='text-[0.6em] cursor-pointer hover:underline hover:text-text font-[500] text-[#595959BF] '>{val.bids.length} Bids</p>
                             </div>}
                     </div>
-
                 </div>
             </div>
             {extra && <> <div className='mt-[10px] text-[1.3rem] xsm:text-[1rem] sm:text-[1rem] px-[0.625em]'>
                 <div className='flex w-full mb-[5px] justify-between gap-[5px] flex-wrap'>
-
                     {val.plastic !== '' &&
                         <div className='flex items-center gap-[3px]'>
                             <img src={plastic} alt="" className=" w-[0.8125em]" />
@@ -179,11 +178,10 @@ const SingleListCard = ({ val }) => {
                             <p className='text-[0.6em] font-[300]'>Collectible</p>
                         </div>
                     }
-
                 </div>
                 {val.priceType === 'auction' &&
                     <form onSubmit={(e) => handleBid(e, 'bid')} className='flex flex-col mb-[6px] gap-[6px]'>
-                        <p className='text-[0.55em] text-[#595959] py-[2px] font-[400]'>Buyer pays shipping from, <span className='font-[700]'>Uppsala, Sweden</span></p>
+                        <p className='text-[0.55em] text-[#595959] py-[2px] font-[400]'>Buyer pays shipping from, <span className='font-[700]'>{getCountryInfoByISO(seller.country).countryName}</span></p>
                         {Object.keys(auth).length !== 0 && <input value={price} min={0} onChange={(e) => {
                             setPrice(e.target.value);
                             if (Number(e.target.value >= val.minPrice))
@@ -196,13 +194,13 @@ const SingleListCard = ({ val }) => {
                                 setErrorText('')
                                 setError(false)
                             }
-                        }} type="number" className={`w-full pl-[3px] py-[0.25em] rounded-[2px] text-[.65em] border-[1px]  ${error ? "border-[#f21616]" : "border-[#000000]"}`} placeholder={`Min Price - ${val.minPrice} kr`} />}
+                        }} type="number" className={`w-full pl-[3px] py-[0.25em] rounded-[2px] text-[.65em] border-[1px]  ${error ? "border-[#f21616]" : "border-[#000000]"}`} placeholder={`Min - ${val.minPrice} ${userCurrency}`} />}
                         {error && <p className='text-[0.5em] text-[#eb0000] my-[-5px]'>{errorText}</p>}
                         {Object.keys(auth).length !== 0 ? <button type='submit' className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Place Bid</button> : <button onClick={() => { navigate('/signin') }} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Sign in to bid</button>}
                     </form>}
                 {(val.priceType === 'fixedPrice') &&
                     <div className='flex mb-[5px] flex-col gap-[5px] mt-[5px]'>
-                        <p className='text-[0.55em] text-[#595959] py-[3px] font-[400]'>Buyer pays shipping from, <span className='font-[700]'>Uppsala, Sweden</span></p>
+                        <p className='text-[0.55em] text-[#595959] py-[3px] font-[400]'>Buyer pays shipping from, <span className='font-[700]'>{getCountryInfoByISO(seller.country).countryName}</span></p>
                         {(Object.keys(auth).length !== 0) ?
                             <button onClick={(e) => { handleBid(e, 'buy') }} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Buy</button> :
                             <button onClick={() => { navigate('/signin') }} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Sign in to buy</button>}
@@ -214,12 +212,12 @@ const SingleListCard = ({ val }) => {
             {imageModal && (
                 <div onClick={() => setImageModal(false)} className="fixed  bg-[#000000CC] z-50 top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center">
                     <div className="w-[50%] xsm:w-full sm:w-full max-h-[80%]">
-                        <img onClick={(e) => e.stopPropagation()} src={val.pictureURL} alt="" className="w-full object-contain" />
+                        <img onClick={(e) => e.stopPropagation()} src={val.pictureURL} alt="image" className="w-full object-contain" />
                     </div>
                 </div>
             )}
-            {modal && <ConfirmBid price={price} val={val} type={type} setModel={setModal} />}
-            {oldModal && <OlderBids setModel={setOldModal} />}
+            {modal && modalComponent}
+            {oldModal && oldModalComponent}
         </div >
     )
 }

@@ -94,7 +94,7 @@ export const signupController = tryCatch(async (req, res) => {
         res.status(201).json({ message: 'User registered successfully' });
     }
     else {
-        const { name, email, password, country } = req.body;
+        const { name, email, password, country, currency } = req.body;
         // check if email already exists
         const user = await User.findOne({ email });
         if (user) {
@@ -102,7 +102,7 @@ export const signupController = tryCatch(async (req, res) => {
         }
         const hashedPassword = await bcrypt.hash(password, 12)
         // create new user
-        await User.create({ name, email, password: hashedPassword, country });
+        await User.create({ name, email, password: hashedPassword, country, currency });
         res.status(201).json({ message: 'User registered successfully' });
     }
 })

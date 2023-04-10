@@ -6,7 +6,6 @@ import axios from './../../api/axios';
 
 const NumofListing = ({ setModel, discs, clearForm }) => {
     const [isLoading, setIsLoading] = useState(false);
-    console.log(discs);
 
     const handleUpload = async (file) => {
         try {
@@ -75,8 +74,9 @@ const NumofListing = ({ setModel, discs, clearForm }) => {
             });
 
             const results = await Promise.all(promises);
-            toast.success(`${discs.length > 1 ? "Discs" : "Disc"} published successfully`);
-            // clearForm();
+            if (results)
+                toast.success(`${discs.length > 1 ? "Discs" : "Disc"} published successfully`);
+            clearForm();
             setIsLoading(false);
             setModel(false)
         } catch (error) {
