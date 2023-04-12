@@ -13,9 +13,12 @@ import OlderBids from './OlderBids'
 import useAuth from '../../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
 import { getCountryInfoByISO } from '../../utils/iso-country-currency'
+import { QueryCache, QueryClient, useMutation } from '@tanstack/react-query'
+import axios from '../../api/axios'
 
 
-const SingleListCard = ({ val, seller }) => {
+const SingleListCard = ({ val, seller, followingData, refetch, isLoadingFollowing }) => {
+    const queryClient = new QueryClient();
     const { auth } = useAuth();
     const userCurrency = auth?.country ? getCountryInfoByISO(auth.country).currency.toUpperCase() : "SEK";
     const navigate = useNavigate();
@@ -37,6 +40,45 @@ const SingleListCard = ({ val, seller }) => {
 
     const modalComponent = useMemo(() => <ConfirmBid price={price} val={val} seller={seller} type={type} setModel={setModal} currentTime={currentTime} clearForm={clearForm} />, [price, val, type, currentTime, setModal]);
     const oldModalComponent = useMemo(() => <OlderBids setModel={setOldModal} discId={val._id} />, [setOldModal]);
+
+    const { mutate: followMutation, isLoading: isFollowLoading } = useMutation(
+        () => axios.post('/user/following', { userId: auth.userId, discId: val._id }),
+        {
+            onSuccess: () => {
+                // QueryCache.invalidateQueries('following');
+                queryClient.invalidateQueries('following');
+                refetch();
+            },
+        }
+    );
+
+
+    const { mutate: unfollowMutation, isLoading: isUnfollowLoading } = useMutation(
+        () => axios.delete(`/user/following/${auth.userId}/${val._id}`),
+        {
+            onSuccess: () => {
+                // QueryCache.invalidateQueries('following');
+                queryClient.invalidateQueries('following');
+                refetch();
+            },
+        }
+    );
+
+    const handleFollowClick = (e) => {
+        e.stopPropagation()
+        if (isFollowing(val._id, followingData)) {
+            console.log('unfollowing');
+            unfollowMutation();
+        } else {
+            console.log('following');
+            followMutation();
+        }
+    };
+
+    const isFollowing = (itemId, followingData) => {
+        console.log(followingData.some((item) => item.disc === itemId));
+        return followingData.some((item) => item.disc === itemId);
+    };
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -123,7 +165,10 @@ const SingleListCard = ({ val, seller }) => {
                     </div>
                 </div>
                 <div className='flex flex-col justify-between items-end'>
-                    <button className='text-[0.60em] xsm:w-[50px] sm:w-[50px] w-[80px] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
+                    <button onClick={handleFollowClick} className='text-[0.60em] xsm:w-[50px] sm:w-[50px] w-[80px] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>
+                        {(isFollowLoading || isUnfollowLoading || isLoadingFollowing) ? "wait" : (followingData.some((item) => item.disc === val._id) ? "Following" : "Follow")}
+                    </button>
+
                     <div className='flex flex-col items-end'>
                         <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{val.startingPrice} {userCurrency}</span>
                         {val.priceType === 'fixedPrice' && <span className='text-[0.6em] font-[500] text-[#595959bf]'>Fixed price</span>}
@@ -218,8 +263,8 @@ const SingleListCard = ({ val, seller }) => {
             {imageModal && (
                 <>
                     <div className='modalBackground' onClick={() => setImageModal(false)}></div>
-                    <div className='modalContainer2   sm:w-[100%] xsm:w-[100%]  flex justify-center items-center w-[60%]  '>
-                        <img onClick={(e) => e.stopPropagation()} src={val.pictureURL} alt="image" className=" md:max-h-[300px] lg:max-h-[300px] xl:max-h-[300px] 2xl:max-h-[300px]  object-contain" />
+                    <div className='modalContainer2  sm:w-[100%] xsm:w-[100%]  flex justify-center items-center w-[60%]  '>
+                        <img onClick={(e) => e.stopPropagation()} src={val.pictureURL} alt="image" className=" w-full md:max-h-[300px] lg:max-h-[300px] xl:max-h-[300px] 2xl:max-h-[300px]  object-contain" />
                     </div>
                 </>
             )}

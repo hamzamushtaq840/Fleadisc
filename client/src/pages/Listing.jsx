@@ -33,8 +33,7 @@ const Listing = () => {
     });
     //array contains unique key that this query represents i.e cahching,refectching,etc
     const [socket, setSocket] = useState(null);
-
-    const { isLoading, error, data, refetch } = useQuery(
+    const { isLoading: isLoadingListings, data: listingsData, refetch: listingsRefetch } = useQuery(
         ['listings', { userCurrency }],
         async () => {
             const response = await axios.get(`/disc?userCurrency=${userCurrency}`);
@@ -54,10 +53,10 @@ const Listing = () => {
     useEffect(() => {
         if (socket) {
             socket.on('bid_added', () => {
-                refetch();
+                listingsRefetch();
             });
         }
-    }, [socket, refetch]);
+    }, [socket, listingsRefetch]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -122,14 +121,14 @@ const Listing = () => {
                     <p onClick={() => setMoreFilters((prev) => !prev)} className='text-[0.75em] text-[#595959] mt-[10px] cursor-pointer'>{moreFilters ? 'Close more filters' : 'Show more filters'}</p>
                 </div>
             </div>
-            {isLoading ? (
+            {isLoadingListings ? (
                 <div style={{ position: "relative", minHeight: "200px" }}>
                     {Loader}
                 </div>
             ) : (
                 <div className='flex flex-col xsm:w-full sm:w-full w-[90%] m-auto overflow-hidden mb-[50px]'>
-                    {data?.length > 0 ?
-                        data?.map((value, index) => {
+                    {listingsData?.length > 0 ?
+                        listingsData?.map((value, index) => {
                             return (
                                 <React.Fragment key={index}>
                                     <SingleList value={value} index={index} />

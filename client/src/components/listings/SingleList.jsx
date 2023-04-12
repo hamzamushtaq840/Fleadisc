@@ -1,22 +1,41 @@
 import { Rating } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
 import signin from '../../assets/signin.svg';
 import SingleListCard from './SingleListCard';
 import moment from 'moment';
 import useAuth from '../../hooks/useAuth';
+import axios from '../../api/axios';
+import { useQuery } from '@tanstack/react-query';
 
 const SingleList = ({ value, index }) => {
     const { auth } = useAuth();
     const navigate = useNavigate();
     const scrollableDivRef = useRef(null);
     const [isHovered, setIsHovered] = useState(false);
+    const [currentTime, setCurrentTime] = useState(moment());
     const [screenSize, setScreenSize] = useState({
         width: window.innerWidth,
         height: window.innerHeight
     });
-    const [currentTime, setCurrentTime] = useState(moment());
+
+    const followingDataQuery = useMemo(
+        () => ['following', { userId: auth.userId }],
+        [auth.userId]
+    );
+
+    const { isLoading: isLoadingFollowing, error: followingError, data: followingData, refetch: followingRefetch } = useQuery(
+        followingDataQuery,
+        async () => {
+            const response = await axios.get(`/user/following/${auth.userId}`);
+            console.log(response.data);
+            return response.data;
+        }
+    );
+    if (isLoadingFollowing) {
+        console.log("loading");
+    }
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -110,7 +129,7 @@ const SingleList = ({ value, index }) => {
                             const combinedDate = moment(`${val.endDay} ${val.endTime}`, "YYYY-MM-DD HH:mm");
                             const isExpired = combinedDate.isBefore(currentTime);
                             return isExpired ? null : (
-                                <SingleListCard key={index} seller={value.seller} val={val} index={index} />
+                                <SingleListCard key={index} seller={value.seller} followingData={followingData} refetch={followingRefetch} isLoadingFollowing={isLoadingFollowing} val={val} index={index} />
                             );
                         })}
                     </div>

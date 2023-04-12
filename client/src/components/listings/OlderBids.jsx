@@ -40,8 +40,8 @@ const OlderBids = ({ setModel, discId }) => {
                     <div className='flex flex-col w-[92%] px-[5px] overflow-y-auto max-h-[250px]'>
                         {data?.map((bid, index) => {
                             return (
-                                <>
-                                    <div key={discId} className='flex w-full justify-between gap-[15px]'>
+                                <div key={bid._id}>
+                                    <div className='flex w-full justify-between gap-[15px]'>
                                         <div className='flex flex-col gap-[8px]'>
                                             <h1 className='text-[0.9375em] font-[500]'>Bidder</h1>
                                             <div className='flex gap-[6px] items-center'>
@@ -64,7 +64,7 @@ const OlderBids = ({ setModel, discId }) => {
 
                                     </div>
                                     <div className='w-[95%] my-[15px] py-[0.3px] bg-[#323232]'></div>
-                                </>
+                                </div>
                             )
                         })}
                     </div>)}

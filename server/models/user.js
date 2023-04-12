@@ -7,7 +7,7 @@ const ratingSchema = mongoose.Schema({
 });
 const followingSchema = mongoose.Schema({
     disc: { type: mongoose.Schema.Types.ObjectId, ref: 'Disc', required: true },
-});
+}, { _id: false });
 
 const userSchema = mongoose.Schema({
     name: {

@@ -115,3 +115,72 @@ export const checkEmail = tryCatch(async (req, res) => {
     else
         res.status(200).json({ message: 'User not registered before' });
 })
+export const getUserFollowing = tryCatch(async (req, res) => {
+    const userId = req.params.userId;
+    console.log('getUserFollowing');
+    const user = await User.findById(userId).populate('following');
+    console.log(user);
+    if (user && user.following) {
+        res.status(200).json(user.following);
+    } else {
+        res.status(200).json([]);
+    }
+});
+
+
+export const addToFollowing = tryCatch(async (req, res) => {
+    const { userId, discId } = req.body;
+    console.log('addToFollowing');
+    console.log(req.body);
+
+    // Find the user by userId and check if they already follow the disc
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new AppError('not_found', 'User not found', 404);
+    }
+
+    // Check if the user is already following the disc
+    const isFollowing = user.following.some((following) => {
+        return following.disc.toString() === discId.toString();
+    });
+    if (isFollowing) {
+        throw new AppError('already_exists', 'User is already following the disc', 409);
+    }
+
+    // Create a new object with the discId and push it to the following array
+    const newFollowing = {
+        disc: discId,
+    };
+    user.following.push(newFollowing);
+    await user.save();
+
+    res.status(201).json({
+        status: 'success',
+        message: 'User is now following the disc',
+        data: null,
+    });
+});
+
+export const removeFromFollowing = tryCatch(async (req, res) => {
+    const { userId, discId } = req.params;
+
+    // Find the user by userId and remove the disc from their following list
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new AppError('not_found', 'User not found', 404);
+    }
+
+    if (!user.following || user.following.length === 0) {
+        throw new AppError('bad_request', 'User does not follow the disc', 400);
+    }
+
+    const followingIndex = user.following.findIndex((f) => f.disc.toString() === discId.toString());
+    if (followingIndex === -1) {
+        throw new AppError('bad_request', 'User does not follow the disc', 400);
+    }
+
+    user.following.splice(followingIndex, 1);
+    await user.save();
+
+    res.status(200).json({ message: 'Disc removed from following list' });
+});

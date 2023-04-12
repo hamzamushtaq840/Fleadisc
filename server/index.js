@@ -32,7 +32,7 @@ export const getUsers = (userId) => {
 }
 
 io.on('connection', (socket) => {
-    console.log('connected');
+    // console.log('connected');
     //new user
     socket.on('newUser', (userId) => {
         addNewUser(userId, socket.id)
