@@ -20,23 +20,6 @@ const SingleList = ({ value, index }) => {
         height: window.innerHeight
     });
 
-    const followingDataQuery = useMemo(
-        () => ['following', { userId: auth.userId }],
-        [auth.userId]
-    );
-
-    const { isLoading: isLoadingFollowing, error: followingError, data: followingData, refetch: followingRefetch } = useQuery(
-        followingDataQuery,
-        async () => {
-            const response = await axios.get(`/user/following/${auth.userId}`);
-            console.log(response.data);
-            return response.data;
-        }
-    );
-    if (isLoadingFollowing) {
-        console.log("loading");
-    }
-
     useEffect(() => {
         const intervalId = setInterval(() => {
             setCurrentTime(moment());
@@ -129,7 +112,7 @@ const SingleList = ({ value, index }) => {
                             const combinedDate = moment(`${val.endDay} ${val.endTime}`, "YYYY-MM-DD HH:mm");
                             const isExpired = combinedDate.isBefore(currentTime);
                             return isExpired ? null : (
-                                <SingleListCard key={index} seller={value.seller} followingData={followingData} refetch={followingRefetch} isLoadingFollowing={isLoadingFollowing} val={val} index={index} />
+                                <SingleListCard key={index} seller={value.seller} val={val} index={index} />
                             );
                         })}
                     </div>

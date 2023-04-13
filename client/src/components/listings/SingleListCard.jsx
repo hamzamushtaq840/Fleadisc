@@ -13,12 +13,11 @@ import OlderBids from './OlderBids'
 import useAuth from '../../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
 import { getCountryInfoByISO } from '../../utils/iso-country-currency'
-import { QueryCache, QueryClient, useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import axios from '../../api/axios'
 
 
-const SingleListCard = ({ val, seller, followingData, refetch, isLoadingFollowing }) => {
-    const queryClient = new QueryClient();
+const SingleListCard = ({ val, seller }) => {
     const { auth } = useAuth();
     const userCurrency = auth?.country ? getCountryInfoByISO(auth.country).currency.toUpperCase() : "SEK";
     const navigate = useNavigate();
@@ -32,22 +31,42 @@ const SingleListCard = ({ val, seller, followingData, refetch, isLoadingFollowin
     const [type, setType] = useState(null)
     const [remainingTime, setRemainingTime] = useState(getRemainingTime(val.endDay, val.endTime));
     const [currentTime, setCurrentTime] = useState("")
+    const [showLoader, setShowLoader] = useState(false);
+    const [currentId, setCurrentId] = useState(0)
 
     const clearForm = () => {
         setPrice("")
         setType(null)
     }
 
+
+
     const modalComponent = useMemo(() => <ConfirmBid price={price} val={val} seller={seller} type={type} setModel={setModal} currentTime={currentTime} clearForm={clearForm} />, [price, val, type, currentTime, setModal]);
     const oldModalComponent = useMemo(() => <OlderBids setModel={setOldModal} discId={val._id} />, [setOldModal]);
+
+    const followingDataQuery = useMemo(
+        () => ['following', { userId: auth.userId }],
+        [auth.userId]
+    );
+
+    const { isLoading: isLoadingFollowing, isFetching: isRefetchingFollowing, error: followingError, data: followingData, refetch: followingRefetch } = useQuery(
+        followingDataQuery,
+        async () => {
+            const response = await axios.get(`/user/following/${auth.userId}`);
+            setCurrentId(0)
+            return response.data;
+        },
+        {
+            staleTime: 60000000000 // Set stale time to 1 minute
+        }
+    );
+
 
     const { mutate: followMutation, isLoading: isFollowLoading } = useMutation(
         () => axios.post('/user/following', { userId: auth.userId, discId: val._id }),
         {
             onSuccess: () => {
-                // QueryCache.invalidateQueries('following');
-                queryClient.invalidateQueries('following');
-                refetch();
+                followingRefetch();
             },
         }
     );
@@ -57,27 +76,23 @@ const SingleListCard = ({ val, seller, followingData, refetch, isLoadingFollowin
         () => axios.delete(`/user/following/${auth.userId}/${val._id}`),
         {
             onSuccess: () => {
-                // QueryCache.invalidateQueries('following');
-                queryClient.invalidateQueries('following');
-                refetch();
+                followingRefetch();
             },
         }
     );
 
     const handleFollowClick = (e) => {
         e.stopPropagation()
+        setCurrentId(val._id)
         if (isFollowing(val._id, followingData)) {
-            console.log('unfollowing');
             unfollowMutation();
         } else {
-            console.log('following');
             followMutation();
         }
     };
 
     const isFollowing = (itemId, followingData) => {
-        console.log(followingData.some((item) => item.disc === itemId));
-        return followingData.some((item) => item.disc === itemId);
+        return followingData?.some((item) => item.disc === itemId);
     };
 
     useEffect(() => {
@@ -165,12 +180,12 @@ const SingleListCard = ({ val, seller, followingData, refetch, isLoadingFollowin
                     </div>
                 </div>
                 <div className='flex flex-col justify-between items-end'>
-                    <button onClick={handleFollowClick} className='text-[0.60em] xsm:w-[50px] sm:w-[50px] w-[80px] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>
-                        {(isFollowLoading || isUnfollowLoading || isLoadingFollowing) ? "wait" : (followingData.some((item) => item.disc === val._id) ? "Following" : "Follow")}
+                    <button disabled={isFollowLoading || isUnfollowLoading || isRefetchingFollowing} onClick={handleFollowClick} className={`text-[0.60em] xsm:w-[50px] sm:w-[50px] w-[80px] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px] mr-[-3px] mt-[1px] ${followingData?.some((item) => item.disc === val._id) ? "bg-[#81B29A33] border-[#81B29A] xsm:w-[60px]  sm:w-[60x] w-[90px] px-[0em]" : ""}`}>
+                        {(isFollowLoading || isUnfollowLoading || isRefetchingFollowing && currentId === val._id) ? "wait" : (followingData?.some((item) => item.disc === val._id) ? "Following" : "Follow")}
                     </button>
 
                     <div className='flex flex-col items-end'>
-                        <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{val.startingPrice} {userCurrency}</span>
+                        <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{val.startingPrice.toFixed(0)} {userCurrency}</span>
                         {val.priceType === 'fixedPrice' && <span className='text-[0.6em] font-[500] text-[#595959bf]'>Fixed price</span>}
                         {(val.priceType !== 'fixedPrice') &&
                             <div className='flex items-center  text-[1em]'>
@@ -245,7 +260,7 @@ const SingleListCard = ({ val, seller, followingData, refetch, isLoadingFollowin
                                 setErrorText('')
                                 setError(false)
                             }
-                        }} type="number" className={`w-full pl-[3px] py-[0.25em] rounded-[2px] text-[.65em] border-[1px]  ${error ? "border-[#f21616]" : "border-[#000000]"}`} placeholder={`Min - ${val.minPrice} ${userCurrency}`} />}
+                        }} type="number" className={`w-full pl-[3px] py-[0.25em] rounded-[2px] text-[.65em] border-[1px]  ${error ? "border-[#f21616]" : "border-[#000000]"}`} placeholder={`Min - ${val.minPrice.toFixed(0)} ${userCurrency}`} />}
                         {error && <p className='text-[0.5em] text-[#eb0000] my-[-5px]'>{errorText}</p>}
                         {Object.keys(auth).length !== 0 ? <button type='submit' className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Place Bid</button> : <button onClick={() => { navigate('/signin') }} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Sign in to bid</button>}
                     </form>}

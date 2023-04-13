@@ -32,7 +32,6 @@ const ConfirmBid = ({ setModel, price, type, val, currentTime, seller, clearForm
 
     const handleBid = () => {
         if (type === 'buy') {
-            console.log(val.startingPrice);
             if (seller._id === auth.userId) {
                 toast.error("You can't buy on your own disc");
                 return;

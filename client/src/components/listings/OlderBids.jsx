@@ -25,7 +25,7 @@ const OlderBids = ({ setModel, discId }) => {
     const { isLoading, error, data } = useQuery(['bids', discId, userCurrency], async () => {
         const response = await axios.get(`/disc/getBids/${discId}/bids`, { params: { userCurrency } });
         return response.data;
-    });
+    }, { refetchOnMount: true });
 
     return (
         <>
@@ -52,7 +52,7 @@ const OlderBids = ({ setModel, discId }) => {
                                         <div className='flex flex-col gap-[8px]  items-center'>
                                             <h1 className='text-[0.9375em] font-[500]'>Price</h1>
                                             <div className='flex  min-h-[25px] items-center'>
-                                                <p className='text-[0.75em] font-[400] text-center'>{bid.bidPrice} {userCurrency}</p>
+                                                <p className='text-[0.75em] font-[400] text-center'>{bid.bidPrice.toFixed(0)} {userCurrency}</p>
                                             </div>
                                         </div>
                                         <div className='flex flex-col gap-[8px]'>
