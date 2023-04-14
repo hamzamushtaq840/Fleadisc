@@ -5,13 +5,8 @@ const bidSchema = mongoose.Schema({
     bidPrice: { type: Number, required: true },
     createdAt: { type: String, required: true },
 });
-const buyerSchema = mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    buyPrice: { type: Number, required: true },
-    createdAt: { type: String, required: true },
-});
 
-const discSchema = mongoose.Schema({
+const finishedListingSchema = mongoose.Schema({
     seller: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     pictureURL: { type: String, required: true },
     quantity: { type: Number, required: true },
@@ -39,25 +34,6 @@ const discSchema = mongoose.Schema({
             return this.priceType !== "fixedPrice";
         },
     },
-    buyer: {
-        type: [buyerSchema],
-        required: function () {
-            return this.priceType === "fixedPrice";
-        },
-    },
-    isActive: { type: Boolean, default: true, required: false },
-    winner: { type: mongoose.Schema.Types.ObjectId, ref: 'Bid', required: false },
-    purchaseConfirmed: { type: Boolean, default: false },
-    addressSent: { type: Boolean, default: false },
-    address: { type: String, default: null },
-    shippingCost: { type: Number, default: null },
-    paymentAddressConfirmed: { type: Boolean, default: false },
-    paymentSent: { type: Boolean, default: false },
-    paymentConfirmed: { type: Boolean, default: false },
-    parcelSent: { type: Boolean, default: false },
-    parcelReceived: { type: Boolean, default: false },
-    cancelPayment: { type: Boolean, default: false },
 });
 
-
-export const Disc = mongoose.model("Disc", discSchema);
+export const FinishedListing = mongoose.model("FinishedListing", finishedListingSchema);

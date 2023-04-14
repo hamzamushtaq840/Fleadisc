@@ -40,6 +40,12 @@ const Navbar = () => {
         }
     };
 
+    const handleLogout = (e) => {
+        handleCloseUserMenu(e);
+        setAuth({})
+
+    }
+
     return (
         <>
             <div style={showShadow ? { boxShadow: "0px 2px 12px rgba(0,0,0,0.1)" } : {}} className='flex items-center fixed w-full h-[67px] justify-center bg-[#FAFAFA] z-20'>
@@ -81,7 +87,7 @@ const Navbar = () => {
                                         Profile
                                     </h1>
                                 </MenuItem>
-                                <MenuItem onClick={(e) => { handleCloseUserMenu(e); setAuth({}) }}>
+                                <MenuItem onClick={(e) => handleLogout(e)}>
                                     <h1 className='min-w-[80px] text-center font-sans text-[.8em]' >Logout</h1>
                                 </MenuItem>
                             </Menu>

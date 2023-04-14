@@ -6,6 +6,11 @@ import plastic from '../../assets/plastic.svg'
 import { getCountryInfoByISO } from '../../utils/iso-country-currency'
 import upload from './../../assets/upload.svg'
 import Select from 'react-select'
+import { useLocation } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import CropEasy from './cropEasy'
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage"
+import { Storage } from './../../utils/firebase'
 
 const options = [
     { value: 'Annax', label: 'Annax' },
@@ -31,30 +36,33 @@ const ranges = [
 ]
 
 const ReList = () => {
-    const [imageUrl, setImageUrl] = useState(null);
+    const location = useLocation()
+    const data = location.state
     const [optional, setOptional] = useState(false);
+    const [openCrop, setOpenCrop] = useState(false)
+    const [photoURL, setPhotoURL] = useState(data.pictureURL);
+    const [files, setFile] = useState(null)
     const [inputValues, setInputValues] = useState({
-        discimage: null,
-        quantity: 1,
-        discName: 'Annax',
-        brand: 'Discart',
-        range: 'xyz',
-        condition: 8,
-        plastic: 'Plastic',
-        grams: 22,
-        named: false,
-        dyed: false,
-        blank: true,
-        glow: false,
-        collectible: true,
-        firstRun: true,
-        priceType: 'auction',
-        auction: false,
-        fixedPrice: false,
-        startingPrice: 2000,
-        minPrice: 2001,
-        endDay: "2023-03-29",
-        endTime: '02:20',
+        discId: data._id,
+        pictureURL: data.pictureURL,
+        quantity: data.quantity,
+        discName: data.discName,
+        brand: data.brand,
+        range: data.range,
+        condition: data.condition,
+        plastic: data.plastic,
+        grams: data.grams,
+        named: data.named,
+        dyed: data.dyed,
+        blank: data.blank,
+        glow: data.glow,
+        collectible: data.collectible,
+        firstRun: data.firstRun,
+        priceType: data.priceType,
+        startingPrice: data.startingPrice,
+        minPrice: data.minPrice,
+        endDay: data.endDay,
+        endTime: data.endTime,
     });
 
     const handleOptionalChange = (event) => {
@@ -87,18 +95,111 @@ const ReList = () => {
         }));
     };
 
-    const handlePublish = () => {
+    const handleUpload = async (file) => {
+        try {
+            const uniqueFileName = `${file.name}_${Math.random().toString(36).substring(2)}`;
+            const storageRef = ref(Storage, `/courseImages/${uniqueFileName}`);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+            const url = await new Promise((resolve, reject) => {
+                uploadTask.on(
+                    "state_changed",
+                    (snapshot) => {
+                        const p = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    },
+                    (error) => {
+                        console.log(error);
+                        reject(error);
+                    },
+                    () => {
+                        getDownloadURL(uploadTask.snapshot.ref)
+                            .then((url) => {
+                                console.log(url);
+                                resolve(url);
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                                reject(error);
+                            });
+                    }
+                );
+            });
+            return url;
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    };
+
+    const handlePublish = async (e) => {
         console.log(inputValues);
+        e.preventDefault()
+        if (inputValues.quantity === '') {
+            toast.error('Quantity is required')
+            return
+        }
+        if (inputValues.discName === '') {
+            toast.error('Disc Name is required')
+            return
+        }
+        if (inputValues.brand === '') {
+            toast.error('Brand is required')
+            return
+        }
+        if (inputValues.range === '') {
+            toast.error('Range is required')
+            return
+        }
+        if (inputValues.priceType === 'auction' && inputValues.startingPrice === '') {
+            toast.error('Starting price is required')
+            return
+        }
+        if (inputValues.priceType === 'fixedPrice' && inputValues.startingPrice === '') {
+            toast.error('Price is required')
+            return
+        }
+        if (inputValues.endDay === '') {
+            toast.error('End day is required')
+            return
+        }
+        if (inputValues.endTime === '') {
+            toast.error('End time is required')
+            return
+        }
+        if (inputValues.pictureURL === null) {
+            toast.error('Please add a picture')
+            return
+        }
+        if (inputValues.priceType === 'auction' && inputValues.minPrice === '') {
+            inputValues.minPrice = 1
+        }
+        if (inputValues.pictureURL instanceof Blob) {
+            const photo = await handleUpload(inputValues.pictureURL)
+            setInputValues((prevInputValues) => ({
+                ...prevInputValues,
+                pictureURL: photo,
+            }))
+        }
+
     }
 
-    function handleFileUpload(event) {
-        const file = event.target.files[0];
-        const url = URL.createObjectURL(file);
-        setImageUrl(url);
+    const handleFileUpload = (event) => {
+        setFile(event.target.files[0])
+        setPhotoURL(URL.createObjectURL(event.target.files[0]))
+        setOpenCrop(true)
+    }
+
+    const handleCropped = (file, url) => {
+        setPhotoURL(url)
+        inputValues.pictureURL = file;
+    }
+
+    const dontCrop = (url) => {
+        setPhotoURL(url)
+        inputValues.pictureURL = files;
     }
 
     return (
-        <div>
+        <div >
             <div style={{ minHeight: "calc(100vh - 88px)", scrollBehavior: "smooth" }} className='relative left-1/2 sm:text-[1rem] xsm:text-[1rem] text-[1.2rem] -translate-x-1/2 mr-[50px] max-w-[1300px] mt-[0.5em]'>
                 <div className='flex justify-between mb-[1.2em] xsm:my-[0.9375em] sm:my-[0.9375em] w-full items-center'>
                     <h1 className='font-[700] text-[1.25em]'>Re-list</h1>
@@ -106,10 +207,10 @@ const ReList = () => {
                 <div className='bg-[#FFFFFF] rounded-[8px] pb-[2.5em] px-[1.25em] xsm:px-[0] sm:px-[0] border-[#0000001f] border-[0.5px]'>
                     <div className="flex justify-center items-center px-[0.625em] h-[13.6875em]">
                         <label htmlFor="file-upload" className="cursor-pointer">
-                            {imageUrl ? (
-                                <img src={imageUrl} className='w-full h-[12.5em] rounded-[4px]' alt="uploaded picture" />
+                            {photoURL !== null ? (
+                                <img src={photoURL} className='w-full h-[12.5em] rounded-[4px]' alt="uploaded picture" />
                             ) : (
-                                <img src={upload} alt="upload a picture" />
+                                <img src={upload} className='w-[84px]' alt="upload a picture" />
                             )}
                         </label>
                         <input id="file-upload" type="file" className="hidden" onChange={handleFileUpload} />
@@ -132,8 +233,12 @@ const ReList = () => {
                             <input name='discName'
                                 value={inputValues.discName}
                                 onChange={handleOptionalChange} type="text" className='text-[0.75em] placeholder:font-[500] pl-[7px] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[1.938em] rounded-[2px]' placeholder='Disc Name *' />
-                            <Select className="select2 w-full text-[0.75em] font-[500] text-[#AAAAAA] rounded-[2px] outline-none  leading-[14.63px] bg-[white]" closeMenuOnScroll={true} placeholder="Brand" options={options} />
-                            <input
+                            <Select value={options.find((option) => option.value === inputValues.brand) || null} className="select2 w-full text-[0.75em] font-[500] text-[#AAAAAA] rounded-[2px] outline-none  leading-[14.63px] bg-[white]" closeMenuOnScroll={true} placeholder="Brand" options={options} onChange={(selectedOption) => {
+                                setInputValues((prevInputValues) => ({
+                                    ...prevInputValues,
+                                    brand: selectedOption ? selectedOption.value : '', // use '' if no option is selected
+                                }));
+                            }} /><input
                                 name='range'
                                 value={inputValues.range}
                                 onChange={handleOptionalChange}
@@ -268,7 +373,9 @@ const ReList = () => {
                     </div>
                 </div>
                 <div className='flex justify-center xsm:pt-[0em] sm:pt-[0em] pt-[1.2em] pb-[1.25em]'><button onClick={handlePublish} className='w-[7.5em] h-[2.4125em] mt-[1.125em] text-[0.875em] button font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[4px]' style={{ boxShadow: "0 4px 0.375em -1px rgba(0, 0, 0, 0.1), 0 0.375em 4px -1px rgba(0, 0, 0, 0.06)" }}>Re-list</button></div>
+
             </div>
+            {openCrop && <CropEasy photoURL={photoURL} setOpenCrop={setOpenCrop} dontCrop={dontCrop} onFinish={handleCropped} />}
         </div >
     )
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import arrowdown from '../../assets/arrowdown.svg'
 import grams from '../../assets/grams.svg'
 import info from '../../assets/info.svg'
@@ -33,6 +33,8 @@ const ranges = [
 
 const EditList = () => {
     const navigate = useNavigate()
+    const location = useLocation()
+    console.log(location.state);
     const [model, setModel] = useState(false)
     const [optional, setOptional] = useState(false);
     const [imageUrl, setImageUrl] = useState(null);

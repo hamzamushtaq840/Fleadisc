@@ -39,27 +39,35 @@ const SingleListCard = ({ val, seller }) => {
         setType(null)
     }
 
-
-
     const modalComponent = useMemo(() => <ConfirmBid price={price} val={val} seller={seller} type={type} setModel={setModal} currentTime={currentTime} clearForm={clearForm} />, [price, val, type, currentTime, setModal]);
     const oldModalComponent = useMemo(() => <OlderBids setModel={setOldModal} discId={val._id} />, [setOldModal]);
+    let followingDataQuery;
+    let isRefetchingFollowing;
+    let followingData;
+    let followingRefetch;
 
-    const followingDataQuery = useMemo(
-        () => ['following', { userId: auth.userId }],
-        [auth.userId]
-    );
+    if (Object.keys(auth).length !== 0) {
+        followingDataQuery = useMemo(
+            () => ['following', { userId: auth.userId }],
+            [auth.userId]
+        );
 
-    const { isLoading: isLoadingFollowing, isFetching: isRefetchingFollowing, error: followingError, data: followingData, refetch: followingRefetch } = useQuery(
-        followingDataQuery,
-        async () => {
-            const response = await axios.get(`/user/following/${auth.userId}`);
-            setCurrentId(0)
-            return response.data;
-        },
-        {
-            staleTime: 60000000000 // Set stale time to 1 minute
-        }
-    );
+        ({
+            isFetching: isRefetchingFollowing,
+            data: followingData,
+            refetch: followingRefetch
+        } = useQuery(
+            followingDataQuery,
+            async () => {
+                const response = await axios.get(`/user/following/${auth.userId}`);
+                setCurrentId(0)
+                return response.data;
+            },
+            {
+                staleTime: 60000000000 // Set stale time to 1 minute
+            }
+        ));
+    }
 
 
     const { mutate: followMutation, isLoading: isFollowLoading } = useMutation(
@@ -83,6 +91,10 @@ const SingleListCard = ({ val, seller }) => {
 
     const handleFollowClick = (e) => {
         e.stopPropagation()
+        if (Object.keys(auth).length === 0) {
+            navigate('/signin')
+            return
+        }
         setCurrentId(val._id)
         if (isFollowing(val._id, followingData)) {
             unfollowMutation();
@@ -150,10 +162,21 @@ const SingleListCard = ({ val, seller }) => {
                 setErrorText('Please enter a price')
                 return
             }
-            if (price < val.minPrice) {
-                setError(true)
-                setErrorText('Enter higher price than min')
-                return
+            if (val.bids.length > 0) {
+                console.log(price);
+                console.log(val.highestBid.bidPrice);
+                if (price <= val.highestBid.bidPrice + 1) {
+                    setError(true)
+                    setErrorText('Enter higher price than min')
+                    return
+                }
+            }
+            else {
+                if (price <= Number(val.minPrice) + Number(val.startingPrice) + 1) {
+                    setError(true)
+                    setErrorText('Enter higher price than min')
+                    return
+                }
             }
         }
         setError(false)
@@ -247,7 +270,7 @@ const SingleListCard = ({ val, seller }) => {
                 </div>
                 {val.priceType === 'auction' &&
                     <form onSubmit={(e) => handleBid(e, 'bid')} className='flex flex-col mb-[6px] gap-[6px]'>
-                        <p className='text-[0.55em] text-[#595959] py-[2px] font-[400]'>Buyer pays shipping from, <span className='font-[700]'>{getCountryInfoByISO(seller.country).countryName}</span></p>
+                        <p className='text-[0.55em] text-[#595959] py-[2px] font-[400]'>Buyer pays shipping from, <span className='font-[700]'>{getCountryInfoByISO(seller?.country).countryName}</span></p>
                         {Object.keys(auth).length !== 0 && <input value={price} min={0} onChange={(e) => {
                             setPrice(e.target.value);
                             if (Number(e.target.value >= val.minPrice))
@@ -260,9 +283,9 @@ const SingleListCard = ({ val, seller }) => {
                                 setErrorText('')
                                 setError(false)
                             }
-                        }} type="number" className={`w-full pl-[3px] py-[0.25em] rounded-[2px] text-[.65em] border-[1px]  ${error ? "border-[#f21616]" : "border-[#000000]"}`} placeholder={`Min - ${val.minPrice.toFixed(0)} ${userCurrency}`} />}
+                        }} type="number" className={`w-full pl-[3px] py-[0.25em] rounded-[2px] text-[.65em] border-[1px]  ${error ? "border-[#f21616]" : "border-[#000000]"}`} placeholder={`Min - ${val.highestBid?.bidPrice ? `${Number(val.highestBid.bidPrice.toFixed(0)) + 1} ` : `${Number(val.startingPrice.toFixed(0)) + Number(val.minPrice.toFixed(0)) + 1}`} ${userCurrency}`} />}
                         {error && <p className='text-[0.5em] text-[#eb0000] my-[-5px]'>{errorText}</p>}
-                        {Object.keys(auth).length !== 0 ? <button type='submit' className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Place Bid</button> : <button onClick={() => { navigate('/signin') }} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Sign in to bid</button>}
+                        {Object.keys(auth).length !== 0 ? <button type='submit' className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>{"Place Bid"}</button> : <button onClick={() => { navigate('/signin') }} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Sign in to bid</button>}
                     </form>}
                 {(val.priceType === 'fixedPrice') &&
                     <div className='flex mb-[5px] flex-col gap-[5px] mt-[5px]'>

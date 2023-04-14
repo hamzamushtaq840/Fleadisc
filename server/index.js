@@ -3,14 +3,16 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
 import helmet from 'helmet'
+import http from "http"
 import mongoose from "mongoose"
+import cron from 'node-cron'
+import { Server } from 'socket.io'
 import { corsOptions } from './config/corsOptions.js'
 import { errorHandler } from './middlewares/errorHandler.js'
 import discRoutes from './routes/discRoutes.js'
 import token from './routes/tokenRoutes.js'
 import userRoutes from './routes/userRoutes.js'
-import { Server } from 'socket.io';
-import http from "http";
+import { checkDiscTime } from './controllers/discController.js'
 
 const app = express()
 const server = http.createServer(app);
@@ -56,6 +58,11 @@ app.use('/user', userRoutes)
 app.use('/token', token)
 app.use('/disc', discRoutes)
 
+cron.schedule('*/30 * * * * *', () => {
+    console.log('i am running a task every 30 seconds');
+    checkDiscTime()
+});
+
 const PORT = process.env.PORT || 5000
 
 mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -70,6 +77,8 @@ mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTop
 server.listen(5001, () => {
     console.log(`Server listening on port ${5001}`);
 });
+
+
 
 app.use(errorHandler)
 

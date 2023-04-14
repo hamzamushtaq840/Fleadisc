@@ -68,7 +68,7 @@ const App = () => {
             <Route path="/about" element={<Suspense fallback={Loader}><About /></Suspense>} />
 
             <Route path="/profile">
-              <Route path="public" element={<Suspense fallback={Loader}><PublicProfile /></Suspense>} >
+              <Route path="public/:id" element={<Suspense fallback={Loader}><PublicProfile /></Suspense>} >
                 <Route index element={<Suspense fallback={Loader}><PublicInfo /></Suspense>} />
                 <Route path="listings" element={<Suspense fallback={Loader}><PublicListing /></Suspense>} />
               </Route>
@@ -79,6 +79,7 @@ const App = () => {
                 <Route path="listings" element={<Suspense fallback={Loader}><PrivateListings /></Suspense>} />
                 <Route path="purchases" element={<Suspense fallback={Loader}><PrivatePurchases /></Suspense>} />
               </Route>
+
             </Route>
 
             <Route path="/create">

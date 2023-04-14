@@ -117,9 +117,7 @@ export const checkEmail = tryCatch(async (req, res) => {
 })
 export const getUserFollowing = tryCatch(async (req, res) => {
     const userId = req.params.userId;
-    console.log('getUserFollowing');
     const user = await User.findById(userId).populate('following');
-    console.log(user);
     if (user && user.following) {
         res.status(200).json(user.following);
     } else {
@@ -130,8 +128,6 @@ export const getUserFollowing = tryCatch(async (req, res) => {
 
 export const addToFollowing = tryCatch(async (req, res) => {
     const { userId, discId } = req.body;
-    console.log('addToFollowing');
-    console.log(req.body);
 
     // Find the user by userId and check if they already follow the disc
     const user = await User.findById(userId);

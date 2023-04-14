@@ -95,9 +95,9 @@ const SingleList = ({ value, index }) => {
         <>
             <div key={index} className='flex flex-col'>
                 <div className='flex px-[19px] mb-[2px] gap-[0.563em] mt-[1.063em]'>
-                    <img src={value.seller.profilePicture !== null ? value.seller.profilePicture : signin} onClick={() => navigate('/profile/public')} className="cursor-pointer mt-1 xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em]" alt="user" />
+                    <img src={value.seller.profilePicture !== null ? value.seller.profilePicture : signin} onClick={() => navigate(`/profile/public/${value.seller._id}`)} className="cursor-pointer mt-1 xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em]" alt="user" />
                     <div className='flex flex-col justify-start'>
-                        <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate('/profile/public')} >{value.seller.name}</h1>
+                        <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate(`/profile/public/${value.seller._id}`)} >{value.seller.name}</h1>
                         <div className='ml-[-0.2em] flex items-center gap-[0.3125em]'>
                             <Rating size='small' name="half-rating-read" onChange={(e) => console.log(e.target.value)} defaultValue={value.rating} precision={0.5} readOnly />
                             <p className='text-[0.7em] font-[500]'>({value.seller.rating.length})</p>

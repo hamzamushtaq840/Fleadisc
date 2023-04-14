@@ -53,6 +53,7 @@ const Listing = () => {
     useEffect(() => {
         if (socket) {
             socket.on('bid_added', () => {
+                console.log('I RAN');
                 listingsRefetch();
             });
         }

@@ -31,6 +31,7 @@ const boughtDiscSchema = mongoose.Schema({
                 return this.priceType === "auction";
             },
         },
+
     },
     purchaseConfirmed: { type: Boolean, default: false },
     addressSent: { type: Boolean, default: false },

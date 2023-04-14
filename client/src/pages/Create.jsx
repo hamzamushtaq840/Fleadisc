@@ -133,6 +133,11 @@ const Create = () => {
         setAdded(false)
         if (multipleDiscs.length === 0) {
             setMultipleDiscs([...multipleDiscs, inputValues])
+            console.log('i ran 4');
+        }
+        if (multipleDiscs.length > 0 && added === false) {
+            console.log('i ran 5');
+            setMultipleDiscs([...multipleDiscs, inputValues])
         }
         setInputValues({
             seller: auth.userId,
@@ -200,6 +205,7 @@ const Create = () => {
         if (inputValues.priceType === 'auction' && inputValues.minPrice === '') {
             inputValues.minPrice = 1
         }
+
         if (multipleDiscs.length > 0 && added === true) {
             const updatedDiscs = [...multipleDiscs];
             updatedDiscs.pop();
