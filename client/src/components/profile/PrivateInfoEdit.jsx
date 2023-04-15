@@ -18,6 +18,35 @@ const PrivateInfoEdit = () => {
         setBuyerChecked(false);
     }
 
+    const [formData, setFormData] = useState({
+        fullName: '',
+        listingIn: '',
+        deliveryAddressLine1: '',
+        deliveryAddressLine2: '',
+        deliveryPostalCode: '',
+        deliveryCity: '',
+        deliveryState: '',
+        deliveryCountry: '',
+        shippingAddressLine1: '',
+        shippingAddressLine2: '',
+        shippingPostalCode: '',
+        shippingCity: '',
+        shippingState: '',
+        shippingCountry: '',
+        copyDeliveryAddress: false,
+    });
+
+    const handleInputChange = (event) => {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    };
+
     return (
         <div className='flex justify-center'>
             <div className='flex flex-col xsm:w-[93%] sm:w-[93%] xsm:text-[1rem] sm:text-[1rem] text-[1.2rem] w-[80%] xsm:gap-[0.6875em] sm:gap-[0.6875em] gap-[1em] justify-center mt-[1.1875em]'>

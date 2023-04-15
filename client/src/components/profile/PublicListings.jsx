@@ -7,8 +7,24 @@ import useAuth from '../../hooks/useAuth';
 import axios from '../../api/axios';
 import { useParams } from 'react-router-dom';
 import { getCountryInfoByISO } from '../../utils/iso-country-currency';
+import FinishedListing from './FinishedListing';
+import { ColorRing } from 'react-loader-spinner';
+
+const Loader =
+    <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>
+        <ColorRing
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="blocks-loading"
+            wrapperStyle={{}}
+            wrapperClass="blocks-wrapper"
+            colors={['#494949', '#494949', '#494949', '#494949', '#494949']}
+        />
+    </div>
 
 const PublicListing = () => {
+    const { id } = useParams();
     const { auth } = useAuth();
     const userCurrency = auth?.country ? getCountryInfoByISO(auth.country).currency.toUpperCase() : "SEK";
     const [isHovered, setIsHovered] = useState(false);
@@ -17,173 +33,25 @@ const PublicListing = () => {
         width: window.innerWidth,
         height: window.innerHeight
     });
-    const activeDiscs = [
-        {
-            discimage: null,
-            quantity: 1,
-            discName: "Annax",
-            brand: 'Discart',
-            range: null,
-            condition: 8,
-            plastic: '',
-            grams: '174',
-            named: true,
-            dyed: true,
-            blank: true,
-            glow: true,
-            collectible: true,
-            firstRun: true,
-            priceType: 'auction',
-            startingPrice: 125,
-            minPrice: 130,
-            endDay: "2023-04-02",
-            endTime: "13:48",
-            bids: [{ sa: 1 }, { bd: 1 }]
-        },
-        {
-            discimage: null,
-            quantity: 1,
-            discName: "Annax",
-            brand: 'Discart',
-            range: null,
-            condition: 8,
-            plastic: '',
-            grams: '174',
-            named: false,
-            dyed: true,
-            blank: false,
-            glow: true,
-            collectible: false,
-            firstRun: true,
-            priceType: 'fixedPrice',
-            startingPrice: 125,
-            minPrice: 130,
-            endDay: "2023-04-22",
-            endTime: "12:35",
-            bids: []
-        },
-        {
-            discimage: null,
-            quantity: 1,
-            discName: "Annax",
-            brand: 'Discart',
-            range: null,
-            condition: 8,
-            plastic: '',
-            grams: '174',
-            named: false,
-            dyed: true,
-            blank: false,
-            glow: true,
-            collectible: false,
-            firstRun: false,
-            priceType: 'auction',
-            startingPrice: 125,
-            minPrice: 130,
-            endDay: "2023-03-29",
-            endTime: "13:48",
-            bids: [{ sa: 1 }, { bd: 1 }]
-        },
-        {
-            discimage: null,
-            quantity: 1,
-            discName: "Annax",
-            brand: 'Discart',
-            range: null,
-            condition: 8,
-            plastic: '',
-            grams: '174',
-            named: false,
-            dyed: true,
-            blank: false,
-            glow: true,
-            collectible: false,
-            firstRun: false,
-            priceType: 'fixedPrice',
-            startingPrice: 125,
-            minPrice: 130,
-            endDay: "2023-04-22",
-            endTime: "12:35",
-            bids: []
-        },
-        {
-            discimage: null,
-            quantity: 1,
-            discName: "Annax",
-            brand: 'Discart',
-            range: null,
-            condition: 8,
-            plastic: 'Plastic',
-            grams: '174',
-            named: true,
-            dyed: true,
-            blank: true,
-            glow: true,
-            collectible: true,
-            firstRun: true,
-            priceType: 'fixedPrice',
-            startingPrice: 125,
-            minPrice: 130,
-            endDay: "2023-04-22",
-            endTime: "12:35",
-            bids: []
-        },
-        {
-            discimage: null,
-            quantity: 1,
-            discName: "Annax",
-            brand: 'Discart',
-            range: null,
-            condition: 8,
-            plastic: '',
-            grams: '174',
-            named: false,
-            dyed: true,
-            blank: false,
-            glow: true,
-            collectible: false,
-            firstRun: false,
-            priceType: 'auction',
-            startingPrice: 125,
-            minPrice: 130,
-            endDay: "2023-03-24",
-            endTime: "13:48",
-            bids: [{ sa: 1 }, { bd: 1 }]
-        },
-        {
-            discimage: null,
-            quantity: 1,
-            discName: "Annax",
-            brand: 'Discart',
-            range: null,
-            condition: 8,
-            plastic: '',
-            grams: '174',
-            named: true,
-            dyed: false,
-            blank: true,
-            glow: true,
-            collectible: false,
-            firstRun: true,
-            priceType: 'auction',
-            startingPrice: 125,
-            minPrice: 130,
-            endDay: "2023-03-24",
-            endTime: "13:48",
-            bids: []
-        },
 
-    ]
-    // const { id } = useParams();
-    // console.log(id);
-
-    const activeDiscsQuery = useQuery(['discsBySellerId2', auth.userId], () => axios.get(`/disc/getActiveDiscs2/${auth.userId}/${userCurrency}`), {
+    const activeDiscsQuery = useQuery(['discsBySellerId2', id], () => axios.get(`/disc/getActiveDiscs2/${id}/${userCurrency}`), {
         onSuccess: () => {
         },
         onError: (error) => {
             console.log(error);
         }
     });
+
+    const finishedDiscsQuery = useQuery(['finishedDiscsBySellerId2', id], () => axios.get(`/disc/getFinishedDiscs2/${id}/${userCurrency}`), {
+        onSuccess: () => {
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+
+
+
 
     function handleScrollRight() {
         let value = 220;
@@ -245,64 +113,52 @@ const PublicListing = () => {
         };
     }, []);
 
-
-    return (
-        <div className='flex items-center overflow-x-hidden flex-col mt-[20px] gap-[30px]'>
-            <div className={`relative xsm:w-screen sm:w-screen w-[100%] ${screenSize.width > 768 ? "px-[25px] " : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                <h1 className='font-[700] pl-[10px] text-[1.25em] mb-[15px]'>Active Listings</h1>
-                {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
-                <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[10px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"} pb-[5px] gap-[10px] mt-[11px] `}>
-                    {activeDiscsQuery?.data?.data.map((val, index) => {
-                        return (
-                            <SingleListCard key={index} val={val} seller={val.seller} index={index} />
-                        )
-                    })}
-                </div>
-                {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
+    if (activeDiscsQuery.isLoading || finishedDiscsQuery.isLoading && !activeDiscsQuery.isLoading.data || !finishedDiscsQuery.data) {
+        return (
+            <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>
+                <ColorRing
+                    visible={true}
+                    height="80"
+                    width="80"
+                    ariaLabel="blocks-loading"
+                    wrapperStyle={{}}
+                    wrapperClass="blocks-wrapper"
+                    colors={['#494949', '#494949', '#494949', '#494949', '#494949']}
+                />
             </div>
-            <div className={`relative xsm:w-screen sm:w-screen w-[100%] ${screenSize.width > 768 ? "px-[25px]" : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                <div className='flex'>
-                    <h1 className='font-[700] pl-[10px] text-[1.25em] mb-[5px]'>Finished Listings</h1>
+        )
+    }
+    else
+        return (
+            <div className='flex items-center   flex-col mt-[20px] gap-[30px]'>
+                <div className={`relative  w-[100%] ${screenSize.width > 768 ? "px-[25px] " : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                    <h1 className='font-[700] pl-[5px] text-[1.25em] mb-[15px]'>Active Listings</h1>
+                    {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
+                    <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[5px]  ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"} pb-[5px] gap-[10px] mt-[11px] `}>
+                        {activeDiscsQuery?.data?.data.map((val, index) => {
+                            return (
+                                <SingleListCard key={index} val={val} seller={val.seller} index={index} />
+                            )
+                        })}
+                    </div>
+                    {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
                 </div>
-                {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
-                <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[10px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"} pb-[5px] gap-[10px] mt-[11px] `}>
-                    {activeDiscs.map((value, index) => {
-                        return (
-                            <div className={`flex relative mb-[10px] xsm:text-[1.07rem] sm:text-[1.07rem] text-[1.2rem] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[165px] sm:min-w-[165px] md:min-w-[200px] lg:min-w-[210px] xl:min-w-[220px] 2xl:min-w-[240px]  h-[0%] flex-col`}>
-                                <img src={disc} className=' w-full' alt="" />
-                                <div className='flex justify-between px-[0.625em] py-[0.425em]'>
-                                    <div className='flex flex-col justify-between'>
-
-                                        <div className='flex items-start'>
-                                            <div className='flex flex-col mr-[0.425em]'>
-                                                <h1 className='text-[0.75em] font-[700]' >{value.discName}</h1>
-                                                <h1 className='text-[0.55em] font-[500] mt-[-0.413em] text-[##595959]' >{value.brand}</h1>
-                                            </div>
-                                            <span className='px-[0.5em] mt-[2px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
-                                        </div>
-                                        <div className='flex mt-[5px] flex-col  text-[#595959]'>
-                                            <span className='font-[600] text-[0.6em]'>{value.endTime}</span>
-                                            <span className='font-[500] text-[0.55em] text-[#595959BF]'>23h 23 min</span>
-                                        </div>
-                                    </div>
-
-                                    <div className='flex flex-col justify-between items-end'>
-                                        <button className='text-[0.60em] xsm:w-[50px] sm:w-[50px] w-[80px] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
-                                        <div className='flex flex-col'>
-                                            <span className='text-[0.75em] font-[600]'>{value.startingPrice} kr</span>
-                                            <span className='text-[0.6em] font-[500] text-[#595959bf]'>15 bids</span>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        )
-                    })}
+                <div className={`relative  w-[100%] ${screenSize.width > 768 ? "px-[25px]" : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                    <div className='flex'>
+                        <h1 className='font-[700] pl-[5px] text-[1.25em] mb-[5px]'>Finished Listings</h1>
+                    </div>
+                    {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
+                    <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[5px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"} pb-[5px] gap-[10px] mt-[11px] `}>
+                        {finishedDiscsQuery?.data?.data.map((value, index) => {
+                            return (
+                                <FinishedListing key={index} value={value} userCurrency={userCurrency} />
+                            )
+                        })}
+                    </div>
+                    {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
                 </div>
-                {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
             </div>
-        </div>
-    )
+        )
 }
 
 export default PublicListing

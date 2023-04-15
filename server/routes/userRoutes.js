@@ -1,7 +1,9 @@
 const router = express.Router();
 import express from 'express';
-import { addToFollowing, checkEmail, getUserFollowing, removeFromFollowing, signinController, signupController } from '../controllers/userController.js';
+import { addToFollowing, changePicture, checkEmail, getUserFollowing, removeFromFollowing, signinController, signupController, userInfoById } from '../controllers/userController.js';
 
+router.get('/:userId', userInfoById);
+router.post('/profilePic', changePicture);
 router.post('/login', signinController);
 router.post('/checkEmail', checkEmail);
 router.post('/register', signupController);

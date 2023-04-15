@@ -26,6 +26,7 @@ const OlderBids = ({ setModel, discId }) => {
         const response = await axios.get(`/disc/getBids/${discId}/bids`, { params: { userCurrency } });
         return response.data;
     }, { refetchOnMount: true });
+    console.log(discId);
 
     return (
         <>

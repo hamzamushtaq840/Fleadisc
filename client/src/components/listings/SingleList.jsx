@@ -6,8 +6,6 @@ import signin from '../../assets/signin.svg';
 import SingleListCard from './SingleListCard';
 import moment from 'moment';
 import useAuth from '../../hooks/useAuth';
-import axios from '../../api/axios';
-import { useQuery } from '@tanstack/react-query';
 
 const SingleList = ({ value, index }) => {
     const { auth } = useAuth();
@@ -95,7 +93,14 @@ const SingleList = ({ value, index }) => {
         <>
             <div key={index} className='flex flex-col'>
                 <div className='flex px-[19px] mb-[2px] gap-[0.563em] mt-[1.063em]'>
-                    <img src={value.seller.profilePicture !== null ? value.seller.profilePicture : signin} onClick={() => navigate(`/profile/public/${value.seller._id}`)} className="cursor-pointer mt-1 xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em]" alt="user" />
+                    <img src={value.seller.profilePicture !== null ? value.seller.profilePicture : signin} onClick={() => {
+                        if (auth?.userId === value.seller._id) {
+                            navigate('/profile/private')
+                            return
+                        }
+                        navigate(`/profile/public/${value.seller._id}`)
+                    }
+                    } className="cursor-pointer mt-1 xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em]" alt="user" />
                     <div className='flex flex-col justify-start'>
                         <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate(`/profile/public/${value.seller._id}`)} >{value.seller.name}</h1>
                         <div className='ml-[-0.2em] flex items-center gap-[0.3125em]'>

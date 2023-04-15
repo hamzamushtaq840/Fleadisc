@@ -77,7 +77,7 @@ export const getAllDiscsWithSellers = tryCatch(async (req, res) => {
 
                 return {
                     ...disc.toObject(),
-                    startingPrice: convertedStartingPrice
+                    startingPrice: 10
 
                 };
             }
@@ -112,11 +112,11 @@ export const getAllDiscsWithSellers = tryCatch(async (req, res) => {
 
                 return {
                     ...disc.toObject(),
-                    startingPrice: convertedStartingPrice,
-                    minPrice: convertedMinPrice,
+                    startingPrice: 10,
+                    minPrice: 10,
                     highestBid: {
                         user: highestBid.user,
-                        bidPrice: convertedHighestBid,
+                        bidPrice: 10,
                         createdAt: highestBid.createdAt,
                         _id: highestBid._id,
                     },
@@ -125,8 +125,8 @@ export const getAllDiscsWithSellers = tryCatch(async (req, res) => {
 
             return {
                 ...disc.toObject(),
-                startingPrice: convertedStartingPrice,
-                minPrice: convertedMinPrice,
+                startingPrice: 10,
+                minPrice: 10,
             };
         }));
         return {
@@ -162,7 +162,7 @@ export const getDiscBids = tryCatch(async (req, res) => {
 
         return {
             ...bid.toObject(),
-            bidPrice: convertedPrice,
+            bidPrice: 10,
         };
     }));
 
@@ -255,6 +255,7 @@ export const getActiveDiscs = tryCatch(async (req, res) => {
 export const getActiveDiscs2 = tryCatch(async (req, res) => {
     const { userId, userCurrency } = req.params;
     console.log(req.params);
+    console.log('---------------');
 
     const discs = await Disc.find({ seller: userId, isActive: true })
         .populate('seller')
@@ -279,7 +280,103 @@ export const getActiveDiscs2 = tryCatch(async (req, res) => {
 
             return {
                 ...disc.toObject(),
-                startingPrice: convertedStartingPrice,
+                startingPrice: 10,
+            };
+        }
+
+        const minPrice = Number(disc.minPrice);
+
+        const currencyConverter1 = new CurrencyConverter({
+            from: sellerCurrency,
+            to: userCurrency,
+            amount: startingPrice,
+        });
+        const convertedStartingPrice = await currencyConverter1.convert();
+
+        const currencyConverter2 = new CurrencyConverter({
+            from: sellerCurrency,
+            to: userCurrency,
+            amount: minPrice,
+        });
+        const convertedMinPrice = await currencyConverter2.convert();
+
+        if (disc.bids.length > 0) {
+            const highestBid = disc.bids.sort((a, b) => b.bidPrice - a.bidPrice)[0];
+
+            const currencyConverter3 = new CurrencyConverter({
+                from: sellerCurrency,
+                to: userCurrency,
+                amount: highestBid.bidPrice,
+            });
+            const convertedHighestBid = await currencyConverter3.convert();
+            console.log();
+
+            return {
+                ...disc.toObject(),
+                startingPrice: 10,
+                minPrice: 10,
+                highestBid: {
+                    user: highestBid.user,
+                    bidPrice: 10,
+                    createdAt: highestBid.createdAt,
+                    _id: highestBid._id,
+                },
+            };
+        }
+
+        return {
+            ...disc.toObject(),
+            startingPrice: 10,
+            minPrice: 10,
+        };
+    }));
+    console.log(convertedDiscs);
+
+    res.status(200).json(convertedDiscs);
+});
+export const getFinishedDiscs = tryCatch(async (req, res) => {
+
+    const { userId } = req.params;
+    console.log(userId);
+
+    // Retrieve all discs belonging to seller where isActive is true
+    const discs = await FinishedListing.find({ seller: userId });
+    console.log(discs);
+    res.send(discs);
+})
+
+export const getFinishedDiscs2 = tryCatch(async (req, res) => {
+
+    const { userId, userCurrency } = req.params;
+    console.log(req.params);
+
+    const discs = await FinishedListing.find({ seller: userId, isActive: true })
+        .populate('seller')
+        .populate('bids.user')
+        .exec();
+
+    if (discs.length === 0) {
+        return res.status(200).json([]);
+    }
+    if (discs.length === 0) {
+        return res.status(200).json([]);
+    }
+
+    const convertedDiscs = await Promise.all(discs.map(async (disc) => {
+        const sellerCurrency = disc.seller.currency;
+        const startingPrice = Number(disc.startingPrice);
+
+        if (disc.minPrice === '') {
+            const currencyConverter = new CurrencyConverter({
+                from: sellerCurrency,
+                to: userCurrency,
+                amount: startingPrice,
+            });
+            const convertedStartingPrice = await currencyConverter.convert();
+
+            return {
+                ...disc.toObject(),
+                startingPrice: 10,
             };
         }
 
@@ -311,11 +408,11 @@ export const getActiveDiscs2 = tryCatch(async (req, res) => {
 
             return {
                 ...disc.toObject(),
-                startingPrice: convertedStartingPrice,
-                minPrice: convertedMinPrice,
+                startingPrice: 10,
+                minPrice: 10,
                 highestBid: {
                     user: highestBid.user,
-                    bidPrice: convertedHighestBid,
+                    bidPrice: 10,
                     createdAt: highestBid.createdAt,
                     _id: highestBid._id,
                 },
@@ -324,20 +421,10 @@ export const getActiveDiscs2 = tryCatch(async (req, res) => {
 
         return {
             ...disc.toObject(),
-            startingPrice: convertedStartingPrice,
-            minPrice: convertedMinPrice,
+            startingPrice: 10,
+            minPrice: 10,
         };
     }));
 
     res.status(200).json(convertedDiscs);
-});
-export const getFinishedDiscs = tryCatch(async (req, res) => {
-
-    const { userId } = req.params;
-    console.log(userId);
-
-    // Retrieve all discs belonging to seller where isActive is true
-    const discs = await FinishedListing.find({ seller: userId, isActive: true });
-    console.log(discs);
-    res.send(discs);
 })

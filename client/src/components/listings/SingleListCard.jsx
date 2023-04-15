@@ -187,7 +187,7 @@ const SingleListCard = ({ val, seller }) => {
 
     return (
         <div className={`flex relative mb-[10px]  xsm:text-[1.07rem] sm:text-[1.07rem] text-[1.2rem] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[165px] xsm:max-w-[165px] sm:min-w-[165px] sm:max-w-[165px] md:min-w-[200px] md:max-w-[200px] lg:min-w-[210px] lg:max-w-[210px] xl:min-w-[220px] xl:max-w-[220px] 2xl:min-w-[240px] 2xl:max-w-[240px]  h-[0%] flex-col`}>
-            <div className='flex justify-center'><img src={val.pictureURL} className='xsm:h-[165px] sm:h-[165px] md:h-[200px] lg:h-[210px] xsm:min-w-[165px] xsm:max-w-[165px] sm:min-w-[165px] sm:max-w-[165px] md:min-w-[200px] md:max-w-[200px] lg:min-w-[210px] lg:max-w-[210px] xl:min-w-[220px] xl:h-[220px] xl:max-w-[220px] 2xl:min-w-[240px] 2xl:max-w-[240px] 2xl:h-[240px] rounded-t-[8px] cursor-pointer' alt="" onClick={() => setImageModal(true)} /></div>
+            <div className='flex rounded-t-[8px] hover:bg-[#000000fb] justify-center'><img src={val.pictureURL} className=' hover:opacity-[0.8] xsm:h-[165px] sm:h-[165px] md:h-[200px] lg:h-[210px] xsm:min-w-[165px] xsm:max-w-[165px] sm:min-w-[165px] sm:max-w-[165px] md:min-w-[200px] md:max-w-[200px] lg:min-w-[210px] lg:max-w-[210px] xl:min-w-[220px] xl:h-[220px] xl:max-w-[220px] 2xl:min-w-[240px] 2xl:max-w-[240px] 2xl:h-[240px]  cursor-pointer' alt="" onClick={() => setImageModal(true)} /></div>
             <div onClick={() => setExtra(prev => !prev)} className='flex justify-between cursor-pointer px-[0.625em] pt-[0.425em]'>
                 <div className='flex flex-col justify-between'>
                     <div className='flex items-start'>
@@ -212,7 +212,14 @@ const SingleListCard = ({ val, seller }) => {
                         {val.priceType === 'fixedPrice' && <span className='text-[0.6em] font-[500] text-[#595959bf]'>Fixed price</span>}
                         {(val.priceType !== 'fixedPrice') &&
                             <div className='flex items-center  text-[1em]'>
-                                <p onClick={(e) => { setOldModal(true); e.stopPropagation(); }} className='text-[0.6em] cursor-pointer hover:underline hover:text-text font-[500] text-[#595959BF] '>{val.bids.length} Bids</p>
+                                <p onClick={(e) => {
+                                    if (val.bids.length === 0) {
+                                        e.stopPropagation()
+                                        return
+                                    }
+                                    setOldModal(true); e.stopPropagation();
+                                }} className='text-[0.6em] cursor-pointer hover:underline hover:text-text font-[500] text-[#595959BF] '>{val.bids.length} Bids</p>
+
                             </div>}
                     </div>
                 </div>

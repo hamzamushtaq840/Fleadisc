@@ -180,3 +180,25 @@ export const removeFromFollowing = tryCatch(async (req, res) => {
 
     res.status(200).json({ message: 'Disc removed from following list' });
 });
+
+export const userInfoById = tryCatch(async (req, res) => {
+    const { userId } = req.params;
+
+    // Find the user by userId and check if they already follow the disc
+    const user = await User.findById(userId);
+    res.status(200).json(user);
+})
+export const changePicture = tryCatch(async (req, res) => {
+    const { userId, pictureURL } = req.body;
+
+    // Find the user by userId and update the profilePicture field with the new picture URL
+    const user = await User.findByIdAndUpdate(userId, { $set: { profilePicture: pictureURL } }, { new: true });
+
+    // If the user is not found, send an error response
+    if (!user) {
+        return res.status(404).json({ message: "User not found" });
+    }
+
+    // Send a success response with the updated user object
+    res.status(200).json({ message: 'Picture updated successfully' });
+});
