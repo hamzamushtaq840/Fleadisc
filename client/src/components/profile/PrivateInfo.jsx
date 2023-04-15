@@ -8,8 +8,6 @@ import { useQuery } from '@tanstack/react-query';
 import axios from '../../api/axios';
 
 const PrivateInfo = () => {
-    const [buyerChecked, setBuyerChecked] = useState(true);
-    const [meChecked, setMeChecked] = useState(false);
     const { auth } = useAuth()
 
     const userInfoQuery = useQuery(['userData', auth.userId], () => axios.get(`/user/${auth.userId}`), {
@@ -19,16 +17,6 @@ const PrivateInfo = () => {
             console.log(error);
         }
     });
-
-    function handleBuyerChange(event) {
-        setBuyerChecked(event.target.checked);
-        setMeChecked(false);
-    }
-
-    function handleMeChange(event) {
-        setMeChecked(event.target.checked);
-        setBuyerChecked(false);
-    }
 
     if (userInfoQuery.isLoading && !userInfoQuery.isLoading.data) {
         return (
@@ -47,7 +35,7 @@ const PrivateInfo = () => {
                             </div>
                             <div className='flex items-center gap-[3px]'>
                                 <p className='text-[0.75em] font-[700]'>4.0</p>
-                                <Rating size='small' name="half-rating-read" defaultValue="3.5" precision={0.5} readOnly />
+                                <Rating size='small' name="half-rating-read" defaultValue={3.5} precision={0.5} readOnly />
                                 <p className='text-[0.75em] text-[#595959]'>({userInfoQuery?.data?.data?.rating.length})</p>
                             </div>
                         </div>
@@ -66,61 +54,49 @@ const PrivateInfo = () => {
                                 <p className='text-[.75em] font-[500]'>{getCountryInfoByISO(userInfoQuery.data.data.country).countryName}</p>
                             </div>
                         </div>
-                        <div className='flex flex-col'>
-                            <h1 className='text-[0.75em] font-[600]' >Delivery Address</h1>
-                            <h1 className='text-[0.75em] max-w-[150px] font-[500] text-[#595959bf]' >Tullgarsgatan 27 753 17, Uppsala Uppland, Sweden</h1>
-                        </div>
-                        <div className='flex flex-col'>
-                            <h1 className='text-[0.75em] font-[600]' >Shipping Address</h1>
-                            <h1 className='text-[0.75em] max-w-[150px] font-[500] text-[#595959bf]' >Tullgarsgatan 27 753 17, Uppsala Uppland, Sweden</h1>
-                        </div>
+                        {(userInfoQuery?.data?.data?.deliveryAddress?.city || userInfoQuery?.data?.data?.deliveryAddress?.country) &&
+                            <div className='flex flex-col'>
+                                <h1 className='text-[0.75em] font-[600]'>Delivery Address</h1>
+                                <h1 className='text-[0.75em] max-w-[150px] font-[500] text-[#595959bf]'>
+                                    {userInfoQuery?.data?.data?.deliveryAddress?.line1 ? userInfoQuery?.data?.data?.deliveryAddress?.line1 + ", " : ""}
+                                    {userInfoQuery?.data?.data?.deliveryAddress?.line2 ? userInfoQuery?.data?.data?.deliveryAddress?.line2 + ", " : ""}
+                                    {userInfoQuery?.data?.data?.deliveryAddress?.city ? userInfoQuery?.data?.data?.deliveryAddress?.city + "," : ""}
+                                    {userInfoQuery?.data?.data?.deliveryAddress?.country ? userInfoQuery?.data?.data?.deliveryAddress?.country : ""}</h1>
+                            </div>}
+                        {(userInfoQuery?.data?.data?.shippingAddress?.city || userInfoQuery?.data?.data?.shippingAddress?.country || userInfoQuery?.data?.data?.shippingAddress?.line1 || userInfoQuery?.data?.data?.shippingAddress?.line2) &&
+                            <div className='flex flex-col'>
+                                <h1 className='text-[0.75em] font-[600]'>Delivery Address</h1>
+                                <h1 className='text-[0.75em] max-w-[150px] font-[500] text-[#595959bf]'>
+                                    {userInfoQuery?.data?.data?.shippingAddress?.line1 ? userInfoQuery?.data?.data?.shippingAddress?.line1 + ", " : ""}
+                                    {userInfoQuery?.data?.data?.shippingAddress?.line2 ? userInfoQuery?.data?.data?.shippingAddress?.line2 + ", " : ""}
+                                    {userInfoQuery?.data?.data?.shippingAddress?.city ? userInfoQuery?.data?.data?.shippingAddress?.city + "," : ""}
+                                    {userInfoQuery?.data?.data?.shippingAddress?.country ? userInfoQuery?.data?.data?.shippingAddress?.country : ""}</h1>
+                            </div>}
                     </div>
-
                     <div className='flex flex-col'>
-                        <div className='flex flex-col'>
-                            <h1 className='text-[0.75em] min-w-[120px] font-[600]' >Accepted payments</h1>
-                            <div className='w-[100%] mt-[10px] flex gap-[6px]'>
-
-                                <div className='flex flex-col mt-[-3px]'>
-                                    <p className='peer-checked:text-[#000000] text-[#000000] text-[0.75em] font-[600]'>Swish</p>
-                                    <p className='peer-checked:text-[#000000] text-[#AAAAAA] text-[0.75em] font-[600]'>0707721066</p>
-                                </div>
+                        {userInfoQuery?.data?.data?.paymentMethods.length !== 0 &&
+                            <div className='flex flex-col mb-[30px]'>
+                                <>
+                                    <h1 className='text-[0.75em] min-w-[120px] font-[600]' >Accepted payments</h1>
+                                    {userInfoQuery?.data?.data?.paymentMethods.map((val, index) => {
+                                        return (
+                                            <div key={index} className='w-[100%] mt-[10px] flex gap-[6px]'>
+                                                <div className='flex flex-col mt-[-3px]'>
+                                                    <p className='peer-checked:text-[#000000] text-[#000000] text-[0.75em] font-[600]'>{val.name}</p>
+                                                    <p className='peer-checked:text-[#000000] text-[#AAAAAA] text-[0.75em] font-[600]'>{val.accountNo}</p>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+                                </>
                             </div>
-                            <div className='w-[100%] mt-[15px] flex gap-[6px]'>
-                                <div className='flex flex-col  mt-[-3px]'>
-                                    <p className='peer-checked/published:text-[#000000] text-[#000000] text-[0.75em] font-[600]'>Bank transaction</p>
-                                    <p className='peer-checked/published:text-[#000000] text-[#595959] text-[0.75em] font-[500]'>Handelsbanken</p>
-                                    <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[0.75em] font-[600]'>0707721066</p>
-                                </div>
+                        }
+                        {userInfoQuery?.data?.data?.shippingCostPaidBy && <div className='flex flex-col '>
+                            <h1 className='text-[0.75em] font-[600]'>Who pays shipping? </h1>
+                            <div className='w-[100%] mt-[4px] flex items-center gap-[6px]'>
+                                <p className='text-[#AAAAAA] text-[0.70em] font-[600]'>{userInfoQuery?.data?.data?.shippingCostPaidBy}</p>
                             </div>
-                        </div>
-                        <div className='flex flex-col mt-[25px]'>
-                            <h1 className='text-[0.75em] font-[600]' >Who pays shipping? </h1>
-                            <div className='flex justify-between'>
-                                <div className='mt-[15px] flex items-center gap-[6px]'>
-                                    <input
-                                        id="buyer"
-                                        name='check'
-                                        type="checkbox"
-                                        checked={buyerChecked}
-                                        onChange={handleBuyerChange}
-                                        className="peer/published w-[18px] h-[18px] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black"
-                                    />
-                                    <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[12px] font-[700]'>Buyer</p>
-                                </div>
-                                <div className='mt-[15px] flex items-center gap-[6px]'>
-                                    <input
-                                        id="me"
-                                        name='check'
-                                        type="checkbox"
-                                        onChange={handleMeChange}
-                                        checked={meChecked}
-                                        className="peer/published w-[18px] h-[18px] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black"
-                                    />
-                                    <span className='peer-checked/published:text-[#000000] inline-flex text-[#AAAAAA] text-[12px] font-[700]'>Me</span>
-                                </div>
-                            </div>
-                        </div>
+                        </div>}
                     </div>
                 </div>
             </>

@@ -1,6 +1,10 @@
 import React from 'react'
 
 const RemoveModel = ({ setModel }) => {
+    const handleRemove = () => {
+
+    }
+
     return (
         <>
             <div className='modalBackground' onClick={() => setModel(false)}></div>
@@ -8,7 +12,7 @@ const RemoveModel = ({ setModel }) => {
                 <p className='w-[80%] text-center text-[.85em] font-[400] mt-[0.688em]'>Are you sure you want to remove this listing?<span className='font-[800]'></span></p>
 
                 <div className='flex flex-wrap justify-center mb-[15px] gap-[11px] mt-[.5em]'>
-                    <button onClick={() => setModel(false)} className='py-[0.625em] button rounded-[4px] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary'>Confirm</button>
+                    <button onClick={handleRemove} className='py-[0.625em] button rounded-[4px] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary'>Confirm</button>
                     <button onClick={() => setModel(false)} className='py-[0.625em] button rounded-[4px] text-[.75em] px-[2.813em] text-[#ffffff] bg-[#F21111]'>Cancel</button>
                 </div>
             </div>

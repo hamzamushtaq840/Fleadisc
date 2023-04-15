@@ -204,7 +204,7 @@ const Edit = () => {
         <div >
             <div style={{ minHeight: "calc(100vh - 88px)", scrollBehavior: "smooth" }} className='relative left-1/2 sm:text-[1rem] xsm:text-[1rem] text-[1.2rem] -translate-x-1/2 mr-[50px] max-w-[1300px] mt-[0.5em]'>
                 <div className='flex justify-between mb-[1.2em] xsm:my-[0.9375em] sm:my-[0.9375em] w-full items-center'>
-                    <h1 className='font-[700] text-[1.25em]'>Re-list</h1>
+                    <h1 className='font-[700] text-[1.25em]'>Edit</h1>
                 </div>
                 <div className='bg-[#FFFFFF] rounded-[8px] pb-[2.5em] px-[1.25em] xsm:px-[0] sm:px-[0] border-[#0000001f] border-[0.5px]'>
                     <div className="flex justify-center items-center px-[0.625em] h-[13.6875em]">
@@ -379,7 +379,8 @@ const Edit = () => {
                     <button onClick={() => setModel(true)} className='w-[7.5em] h-[2.3125em] mt-[18px] text-[0.875rem] font-[600] bg-[#F21111] text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Remove</button>
                 </div>
             </div >
-            {model && <RemoveModel setModel={setModel} />}</div >
+            {openCrop && <CropEasy photoURL={photoURL} setOpenCrop={setOpenCrop} dontCrop={dontCrop} onFinish={handleCropped} />}
+            {model && <RemoveModel setModel={setModel} discId={data._id} />}</div >
     )
 }
 

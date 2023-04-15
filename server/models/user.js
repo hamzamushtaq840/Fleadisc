@@ -9,6 +9,17 @@ const followingSchema = mongoose.Schema({
     disc: { type: mongoose.Schema.Types.ObjectId, ref: 'Disc', required: true },
 }, { _id: false });
 
+const paymentMethodSchema = mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    accountNo: {
+        type: String,
+        required: true
+    },
+});
+
 const userSchema = mongoose.Schema({
     name: {
         type: String,
@@ -56,7 +67,12 @@ const userSchema = mongoose.Schema({
         default: [],
         required: false,
     },
-    billingAddress: {
+    shippingCostPaidBy: {
+        type: String,
+        enum: ["Buyer", "Me"],
+        required: false,
+    },
+    deliveryAddress: {
         line1: {
             type: String,
             required: false,
@@ -82,28 +98,35 @@ const userSchema = mongoose.Schema({
             required: false,
         },
     },
-    payment: {
-        method: {
-            type: String,
-            enum: ["Credit Card", "Debit Card", "PayPal"],
-            required: false,
-        },
-        cardNumber: {
+    shippingAddress: {
+        line1: {
             type: String,
             required: false,
         },
-        cardExpiration: {
-            type: Date,
-            required: false,
-        },
-        cvv: {
+        line2: {
             type: String,
             required: false,
         },
-        paypalEmail: {
+        postalCode: {
             type: String,
             required: false,
         },
+        city: {
+            type: String,
+            required: false,
+        },
+        state: {
+            type: String,
+            required: false,
+        },
+        country: {
+            type: String,
+            required: false,
+        },
+    },
+    paymentMethods: {
+        type: [paymentMethodSchema],
+        required: false
     },
     createdAt: {
         type: Date,
@@ -112,5 +135,5 @@ const userSchema = mongoose.Schema({
     },
 });
 
-export const User = mongoose.model("User", userSchema);
 
+export const User = mongoose.model("User", userSchema);

@@ -43,6 +43,7 @@ const Navbar = () => {
     const handleLogout = (e) => {
         handleCloseUserMenu(e);
         setAuth({})
+        navigate('/signin')
 
     }
 
@@ -80,7 +81,7 @@ const Navbar = () => {
                         <h1 className='text-[.75em] mt-[-2px]'>Sign In</h1>
                     </NavLink> :
                         <div onClick={handleOpenUserMenu} className='cursor-pointer flex flex-col gap-[3px] min-w-[50px] items-center'>
-                            <img src={auth.profilePicture === null ? signin : auth.profilePicture} className="h-[22px] cursor-pointer" alt='profile' />
+                            <img src={auth.profilePicture === null ? signin : auth.profilePicture} className={`h-[23px] rounded-full cursor-pointer`} alt='profile' />
                             <Menu sx={{ mt: '45px' }} id="menu-appbar" anchorEl={anchorElUser} anchorOrigin={{ vertical: 'top', horizontal: 'right', }} keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right', }} open={Boolean(anchorElUser)} onClose={handleCloseUserMenu}>
                                 <MenuItem onClick={(e) => { handleCloseUserMenu(e); navigate('/profile/private') }}>
                                     <h1 className=" flex flex-col font-sans text-[.8em] gap-[3px] min-w-[80px] items-center" activeclassname="active">

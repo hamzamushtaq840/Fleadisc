@@ -2,38 +2,50 @@ import React, { useState } from 'react';
 import ReactFlagsSelect from "react-flags-select";
 import add from '../../assets/addd.svg';
 import cross from '../../assets/cross.svg';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import useAuth from '../../hooks/useAuth';
+import axios from '../../api/axios';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const PrivateInfoEdit = () => {
-    const [selected, setSelected] = useState("SE");
-    const [buyerChecked, setBuyerChecked] = useState(false);
-    const [meChecked, setMeChecked] = useState(false);
+    const { auth } = useAuth()
+    const navigate = useNavigate()
+    const userInfoQuery = useQuery(['userData', auth.userId], () => axios.get(`/user/${auth.userId}`), {
+        onSuccess: (res) => {
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
 
-    function handleBuyerChange(event) {
-        setBuyerChecked(event.target.checked);
-        setMeChecked(false);
-    }
-
-    function handleMeChange(event) {
-        setMeChecked(event.target.checked);
-        setBuyerChecked(false);
-    }
+    const userEditMutation = useMutation((data) => axios.post(`/user/editUser/${auth.userId}`, data), {
+        onSuccess: () => {
+            userInfoQuery.refetch()
+            toast.success('Profile updated')
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
 
     const [formData, setFormData] = useState({
-        fullName: '',
-        listingIn: '',
-        deliveryAddressLine1: '',
-        deliveryAddressLine2: '',
-        deliveryPostalCode: '',
-        deliveryCity: '',
-        deliveryState: '',
-        deliveryCountry: '',
-        shippingAddressLine1: '',
-        shippingAddressLine2: '',
-        shippingPostalCode: '',
-        shippingCity: '',
-        shippingState: '',
-        shippingCountry: '',
-        copyDeliveryAddress: false,
+        name: userInfoQuery.data.data.name || "",
+        country: userInfoQuery.data.data.country || "",
+        deliveryAddressLine1: userInfoQuery.data.data.deliveryAddress ? userInfoQuery.data.data.deliveryAddress.line1 || "" : "",
+        deliveryAddressLine2: userInfoQuery.data.data.deliveryAddress ? userInfoQuery.data.data.deliveryAddress.line2 || "" : "",
+        deliveryPostalCode: userInfoQuery.data.data.deliveryAddress ? userInfoQuery.data.data.deliveryAddress.postalCode || "" : "",
+        deliveryCity: userInfoQuery.data.data.deliveryAddress ? userInfoQuery.data.data.deliveryAddress.city || "" : "",
+        deliveryState: userInfoQuery.data.data.deliveryAddress ? userInfoQuery.data.data.deliveryAddress.state || "" : "",
+        deliveryCountry: userInfoQuery.data.data.deliveryAddress ? userInfoQuery.data.data.deliveryAddress.country || "" : "",
+        shippingAddressLine1: userInfoQuery.data.data.shippingAddress ? userInfoQuery.data.data.shippingAddress.line1 || "" : "",
+        shippingAddressLine2: userInfoQuery.data.data.shippingAddress ? userInfoQuery.data.data.shippingAddress.line2 || "" : "",
+        shippingPostalCode: userInfoQuery.data.data.shippingAddress ? userInfoQuery.data.data.shippingAddress.postalCode || "" : "",
+        shippingCity: userInfoQuery.data.data.shippingAddress ? userInfoQuery.data.data.shippingAddress.city || "" : "",
+        shippingState: userInfoQuery.data.data.shippingAddress ? userInfoQuery.data.data.shippingAddress.state || "" : "",
+        shippingCountry: userInfoQuery.data.data.shippingAddress ? userInfoQuery.data.data.shippingAddress.country || "" : "",
+        paymentMethods: userInfoQuery.data.data.paymentMethods || [], // new state property for payment methods
+        shippingCostPaidBy: userInfoQuery.data.data.shippingCostPaidBy || "" // new state property for shipping cost payment
     });
 
     const handleInputChange = (event) => {
@@ -41,117 +53,202 @@ const PrivateInfoEdit = () => {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
+        if (name.startsWith('paymentMethod')) {
+            // if the input name starts with "paymentMethod",
+            // update the payment methods array in the formData state
+            const a = target.name;
+            const parts = a.split(".");
+            const lastName = parts[1];
+
+            const index = parseInt(name.substring('paymentMethod'.length));
+            console.log(index);
+            const paymentMethods = [...formData.paymentMethods];
+            paymentMethods[index] = { ...paymentMethods[index], [lastName]: target.value };
+            setFormData({
+                ...formData,
+                paymentMethods,
+            });
+        }
+        else if (name === 'shippingCostPaidBy') {
+            setFormData({
+                ...formData,
+                'shippingCostPaidBy': target.value
+            });
+        }
+        else {
+            // otherwise, update the corresponding input value in the formData state
+            setFormData({
+                ...formData,
+                [name]: value
+            });
+        }
+    };
+
+    const handleRemoveLastPaymentMethod = () => {
+        const paymentMethods = [...formData.paymentMethods];
+        paymentMethods.pop();
         setFormData({
             ...formData,
-            [name]: value
+            paymentMethods,
         });
     };
+
+    const handlePost = () => {
+        console.log(formData);
+        if (formData.name === '') {
+            toast.error('Name can not be empty')
+            return
+        }
+        userEditMutation.mutate(formData)
+    }
+
+    const copyDeliveryToShipping = () => {
+        setFormData({
+            ...formData,
+            shippingAddressLine1: formData.deliveryAddressLine1,
+            shippingAddressLine2: formData.deliveryAddressLine2,
+            shippingPostalCode: formData.deliveryPostalCode,
+            shippingCity: formData.deliveryCity,
+            shippingState: formData.deliveryState,
+            shippingCountry: formData.deliveryCountry,
+        });
+    }
 
     return (
         <div className='flex justify-center'>
             <div className='flex flex-col xsm:w-[93%] sm:w-[93%] xsm:text-[1rem] sm:text-[1rem] text-[1.2rem] w-[80%] xsm:gap-[0.6875em] sm:gap-[0.6875em] gap-[1em] justify-center mt-[1.1875em]'>
                 <div className='flex w-full flex-col gap-[0.5em]'>
-                    <label className='text-[0.75em] font-[600]' htmlFor="fullName">Full Name</label>
-                    <input name='fullName'
-                        type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] w-[40%] placeholder:font-[500]  border-[1px] border-[#595959]  xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Fred Isaksson' />
+                    <label className='text-[0.75em] font-[600]' htmlFor="name">Full Name</label>
+                    <input name='name'
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] w-[40%] placeholder:font-[500]  border-[1px] border-[#595959]  xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' />
                 </div>
                 <div className='flex w-full flex-col gap-[0.5em]'>
-                    <label className='text-[0.75em] font-[600]' htmlFor="fullName">Listing in</label>
-                    <div className='pl-[5px] w-[190px]'>
+                    <label className='text-[0.75em] font-[600]' htmlFor="Listing">Listing in</label>
+                    <div className='ml-[0.5em] w-full'>
                         <ReactFlagsSelect
-                            selected={selected}
+                            selected={formData.country}
+                            name='country'
                             fullWidth={true}
                             searchable={true}
                             alignOptionsToRight={true}
-                            onSelect={(code) => { setSelected(code); console.log(code); }}
-                            className='w-[90%] mt-[-4px] text-text font-sans'
+                            onSelect={(code) => {
+                                setFormData({
+                                    ...formData,
+                                    "country": code
+                                });
+                            }}
+                            className='w-[40%] xsm:h-[25px] sm:h-[25px] h-[2.938em]  flex text-[0.75em] border-[1px] justify-start items-center bg-[#ffffff] border-[#595959]  rounded-[2px]  mt-[-4px] text-text font-sans'
                             placeholder="Choose a country"
                         />
                     </div>
                 </div>
 
                 <div className='flex w-full flex-col gap-[0.5em]'>
-                    <label className='text-[0.75em] font-[600]' htmlFor="fullName">Delivery Address (Recieving to)</label>
-                    <input name='fullName' type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] xsm:w-[80%] sm:w-[80%] w-full placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Address line 1' />
-                    <input name='fullName' type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] xsm:w-[80%] sm:w-[80%] w-full placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Address line 2' />
+                    <label className='text-[0.75em] font-[600]' htmlFor="Delievery Address">Delivery Address (Recieving to)</label>
+                    <input
+                        name='deliveryAddressLine1'
+                        value={formData.deliveryAddressLine1}
+                        onChange={handleInputChange} type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] xsm:w-[80%] sm:w-[80%] w-full placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Address line 1' />
+                    <input name='deliveryAddressLine2'
+                        value={formData.deliveryAddressLine2}
+                        onChange={handleInputChange} type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] xsm:w-[80%] sm:w-[80%] w-full placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Address line 2' />
                     <div className='flex ml-[0.425em] xsm:w-[80%] sm:w-[80%] w-full gap-[0.9375em]'>
-                        <input name='fullName' type="text" className='text-[0.75em]   w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Postal Code' />
-                        <input name='fullName' type="text" className='text-[0.75em]   w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='City' />
+                        <input
+                            name='deliveryPostalCode'
+                            value={formData.deliveryPostalCode}
+                            onChange={handleInputChange} type="text" className='text-[0.75em]   w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Postal Code' />
+                        <input name='deliveryCity'
+                            value={formData.deliveryCity}
+                            onChange={handleInputChange}
+                            type="text" className='text-[0.75em]   w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='City' />
                     </div>
                     <div className='flex ml-[0.425em] xsm:w-[80%] sm:w-[80%] w-full gap-[0.9375em]'>
-                        <input name='fullName' type="text" className='text-[0.75em]   w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='State / Province' />
-                        <input name='fullName' type="text" className='text-[0.75em]   w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Country' />
+                        <input name='deliveryState'
+                            value={formData.deliveryState}
+                            onChange={handleInputChange} type="text" className='text-[0.75em]   w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='State / Province' />
+                        <input name='deliveryCountry'
+                            value={formData.deliveryCountry}
+                            onChange={handleInputChange} type="text" className='text-[0.75em]   w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Country' />
                     </div>
                 </div>
                 <div className='flex w-full flex-col gap-[0.5em]'>
-                    <label className='text-[0.75em] font-[600] flex items-center gap-[5px]' htmlFor="fullName">Shipping Address (Sending from) <span className='text-[0.5em] text-[#595959BF] font-[500]'>Copy delivery address</span></label>
-                    <input name='fullName' type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] xsm:w-[80%] sm:w-[80%] w-full placeholder:font-[500]  border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Address line 1' />
-                    <input name='fullName' type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] xsm:w-[80%] sm:w-[80%] w-full placeholder:font-[500]  border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Address line 2' />
+                    <label className='text-[0.75em]  font-[600] flex items-center gap-[5px]' htmlFor="Shipping Address">Shipping Address (Sending from) <span className='text-[0.6em] cursor-pointer hover:underline hover:text-text text-[#595959BF] font-[500]' onClick={copyDeliveryToShipping}>Copy delivery address</span></label>
+                    <input
+                        name='shippingAddressLine1'
+                        value={formData.shippingAddressLine1}
+                        onChange={handleInputChange} type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] xsm:w-[80%] sm:w-[80%] w-full placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Address line 1' />
+                    <input name='shippingAddressLine2'
+                        value={formData.shippingAddressLine2}
+                        onChange={handleInputChange} type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] xsm:w-[80%] sm:w-[80%] w-full placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Address line 2' />
                     <div className='flex ml-[0.425em] xsm:w-[80%] sm:w-[80%] w-full gap-[0.9375em]'>
-                        <input name='fullName' type="text" className='text-[0.75em] w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Postal Code' />
-                        <input name='fullName' type="text" className='text-[0.75em] w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='City' />
+                        <input
+                            name='shippingPostalCode'
+                            value={formData.shippingPostalCode}
+                            onChange={handleInputChange} type="text" className='text-[0.75em]   w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Postal Code' />
+                        <input name='shippingCity'
+                            value={formData.shippingCity}
+                            onChange={handleInputChange}
+                            type="text" className='text-[0.75em]   w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='City' />
                     </div>
                     <div className='flex ml-[0.425em] xsm:w-[80%] sm:w-[80%] w-full gap-[0.9375em]'>
-                        <input name='fullName' type="text" className='text-[0.75em] w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='State / Province' />
-                        <input name='fullName' type="text" className='text-[0.75em] w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Country' />
+                        <input name='shippingState'
+                            value={formData.shippingState}
+                            onChange={handleInputChange} type="text" className='text-[0.75em]   w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='State / Province' />
+                        <input name='shippingCountry'
+                            value={formData.shippingCountry}
+                            onChange={handleInputChange} type="text" className='text-[0.75em]   w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='Country' />
                     </div>
                 </div>
 
-                <div className='flex flex-col mt-[15px]'>
-                    <h1 className='text-[0.75em] font-[600]' >Who pays shipping? </h1>
-                    <div className='flex gap-[0.625em]'>
-                        <div className='mt-[15px] flex items-center gap-[6px]'>
+                <div className='flex gap-[0.7em] mt-[0.3125em] flex-col'>
+                    <label className='text-[0.75em] font-[600] flex items-center gap-[5px]' htmlFor="Shipping Address">Who pays shipping?</label>
+                    <div className='flex gap-[1em]'>
+                        <div className=' flex items-center gap-[6px]'>
                             <input
-                                id="buyer"
-                                name='check'
+                                id="Buyer"
+                                name='shippingCostPaidBy'
                                 type="checkbox"
-                                checked={buyerChecked}
-                                onChange={handleBuyerChange}
-                                className="peer/published w-[18px] h-[18px] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black"
+                                checked={formData.shippingCostPaidBy === 'Buyer'}
+                                onChange={handleInputChange}
+                                value="Buyer"
+                                className="peer/published w-[18px] h-[18px] border border-gray-400 rounded-md bg-white checked:bg-transparent focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black"
                             />
                             <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[12px] font-[700]'>Buyer</p>
                         </div>
-                        <div className='mt-[15px] flex items-center gap-[6px]'>
+                        <div className='flex items-center gap-[6px]'>
                             <input
-                                id="me"
-                                name='check'
+                                id="Me"
+                                name='shippingCostPaidBy'
                                 type="checkbox"
-                                onChange={handleMeChange}
-                                checked={meChecked}
+                                onChange={handleInputChange}
+                                checked={formData.shippingCostPaidBy === 'Me'}
+                                value="Me"
                                 className="peer/published w-[18px] h-[18px] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black"
                             />
                             <span className='peer-checked/published:text-[#000000] inline-flex text-[#AAAAAA] text-[12px] font-[700]'>Me</span>
                         </div>
                     </div>
                 </div>
+                <div className='flex w-full flex-col gap-[0.6em] mt-[10px]'>
+                    <label className='text-[0.75em] font-[600]' htmlFor="Payment Methods">Payment methods</label>
+                    {formData.paymentMethods.map((paymentMethod, index) => (
+                        <div key={index} className='flex flex-col gap-[0.75em]'>
+                            <input value={paymentMethod.name} name={`paymentMethod${index}.name`} id={index} className='name text-[0.75em] pl-[5px] ml-[0.625em] w-[50%] placeholder:font-[500]  border-[1px] border-[#595959]  xsm:h-[27px] sm:h-[27px] h-[2.938em] rounded-[2px]' placeholder='Name of method' onChange={handleInputChange} />
+                            <input value={paymentMethod.accountNo} name={`paymentMethod${index}.accountNo`} className='accountNo text-[0.75em] pl-[5px] ml-[0.625em] w-[70%] placeholder:font-[500]  border-[1px] border-[#595959]  xsm:h-[27px] sm:h-[27px] h-[2.938em] rounded-[2px]' placeholder='Account No i.e IBAN, BSB, IFSC etc' onChange={handleInputChange} />
 
-                <div className='flex w-full flex-col gap-[0.5em] mt-[15px]'>
-                    <label className='text-[0.75em] font-[600]' htmlFor="fullName">Payment methods</label>
-
-                    <div className='flex flex-col gap-[0.75em]'>
-                        <input name='fullName' type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] w-[50%] placeholder:font-[500]  border-[1px] border-[#595959]  xsm:h-[27px] sm:h-[27px] h-[2.938em] rounded-[2px]' placeholder='Swish' />
-                        <input name='fullName' type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] w-[70%] placeholder:font-[500]  border-[1px] border-[#595959]  xsm:h-[27px] sm:h-[27px] h-[2.938em] rounded-[2px]' placeholder='Account No' />
-                    </div>
-
-                    <div className=' flex gap-[0.625em] justify-center' >
-                        <button className='h-[1.875em] w-[1.875em] bg-primary flex justify-center items-center'><img src={add} alt="" /></button>
-                        <button className='h-[1.875em] w-[1.875em] bg-[#F21111] flex justify-center items-center'><img src={cross} alt="" /></button>
-                    </div>
-                </div>
-                <div className='flex w-full flex-col gap-[0.5em] mt-[15px]'>
-                    <div className='flex flex-col gap-[0.75em]'>
-                        <input name='fullName' type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] w-[50%] placeholder:font-[500]  border-[1px] border-[#595959]  xsm:h-[27px] sm:h-[27px] h-[2.938em] rounded-[2px]' placeholder='Name of method' />
-                        <textarea name='fullName' defaultValue="Payment information like phone number, bank details or other transaction instructions " type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] min-h-[5em] w-[80%] placeholder:font-[500] border-[1px] resize-none border-[#595959] rounded-[2px]' />
-                    </div>
-
-                    <div className=' flex gap-[0.625em] justify-center' >
-                        <button className='h-[1.875em] w-[1.875em] bg-primary flex justify-center items-center'><img src={add} alt="" /></button>
-                        <button className='h-[1.875em] w-[1.875em] bg-[#F21111] flex justify-center items-center'><img src={cross} alt="" /></button>
+                        </div>
+                    ))}
+                    <div className=' flex gap-[0.625em]  justify-center' >
+                        <button onClick={() => setFormData({ ...formData, paymentMethods: [...formData.paymentMethods, { name: '', accountNo: '' }] })} className='h-[1.875em] w-[1.875em] bg-primary flex justify-center items-center'><img src={add} alt="" /></button>
+                        <button className='h-[1.875em] w-[1.875em] bg-[#F21111] flex justify-center items-center' onClick={handleRemoveLastPaymentMethod}><img src={cross} alt="" /></button>
                     </div>
                 </div>
+
                 <div className='flex justify-center my-[0.625em] gap-[0.625em]'>
-                    <button onClick={() => navigate('/profile/private/information/edit')} className='text-[#ffffff] mt-[0.45em] mb-[0.625em] button rounded-[2px] text-[.75em] font-[600] py-[0.625em] px-[2.1875em] bg-primary'>Save</button>
-                    <button onClick={() => navigate('/profile/private/information/edit')} className='text-[#ffffff] mt-[0.45em] mb-[0.625em] button rounded-[2px] text-[.75em] font-[600] py-[0.625em] px-[2.1875em] bg-[#F21111]'>Discard</button>
+                    <button onClick={handlePost} className='text-[#ffffff] mt-[0.45em] mb-[0.625em] button rounded-[2px] text-[.75em] font-[600] py-[0.625em] px-[2.1875em] bg-primary'>{userEditMutation.isLoading ? "wait" : 'Save'}</button>
+                    <button onClick={() => navigate('/profile/private')} className='text-[#ffffff] mt-[0.45em] mb-[0.625em] button rounded-[2px] text-[.75em] font-[600] py-[0.625em] px-[2.1875em] bg-[#F21111]'>Discard</button>
 
                 </div>
 

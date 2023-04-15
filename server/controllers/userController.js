@@ -7,6 +7,8 @@ import AppError from '../utils/AppError.js';
 import { RefreshToken } from "../models/refreshToken.js";
 
 export const signinController = tryCatch(async (req, res) => {
+    console.log('i ran 2');
+
 
     if (req.body.googleAccessToken) {
         const userInfo = await axios.get(
@@ -183,7 +185,6 @@ export const removeFromFollowing = tryCatch(async (req, res) => {
 
 export const userInfoById = tryCatch(async (req, res) => {
     const { userId } = req.params;
-
     // Find the user by userId and check if they already follow the disc
     const user = await User.findById(userId);
     res.status(200).json(user);
@@ -202,3 +203,36 @@ export const changePicture = tryCatch(async (req, res) => {
     // Send a success response with the updated user object
     res.status(200).json({ message: 'Picture updated successfully' });
 });
+export const editUser = tryCatch(async (req, res) => {
+
+    console.log('i ran');
+    const userId = req.params.userId;
+    const updates = req.body;
+
+    const user = await User.findById(userId);
+
+    // // Update the user document with the new form data
+    user.name = updates.name || user.name;
+    user.country = updates.country || user.country;
+    user.deliveryAddress.line1 = updates.deliveryAddressLine1 || user.deliveryAddress.line1;
+    user.deliveryAddress.line2 = updates.deliveryAddressLine2 || user.deliveryAddress.line2;
+    user.deliveryAddress.postalCode = updates.deliveryPostalCode || user.deliveryAddress.postalCode;
+    user.deliveryAddress.city = updates.deliveryCity || user.deliveryAddress.city;
+    user.deliveryAddress.state = updates.deliveryState || user.deliveryAddress.state;
+    user.deliveryAddress.country = updates.deliveryCountry || user.deliveryAddress.country;
+    user.shippingAddress.line1 = updates.shippingAddressLine1 || user.shippingAddress.line1;
+    user.shippingAddress.line2 = updates.shippingAddressLine2 || user.shippingAddress.line2;
+    user.shippingAddress.postalCode = updates.shippingPostalCode || user.shippingAddress.postalCode;
+    user.shippingAddress.city = updates.shippingCity || user.shippingAddress.city;
+    user.shippingAddress.state = updates.shippingState || user.shippingAddress.state;
+    user.shippingAddress.country = updates.shippingCountry || user.shippingAddress.country;
+    user.paymentMethods = updates.paymentMethods || user.paymentMethods;
+    user.shippingCostPaidBy = updates.shippingCostPaidBy || user.shippingCostPaidBy;
+
+    // Save the updated user document to the database
+    await user.save();
+
+    // Send the updated user document as the response
+    res.json(user);
+
+})
