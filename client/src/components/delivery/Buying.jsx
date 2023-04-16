@@ -1,7 +1,11 @@
 import React from 'react';
 import SingleBuyItem from './SingleBuyItem';
+import useAuth from './../../hooks/useAuth';
+import { useQuery } from '@tanstack/react-query';
+import axios from '../../api/axios';
 
 const Buying = () => {
+    const { auth } = useAuth()
     const wonBids = [
         {
             id: '123',
@@ -229,6 +233,15 @@ const Buying = () => {
             bids: []
         },
     ]
+
+    const userInfoQuery = useQuery(['buyingDiscs', auth.userId], () => axios.get(`/disc/buying/${auth.userId}`), {
+        onSuccess: (res) => {
+            console.log(res.data);
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
 
     return (
         <div className=' bg-[#FAFAFA] flex justify-center px-[1.25em] py-[0.625em] text-[1.2rem] xsm:text-[1rem] sm:text-[1rem] '>

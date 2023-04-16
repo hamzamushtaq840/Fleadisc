@@ -45,7 +45,7 @@ const requiredFields = {
 
 const Create = () => {
     const { auth } = useAuth();
-    const userCountry = getCountryInfoByISO(auth?.country).currency.toLowerCase();
+    const userCountry = "SEK";
     const [optional, setOptional] = useState(false);
     const [model, setModel] = useState(false)
     const [openCrop, setOpenCrop] = useState(false)

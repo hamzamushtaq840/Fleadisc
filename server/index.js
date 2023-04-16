@@ -59,7 +59,6 @@ app.use('/token', token)
 app.use('/disc', discRoutes)
 
 cron.schedule('*/30 * * * * *', () => {
-    console.log('i am running a task every 30 seconds');
     checkDiscTime()
 });
 

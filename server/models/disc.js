@@ -40,7 +40,7 @@ const discSchema = mongoose.Schema({
         },
     },
     buyer: {
-        type: [buyerSchema],
+        type: buyerSchema,
         required: function () {
             return this.priceType === "fixedPrice";
         },

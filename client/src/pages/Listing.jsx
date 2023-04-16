@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import ReactFlagsSelect from "react-flags-select";
 import { Us } from "react-flags-select";
 import SingleList from '../components/listings/SingleList';
@@ -8,6 +8,8 @@ import useAuth from '../hooks/useAuth';
 import { getCountryInfoByISO } from '../utils/iso-country-currency';
 import { ColorRing } from 'react-loader-spinner';
 import { io } from 'socket.io-client'
+import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
 
 const Loader =
     <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>
@@ -23,6 +25,7 @@ const Loader =
     </div>
 
 const Listing = () => {
+    const navigate = useNavigate()
     const [selected, setSelected] = useState('SE');
     const [moreFilters, setMoreFilters] = useState(false)
     const [data, setData] = useState([])
@@ -34,15 +37,15 @@ const Listing = () => {
     });
     //array contains unique key that this query represents i.e cahching,refectching,etc
     const [socket, setSocket] = useState(null);
-    const { isLoading: isLoadingListings, data: listingsData, refetch: listingsRefetch } = useQuery(
+    const { isLoading: isLoadingListings, isRefetching: isRefectingListings, data: listingsData, refetch: listingsRefetch } = useQuery(
         ['listings', { userCurrency }],
         async () => {
             const response = await axios.get(`/disc?userCurrency=${userCurrency}`);
             setData(response.data)
-            console.log(response.data);
+            applyFilters(appliedFilters)
             return response.data;
         },
-        { staleTime: 1000 * 60 * 60 * 24, refetchOnWindowFocus: false }
+        { refetchOnMount: false, refetchOnWindowFocus: false, refetchOnReconnect: false }
     );
 
     useEffect(() => {
@@ -74,33 +77,81 @@ const Listing = () => {
         };
     }, []);
 
+    useEffect(() => {
+        applyFilters(appliedFilters)
+    }, [])
+
     const [appliedFilters, setAppliedFilters] = useState([]);
+    let followingDataQuery;
+    let followingData;
+    if (Object.keys(auth).length !== 0) {
+        followingDataQuery = useMemo(
+            () => ['following', { userId: auth.userId }],
+            [auth.userId]
+        );
+
+        ({
+            data: followingData,
+        } = useQuery(
+            followingDataQuery,
+            async () => {
+                const response = await axios.get(`/user/following/${auth.userId}`);
+                return response.data;
+            },
+            {
+                staleTime: 60000000000 // Set stale time to 1 minute
+            }
+        ));
+    }
 
     const applyFilters = (appliedFilters2) => {
-        let tempDiscs = data;
-
+        let tempDiscs = listingsData;
 
         if (appliedFilters2.length > 0) {
-            tempDiscs.forEach((disc) => {
-                disc.discs.forEach((d, index) => {
-
-                    appliedFilters2.forEach(filter => {
-
-                        if (filter === 'shortOnTime') {
-                            console.log('short on time');
+            tempDiscs = tempDiscs.map((disc) => {
+                const filteredDiscs = disc.discs.filter((d) => {
+                    return appliedFilters2.every((filter) => {
+                        if (filter === "shortOnTime") {
+                            const endDateTime = moment(`${d.endDay} ${d.endTime}`, "YYYY-MM-DD HH:mm");
+                            const twoHoursFromNow = moment().add(10, "hours");
+                            return endDateTime.isBefore(twoHoursFromNow);
                         }
-
-                        if (d[filter]) {
-                            console.log('disc should be included');
+                        if (filter === "following") {
+                            if (Object.keys(auth).length !== 0) {
+                                return followingData.some((f) => f.disc === d._id)
+                            }
+                            else {
+                                navigate('/login')
+                            }
                         }
-                    })
-                })
-            })
+                        if (filter === "new") {
+                            const createdAt = moment(d.createdAt);
+                            const now = moment();
+                            const diffInHours = now.diff(createdAt, 'hours');
+                            if (diffInHours < 12) {
+                                return true;
+                            }
+                        }
+                        if (filter === "unamed") {
+                            return !d.named;
+                        }
+                        if (filter === "popular") {
+                            return d.bids.length > 5;
+                        }
+                        return d[filter];
+                    });
+                });
+                return {
+                    ...disc,
+                    discs: filteredDiscs,
+                };
+            });
+            tempDiscs = tempDiscs.filter((disc) => disc.discs.length > 0);
+            setData(tempDiscs);
+        } else {
+            setData(listingsData);
         }
-        else {
-            setData(listingsData)
-        }
-    }
+    };
 
 
     const handleFilterClick = filter => {
@@ -148,13 +199,13 @@ const Listing = () => {
                 </select>
             </div>
             <div className='px-[5px] xsm:px-0 flex gap-[10px] xsm:gap-[5px] items-center xsm:justify-start justify-center flex-wrap xsm:w-[320px] w-[405px]  m-auto'>
-                <button className='w-[57px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>New</button>
-                <button className='w-[66px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>Popular</button>
-                <button className='w-[77px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>Following</button>
+                <button className={`w-[57px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('new') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('new')}>New</button>
+                <button className={`w-[66px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('popular') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('popular')}>Popular</button>
+                <button className={`w-[77px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('following') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('following')}>Following</button>
                 <button className={`w-[99px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('shortOnTime') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('shortOnTime')}>Short on time</button>
                 {moreFilters && <>
                     <button className={`w-[74px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('named') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('named')}>Named</button>
-                    <button className={`w-[79px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('unamed') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('unnamed')}>Unamed</button>
+                    <button className={`w-[79px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('unamed') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('unamed')}>Unamed</button>
                     <button className={`w-[50px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('dyed') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('dyed')}>Dyed</button>
                     <button className={`w-[87px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('collectible') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('collectible')}>Collectible</button>
                     <button className={`w-[59px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('blank') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('blank')}>Blank</button>
@@ -167,20 +218,35 @@ const Listing = () => {
                     <p onClick={() => setMoreFilters((prev) => !prev)} className='text-[0.75em] text-[#595959] mt-[10px] cursor-pointer'>{moreFilters ? 'Close more filters' : 'Show more filters'}</p>
                 </div>
             </div>
-            {isLoadingListings ? (
+            {(isLoadingListings) ? (
                 <div style={{ position: "relative", minHeight: "200px" }}>
                     {Loader}
                 </div>
             ) : (
                 <div className='flex flex-col xsm:w-full sm:w-full w-[90%] m-auto overflow-hidden mb-[50px]'>
-                    {data?.length > 0 ?
-                        data?.map((value, index) => {
-                            return (
-                                <React.Fragment key={index}>
-                                    <SingleList value={value} discs={value.discs} index={index} />
-                                </React.Fragment>
-                            )
-                        }) : <p className='mt-[20px] text-[1em] font-[500] text-center'>No discs found</p>}
+                    {data?.length === 0 || listingsData?.length === 0 ?
+                        <p className='mt-[20px] text-[1em] font-[500] text-center'>No discs found</p>
+                        :
+                        listingsData?.length > 0 ?
+                            appliedFilters.length > 0 ?
+                                data?.map((value, index) => {
+                                    return (
+                                        <React.Fragment key={index}>
+                                            <SingleList value={value} discs={value.discs} index={index} />
+                                        </React.Fragment>
+                                    )
+                                })
+                                :
+                                listingsData?.map((value, index) => {
+                                    return (
+                                        <React.Fragment key={index}>
+                                            <SingleList value={value} discs={value.discs} index={index} />
+                                        </React.Fragment>
+                                    )
+                                })
+                            :
+                            <p className='mt-[20px] text-[1em] font-[500] text-center'>No discs found</p>
+                    }
                 </div>
             )}
         </div >

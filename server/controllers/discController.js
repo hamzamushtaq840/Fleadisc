@@ -8,6 +8,7 @@ import { BoughtDisc } from '../models/boughtDisc.js';
 import moment from 'moment'
 import { FinishedListing } from '../models/finishedListing.js';
 import { User } from '../models/user.js';
+import mongoose from 'mongoose';
 
 export const postDisc = tryCatch(async (req, res) => {
     const { seller, pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime } = req.body;
@@ -20,12 +21,6 @@ export const postBid = tryCatch(async (req, res) => {
     const { listingId, userId, price, time, fromCurrency, toCurrency } = req.body;
 
     // Convert bid price to the requested currency
-    const currencyConverter = new CurrencyConverter({
-        from: fromCurrency,
-        to: toCurrency,
-        amount: Number(price),
-    });
-    const convertedPrice = await currencyConverter.convert();
 
     const disc = await Disc.findById(listingId);
     if (!disc) {
@@ -33,7 +28,7 @@ export const postBid = tryCatch(async (req, res) => {
     }
     const bid = {
         user: userId,
-        bidPrice: convertedPrice,
+        bidPrice: Number(price),
         createdAt: time
     };
     disc.bids.push(bid);
@@ -66,57 +61,26 @@ export const getAllDiscsWithSellers = tryCatch(async (req, res) => {
             const sellerCurrency = seller.currency;
             const startingPrice = Number(disc.startingPrice);
             if (disc.minPrice === '') {
-
-                const currencyConverter = new CurrencyConverter({
-                    from: sellerCurrency,
-                    to: requestedCurrency,
-                    amount: startingPrice,
-                });
-
-                const convertedStartingPrice = await currencyConverter.convert();
-
                 return {
                     ...disc.toObject(),
-                    startingPrice: 10
+                    startingPrice: startingPrice
 
                 };
             }
-
-
             const minPrice = Number(disc.minPrice);
 
-            const currencyConverter = new CurrencyConverter({
-                from: sellerCurrency,
-                to: requestedCurrency,
-                amount: startingPrice,
-            });
-            const convertedStartingPrice = await currencyConverter.convert();
-            const currencyConverter2 = new CurrencyConverter({
-                from: sellerCurrency,
-                to: requestedCurrency,
-                amount: minPrice,
-            });
-            const convertedMinPrice = await currencyConverter2.convert();
-
-            // console.log(disc);
             if (disc.bids.length > 0) {
                 const highestBid = disc.bids.sort(
                     (a, b) => b.bidPrice - a.bidPrice
                 )[0];
-                const currencyConverter3 = new CurrencyConverter({
-                    from: sellerCurrency,
-                    to: requestedCurrency,
-                    amount: highestBid.bidPrice,
-                });
-                const convertedHighestBid = await currencyConverter3.convert();
 
                 return {
                     ...disc.toObject(),
-                    startingPrice: 10,
-                    minPrice: 10,
+                    startingPrice: startingPrice,
+                    minPrice: minPrice,
                     highestBid: {
                         user: highestBid.user,
-                        bidPrice: 10,
+                        bidPrice: highestBid.bidPrice,
                         createdAt: highestBid.createdAt,
                         _id: highestBid._id,
                     },
@@ -125,10 +89,11 @@ export const getAllDiscsWithSellers = tryCatch(async (req, res) => {
 
             return {
                 ...disc.toObject(),
-                startingPrice: 10,
-                minPrice: 10,
+                startingPrice: startingPrice,
+                minPrice: minPrice,
             };
         }));
+        console.log(convertedDiscs);
         return {
             seller,
             discs: convertedDiscs,
@@ -153,16 +118,9 @@ export const getDiscBids = tryCatch(async (req, res) => {
         const bidderCurrency = disc.seller.currency;
         const bidPrice = Number(bid.bidPrice)
 
-        const currencyConverter = new CurrencyConverter({
-            from: bidderCurrency,
-            to: userCurrency,
-            amount: bidPrice,
-        });
-        const convertedPrice = await currencyConverter.convert();
-
         return {
             ...bid.toObject(),
-            bidPrice: 10,
+            bidPrice: bidPrice,
         };
     }));
 
@@ -185,10 +143,10 @@ export const buyDisc = tryCatch(async (req, res) => {
     const buyer = {
         user: userId,
         buyPrice: disc.startingPrice,
-        createdAt: time,
+        createdAt: new Date(),
     };
 
-    disc.buyer.push(buyer);
+    disc.buyer = buyer;
     disc.isActive = false;
     await disc.save();
 
@@ -207,21 +165,23 @@ export const checkDiscTime = async () => {
                 if (disc.priceType === "auction" && disc.isActive) {
                     if (disc.bids.length > 0) {
                         if (disc.isActive === false) return;
-                        console.log('bids length greater than zero');
                         const highestBid = disc.bids.sort(
                             (a, b) => b.bidPrice - a.bidPrice
                         )[0];
-                        disc.winner = highestBid._id;
+
+                        const buyer = {
+                            user: highestBid._id,
+                            buyPrice: highestBid.bidPrice,
+                            createdAt: new Date(),
+                        };
+                        disc.buyer = buyer;
                         disc.isActive = false;
                         await disc.save();
-                        console.log('disc saved');
                         io.emit("bid_added");
 
                     } else {
-                        console.log('bids length is zero');
                         const finishedDisc = new FinishedListing(disc.toJSON());
                         await finishedDisc.save();
-                        console.log('disc saved in finished');
                         await Disc.deleteOne({ _id: disc._id });
                         io.emit("bid_added");
                     }
@@ -271,53 +231,23 @@ export const getActiveDiscs2 = tryCatch(async (req, res) => {
         const startingPrice = Number(disc.startingPrice);
 
         if (disc.minPrice === '') {
-            const currencyConverter = new CurrencyConverter({
-                from: sellerCurrency,
-                to: userCurrency,
-                amount: startingPrice,
-            });
-            const convertedStartingPrice = await currencyConverter.convert();
 
             return {
                 ...disc.toObject(),
-                startingPrice: 10,
+                startingPrice: startingPrice,
             };
         }
 
         const minPrice = Number(disc.minPrice);
-
-        const currencyConverter1 = new CurrencyConverter({
-            from: sellerCurrency,
-            to: userCurrency,
-            amount: startingPrice,
-        });
-        const convertedStartingPrice = await currencyConverter1.convert();
-
-        const currencyConverter2 = new CurrencyConverter({
-            from: sellerCurrency,
-            to: userCurrency,
-            amount: minPrice,
-        });
-        const convertedMinPrice = await currencyConverter2.convert();
-
         if (disc.bids.length > 0) {
             const highestBid = disc.bids.sort((a, b) => b.bidPrice - a.bidPrice)[0];
-
-            const currencyConverter3 = new CurrencyConverter({
-                from: sellerCurrency,
-                to: userCurrency,
-                amount: highestBid.bidPrice,
-            });
-            const convertedHighestBid = await currencyConverter3.convert();
-            console.log();
-
             return {
                 ...disc.toObject(),
-                startingPrice: 10,
-                minPrice: 10,
+                startingPrice: startingPrice,
+                minPrice: minPrice,
                 highestBid: {
                     user: highestBid.user,
-                    bidPrice: 10,
+                    bidPrice: highestBid.bidPrice,
                     createdAt: highestBid.createdAt,
                     _id: highestBid._id,
                 },
@@ -326,8 +256,8 @@ export const getActiveDiscs2 = tryCatch(async (req, res) => {
 
         return {
             ...disc.toObject(),
-            startingPrice: 10,
-            minPrice: 10,
+            startingPrice: startingPrice,
+            minPrice: startingPrice,
         };
     }));
     console.log(convertedDiscs);
@@ -367,52 +297,24 @@ export const getFinishedDiscs2 = tryCatch(async (req, res) => {
         const startingPrice = Number(disc.startingPrice);
 
         if (disc.minPrice === '') {
-            const currencyConverter = new CurrencyConverter({
-                from: sellerCurrency,
-                to: userCurrency,
-                amount: startingPrice,
-            });
-            const convertedStartingPrice = await currencyConverter.convert();
-
             return {
                 ...disc.toObject(),
-                startingPrice: 10,
+                startingPrice: startingPrice,
             };
         }
 
         const minPrice = Number(disc.minPrice);
 
-        const currencyConverter1 = new CurrencyConverter({
-            from: sellerCurrency,
-            to: userCurrency,
-            amount: startingPrice,
-        });
-        const convertedStartingPrice = await currencyConverter1.convert();
-
-        const currencyConverter2 = new CurrencyConverter({
-            from: sellerCurrency,
-            to: userCurrency,
-            amount: minPrice,
-        });
-        const convertedMinPrice = await currencyConverter2.convert();
-
         if (disc.bids.length > 0) {
             const highestBid = disc.bids.sort((a, b) => b.bidPrice - a.bidPrice)[0];
 
-            const currencyConverter3 = new CurrencyConverter({
-                from: sellerCurrency,
-                to: userCurrency,
-                amount: highestBid.bidPrice,
-            });
-            const convertedHighestBid = await currencyConverter3.convert();
-
             return {
                 ...disc.toObject(),
-                startingPrice: 10,
-                minPrice: 10,
+                startingPrice: startingPrice,
+                minPrice: minPrice,
                 highestBid: {
                     user: highestBid.user,
-                    bidPrice: 10,
+                    bidPrice: highestBid.bidPrice,
                     createdAt: highestBid.createdAt,
                     _id: highestBid._id,
                 },
@@ -421,8 +323,8 @@ export const getFinishedDiscs2 = tryCatch(async (req, res) => {
 
         return {
             ...disc.toObject(),
-            startingPrice: 10,
-            minPrice: 10,
+            startingPrice: startingPrice,
+            minPrice: minPrice,
         };
     }));
 
@@ -494,3 +396,45 @@ export const reListDisc = tryCatch(async (req, res) => {
     io.emit("bid_added");
     res.send('Disc relisted successfully');
 });
+
+
+export const buyingDiscs = tryCatch(async (req, res) => {
+
+    const { userId } = req.params;
+
+    const discs = await Disc.aggregate([
+        {
+            $match: {
+                "buyer.user": new mongoose.Types.ObjectId(userId),
+                isActive: false
+            }
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "seller",
+                foreignField: "_id",
+                as: "seller"
+            }
+        },
+        {
+            $unwind: "$seller"
+        },
+        {
+            $group: {
+                _id: "$seller._id",
+                seller: {
+                    $first: "$seller"
+                },
+                discs: {
+                    $push: "$$ROOT"
+                }
+            }
+        }
+    ]);
+
+
+    res.status(200).json(discs);
+
+})
+
