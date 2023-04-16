@@ -25,8 +25,9 @@ const Loader =
 const Listing = () => {
     const [selected, setSelected] = useState('SE');
     const [moreFilters, setMoreFilters] = useState(false)
+    const [data, setData] = useState([])
     const { auth } = useAuth();
-    const userCurrency = auth?.country ? getCountryInfoByISO(auth.country).currency.toUpperCase() : "SEK";
+    const userCurrency = "SEK";
     const [screenSize, setScreenSize] = useState({
         width: window.innerWidth,
         height: window.innerHeight
@@ -37,8 +38,11 @@ const Listing = () => {
         ['listings', { userCurrency }],
         async () => {
             const response = await axios.get(`/disc?userCurrency=${userCurrency}`);
+            setData(response.data)
+            console.log(response.data);
             return response.data;
-        }
+        },
+        { staleTime: 1000 * 60 * 60 * 24, refetchOnWindowFocus: false }
     );
 
     useEffect(() => {
@@ -53,7 +57,6 @@ const Listing = () => {
     useEffect(() => {
         if (socket) {
             socket.on('bid_added', () => {
-                console.log('I RAN');
                 listingsRefetch();
             });
         }
@@ -70,6 +73,48 @@ const Listing = () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+
+    const [appliedFilters, setAppliedFilters] = useState([]);
+
+    const applyFilters = (appliedFilters2) => {
+        let tempDiscs = data;
+
+
+        if (appliedFilters2.length > 0) {
+            tempDiscs.forEach((disc) => {
+                disc.discs.forEach((d, index) => {
+
+                    appliedFilters2.forEach(filter => {
+
+                        if (filter === 'shortOnTime') {
+                            console.log('short on time');
+                        }
+
+                        if (d[filter]) {
+                            console.log('disc should be included');
+                        }
+                    })
+                })
+            })
+        }
+        else {
+            setData(listingsData)
+        }
+    }
+
+
+    const handleFilterClick = filter => {
+        let tempFilters = [...appliedFilters];
+
+        if (tempFilters.includes(filter)) {
+            tempFilters = tempFilters.filter(f => f !== filter);
+        } else {
+            tempFilters.push(filter);
+        }
+
+        setAppliedFilters(tempFilters);
+        applyFilters(tempFilters)
+    }
 
 
     return (
@@ -106,15 +151,15 @@ const Listing = () => {
                 <button className='w-[57px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>New</button>
                 <button className='w-[66px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>Popular</button>
                 <button className='w-[77px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>Following</button>
-                <button className='w-[99px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>Short on time</button>
+                <button className={`w-[99px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('shortOnTime') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('shortOnTime')}>Short on time</button>
                 {moreFilters && <>
-                    <button className='w-[74px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>Named</button>
-                    <button className='w-[79px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>Unamed</button>
-                    <button className='w-[50px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>Dyed</button>
-                    <button className='w-[87px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>Collectible</button>
-                    <button className='w-[59px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>Blank</button>
-                    <button className='w-[68px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>First Run</button>
-                    <button className='w-[51px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33]'>Glow</button>
+                    <button className={`w-[74px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('named') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('named')}>Named</button>
+                    <button className={`w-[79px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('unamed') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('unnamed')}>Unamed</button>
+                    <button className={`w-[50px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('dyed') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('dyed')}>Dyed</button>
+                    <button className={`w-[87px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('collectible') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('collectible')}>Collectible</button>
+                    <button className={`w-[59px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('blank') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('blank')}>Blank</button>
+                    <button className={`w-[68px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('firstRun') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('firstRun')}>First Run</button>
+                    <button className={`w-[51px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('glow') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('glow')} >Glow</button>
                 </>}
             </div>
             <div className='flex justify-start xsm:w-[320px] w-[405px] m-auto'>
@@ -128,11 +173,11 @@ const Listing = () => {
                 </div>
             ) : (
                 <div className='flex flex-col xsm:w-full sm:w-full w-[90%] m-auto overflow-hidden mb-[50px]'>
-                    {listingsData?.length > 0 ?
-                        listingsData?.map((value, index) => {
+                    {data?.length > 0 ?
+                        data?.map((value, index) => {
                             return (
                                 <React.Fragment key={index}>
-                                    <SingleList value={value} index={index} />
+                                    <SingleList value={value} discs={value.discs} index={index} />
                                 </React.Fragment>
                             )
                         }) : <p className='mt-[20px] text-[1em] font-[500] text-center'>No discs found</p>}

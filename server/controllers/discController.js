@@ -428,3 +428,69 @@ export const getFinishedDiscs2 = tryCatch(async (req, res) => {
 
     res.status(200).json(convertedDiscs);
 })
+
+export const deleteDisc = tryCatch(async (req, res) => {
+    const { discId } = req.params;
+
+    // Check if the disc exists
+    const disc = await FinishedListing.findById(discId);
+    if (!disc) {
+        return res.status(404).send('Disc not found');
+    }
+
+    // Delete the disc
+    await disc.remove();
+    io.emit("bid_added");
+    res.send('Disc deleted successfully');
+});
+
+
+export const editDisc = tryCatch(async (req, res) => {
+    const { discId } = req.params;
+
+    let disc = await Disc.findById(discId);
+    if (!disc) {
+        return res.status(404).send('Disc not found');
+    }
+
+    // Update the disc with the new data
+    const { pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime } = req.body;
+    disc.pictureURL = pictureURL;
+    disc.quantity = quantity;
+    disc.discName = discName;
+    disc.brand = brand;
+    disc.range = range;
+    disc.condition = condition;
+    disc.plastic = plastic;
+    disc.grams = grams;
+    disc.named = named;
+    disc.dyed = dyed;
+    disc.blank = blank;
+    disc.glow = glow;
+    disc.collectible = collectible;
+    disc.firstRun = firstRun;
+    disc.priceType = priceType;
+    disc.startingPrice = startingPrice;
+    disc.minPrice = minPrice;
+    disc.endDay = endDay;
+    disc.endTime = endTime;
+
+    // Save the updated disc
+    disc = await disc.save();
+    io.emit("bid_added");
+    res.send('Disc updated successfully');
+});
+
+export const reListDisc = tryCatch(async (req, res) => {
+    const { discId } = req.params;
+
+    // Delete the disc in FinishedListing
+    await FinishedListing.findByIdAndDelete(discId);
+
+    // Create a new disc in Disc
+    const { seller, pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime } = req.body;
+    console.log(req.body);
+    await Disc.create({ seller, pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime });
+    io.emit("bid_added");
+    res.send('Disc relisted successfully');
+});

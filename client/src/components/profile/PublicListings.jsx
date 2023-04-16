@@ -26,7 +26,7 @@ const Loader =
 const PublicListing = () => {
     const { id } = useParams();
     const { auth } = useAuth();
-    const userCurrency = auth?.country ? getCountryInfoByISO(auth.country).currency.toUpperCase() : "SEK";
+    const userCurrency = "SEK";
     const [isHovered, setIsHovered] = useState(false);
     const scrollableDivRef = useRef(null);
     const [screenSize, setScreenSize] = useState({

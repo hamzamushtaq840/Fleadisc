@@ -6,11 +6,15 @@ import plastic from '../../assets/plastic.svg'
 import { getCountryInfoByISO } from '../../utils/iso-country-currency'
 import upload from './../../assets/upload.svg'
 import Select from 'react-select'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import CropEasy from './cropEasy'
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { Storage } from './../../utils/firebase'
+import moment from 'moment'
+import { useMutation } from '@tanstack/react-query'
+import axios from '../../api/axios'
+import useAuth from '../../hooks/useAuth'
 
 const options = [
     { value: 'Annax', label: 'Annax' },
@@ -37,13 +41,15 @@ const ranges = [
 
 const ReList = () => {
     const location = useLocation()
+    const navigate = useNavigate()
     const data = location.state
+    const { auth } = useAuth()
     const [optional, setOptional] = useState(false);
     const [openCrop, setOpenCrop] = useState(false)
     const [photoURL, setPhotoURL] = useState(data.pictureURL);
     const [files, setFile] = useState(null)
     const [inputValues, setInputValues] = useState({
-        discId: data._id,
+        seller: auth.userId,
         pictureURL: data.pictureURL,
         quantity: data.quantity,
         discName: data.discName,
@@ -129,10 +135,27 @@ const ReList = () => {
             throw err;
         }
     };
+    function isBeforeNow(day, time) {
+        const endDateTime = moment(`${day} ${time}`);
+        const now = moment();
+        return endDateTime.isBefore(now);
+    }
+
+
+    const relistDisc = useMutation(() => axios.post(`/disc/relist/${data._id}`, inputValues), {
+        onSuccess: () => {
+            navigate('/profile/private/listings')
+            toast.success('Listing relisted successfully');
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+
 
     const handlePublish = async (e) => {
-        console.log(inputValues);
         e.preventDefault()
+        console.log(inputValues);
         if (inputValues.quantity === '') {
             toast.error('Quantity is required')
             return
@@ -172,6 +195,11 @@ const ReList = () => {
         if (inputValues.priceType === 'auction' && inputValues.minPrice === '') {
             inputValues.minPrice = 1
         }
+        if (isBeforeNow(inputValues.endDay, inputValues.endTime)) {
+            toast.error('End day and time cannot be from past')
+            return
+        }
+
         if (inputValues.pictureURL instanceof Blob) {
             const photo = await handleUpload(inputValues.pictureURL)
             setInputValues((prevInputValues) => ({
@@ -179,6 +207,7 @@ const ReList = () => {
                 pictureURL: photo,
             }))
         }
+        relistDisc.mutate()
 
     }
 
@@ -372,7 +401,7 @@ const ReList = () => {
                             onChange={handleOptionalChange} className='min-w-[80px]  ml-2 text-[#595959bf] rounded-[2px] border-[1px] border-[#000000]' type="time" id="time" /></label>
                     </div>
                 </div>
-                <div className='flex justify-center xsm:pt-[0em] sm:pt-[0em] pt-[1.2em] pb-[1.25em]'><button onClick={handlePublish} className='w-[7.5em] h-[2.4125em] mt-[1.125em] text-[0.875em] button font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[4px]' style={{ boxShadow: "0 4px 0.375em -1px rgba(0, 0, 0, 0.1), 0 0.375em 4px -1px rgba(0, 0, 0, 0.06)" }}>Re-list</button></div>
+                <div className='flex justify-center xsm:pt-[0em] sm:pt-[0em] pt-[1.2em] pb-[1.25em]'><button onClick={handlePublish} className='w-[7.5em] h-[2.4125em] mt-[1.125em] text-[0.875em] button font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[4px]' style={{ boxShadow: "0 4px 0.375em -1px rgba(0, 0, 0, 0.1), 0 0.375em 4px -1px rgba(0, 0, 0, 0.06)" }}>{relistDisc.isLoading ? "wait" : "Re-list"}</button></div>
 
             </div>
             {openCrop && <CropEasy photoURL={photoURL} setOpenCrop={setOpenCrop} dontCrop={dontCrop} onFinish={handleCropped} />}

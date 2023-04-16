@@ -7,7 +7,7 @@ import SingleListCard from './SingleListCard';
 import moment from 'moment';
 import useAuth from '../../hooks/useAuth';
 
-const SingleList = ({ value, index }) => {
+const SingleList = ({ value, index, discs }) => {
     const { auth } = useAuth();
     const navigate = useNavigate();
     const scrollableDivRef = useRef(null);
@@ -113,7 +113,7 @@ const SingleList = ({ value, index }) => {
                 <div className={`relative ${screenSize.width > 768 ? "px-[25px] " : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                     {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%]  flex justify-center items-center h-[80%] w-[20px] select-none ' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
                     <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[4px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"}  pb-[5px] gap-[10px] mt-[11px] `}>
-                        {value.discs.map((val, index) => {
+                        {discs.map((val, index) => {
                             const combinedDate = moment(`${val.endDay} ${val.endTime}`, "YYYY-MM-DD HH:mm");
                             const isExpired = combinedDate.isBefore(currentTime);
                             return isExpired ? null : (

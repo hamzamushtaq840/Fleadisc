@@ -16,7 +16,7 @@ const PrivateListings = () => {
     const navigate = useNavigate();
     const scrollableDivRef = useRef(null);
     const { auth } = useAuth();
-    const userCurrency = auth?.country ? getCountryInfoByISO(auth.country).currency.toUpperCase() : "SEK";
+    const userCurrency =  "SEK";
     const [isHovered, setIsHovered] = useState(false);
     const [screenSize, setScreenSize] = useState({
         width: window.innerWidth,

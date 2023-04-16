@@ -6,12 +6,14 @@ import plastic from '../../assets/plastic.svg'
 import { getCountryInfoByISO } from '../../utils/iso-country-currency'
 import upload from './../../assets/upload.svg'
 import Select from 'react-select'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import CropEasy from './cropEasy'
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { Storage } from './../../utils/firebase'
 import RemoveModel from './RemoveModel'
+import { useMutation } from '@tanstack/react-query'
+import axios from '../../api/axios'
 
 const options = [
     { value: 'Annax', label: 'Annax' },
@@ -39,6 +41,7 @@ const ranges = [
 const Edit = () => {
     const location = useLocation()
     const data = location.state
+    const navigate = useNavigate()
     const [optional, setOptional] = useState(false);
     const [openCrop, setOpenCrop] = useState(false)
     const [photoURL, setPhotoURL] = useState(data.pictureURL);
@@ -132,8 +135,18 @@ const Edit = () => {
         }
     };
 
+    const editDisc = useMutation(() => axios.post(`/disc/edit/${data._id}`, inputValues), {
+        onSuccess: () => {
+            navigate('/profile/private/listings')
+            toast.success('Listing edited successfully');
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+
     const handlePublish = async (e) => {
-        console.log(inputValues);
+
         e.preventDefault()
         if (inputValues.quantity === '') {
             toast.error('Quantity is required')
@@ -181,7 +194,7 @@ const Edit = () => {
                 pictureURL: photo,
             }))
         }
-
+        editDisc.mutate()
     }
 
     const handleFileUpload = (event) => {
@@ -375,7 +388,7 @@ const Edit = () => {
                     </div>
                 </div>
                 <div className='flex justify-center mb-[20px] gap-[8px]'>
-                    <button onClick={handlePublish} className='w-[7.5em] h-[2.3125em] mt-[18px] text-[0.875rem] font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Update</button>
+                    <button onClick={handlePublish} className='w-[7.5em] h-[2.3125em] mt-[18px] text-[0.875rem] font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>{editDisc.isLoading ? "wait" : "Update"}</button>
                     <button onClick={() => setModel(true)} className='w-[7.5em] h-[2.3125em] mt-[18px] text-[0.875rem] font-[600] bg-[#F21111] text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Remove</button>
                 </div>
             </div >

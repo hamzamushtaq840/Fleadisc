@@ -19,7 +19,7 @@ import axios from '../../api/axios'
 
 const SingleListCard = ({ val, seller }) => {
     const { auth } = useAuth();
-    const userCurrency = auth?.country ? getCountryInfoByISO(auth.country).currency.toUpperCase() : "SEK";
+    const userCurrency = "SEK";
     const navigate = useNavigate();
     const [extra, setExtra] = useState(false)
     const [imageModal, setImageModal] = useState(false);

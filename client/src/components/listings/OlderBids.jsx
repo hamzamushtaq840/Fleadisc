@@ -21,7 +21,7 @@ const Loader =
 
 const OlderBids = ({ setModel, discId }) => {
     const { auth } = useAuth();
-    const userCurrency = auth?.country ? getCountryInfoByISO(auth.country).currency.toUpperCase() : "SEK";
+    const userCurrency = "SEK";
     const { isLoading, error, data } = useQuery(['bids', discId, userCurrency], async () => {
         const response = await axios.get(`/disc/getBids/${discId}/bids`, { params: { userCurrency } });
         return response.data;
