@@ -10,7 +10,7 @@ import axios from '../../api/axios';
 const PublicInfo = () => {
     const { id } = useParams()
 
-    const userInfoQuery = useQuery(['userData', id], () => axios.get(`/user/${id}`), {
+    const userInfoQuery = useQuery(['userDataPublic', id], () => axios.get(`/user/${id}`), {
         onSuccess: (res) => {
         },
         onError: (error) => {
@@ -54,7 +54,7 @@ const PublicInfo = () => {
                                 <p className='text-[.75em] font-[500]'>{getCountryInfoByISO(userInfoQuery.data.data.country).countryName}</p>
                             </div>
                         </div>
-                        {(userInfoQuery?.data?.data?.deliveryAddress?.city || userInfoQuery?.data?.data?.deliveryAddress?.country) &&
+                        {(userInfoQuery?.data?.data?.deliveryAddress?.city || userInfoQuery?.data?.data?.deliveryAddress?.country || userInfoQuery?.data?.data?.deliveryAddress?.line1 || userInfoQuery?.data?.data?.deliveryAddress?.line2) &&
                             <div className='flex flex-col'>
                                 <h1 className='text-[0.75em] font-[600]'>Delivery Address</h1>
                                 <h1 className='text-[0.75em] max-w-[150px] font-[500] text-[#595959bf]'>

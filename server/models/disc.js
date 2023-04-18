@@ -41,22 +41,11 @@ const discSchema = mongoose.Schema({
     },
     buyer: {
         type: buyerSchema,
-        required: function () {
-            return this.priceType === "fixedPrice";
-        },
+        required: false
     },
     isActive: { type: Boolean, default: true, required: false },
     winner: { type: mongoose.Schema.Types.ObjectId, ref: 'Bid', required: false },
-    purchaseConfirmed: { type: Boolean, default: false },
-    addressSent: { type: Boolean, default: false },
-    address: { type: String, default: null },
-    shippingCost: { type: Number, default: null },
-    paymentAddressConfirmed: { type: Boolean, default: false },
-    paymentSent: { type: Boolean, default: false },
-    paymentConfirmed: { type: Boolean, default: false },
-    parcelSent: { type: Boolean, default: false },
-    parcelReceived: { type: Boolean, default: false },
-    cancelPayment: { type: Boolean, default: false },
+
 });
 
 

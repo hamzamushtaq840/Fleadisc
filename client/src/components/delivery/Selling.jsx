@@ -1,7 +1,26 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SingleSellItem from './SingleSellItem'
+import { useQuery } from '@tanstack/react-query';
+import axios from '../../api/axios';
+import useAuth from '../../hooks/useAuth';
+import { ColorRing } from 'react-loader-spinner';
+
+
+const Loader =
+    <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>
+        <ColorRing
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="blocks-loading"
+            wrapperStyle={{}}
+            wrapperClass="blocks-wrapper"
+            colors={['#494949', '#494949', '#494949', '#494949', '#494949']}
+        />
+    </div>
 
 const Selling = () => {
+    const { auth } = useAuth()
     const wonBids = [
         {
             id: '123',
@@ -222,19 +241,52 @@ const Selling = () => {
         },
     ]
 
-    return (
-        <div className=' bg-[#FAFAFA] flex justify-center px-[1.25em] py-[0.625em] text-[1.2rem] xsm:text-[1rem] sm:text-[1.125rem] '>
-            <div className='w-[80vw] sm:w-[100vw] xsm:w-[100vw]'>
-                {wonBids.map((value, index) => {
-                    return (
-                        <div key={index}>
-                            <SingleSellItem value={value} />
-                        </div>
-                    )
-                })}
+    const sellingQuery = useQuery(['sellingDiscs', auth.userId], () => axios.get(`/disc/selling/${auth.userId}`), {
+        onSuccess: (res) => {
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+
+    useEffect(() => {
+        sellingQuery.refetch()
+    }, [])
+
+
+
+    if (sellingQuery.isLoading || sellingQuery.isRefetching && !sellingQuery.data) {
+        return (
+            <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>
+                <ColorRing
+                    visible={true}
+                    height="80"
+                    width="80"
+                    ariaLabel="blocks-loading"
+                    wrapperStyle={{}}
+                    wrapperClass="blocks-wrapper"
+                    colors={['#494949', '#494949', '#494949', '#494949', '#494949']}
+                />
             </div>
-        </div>
-    )
+
+        )
+    }
+    else
+        return (
+            <div className=' bg-[#FAFAFA] flex justify-center px-[1.25em] py-[0.625em] text-[1.2rem] xsm:text-[1rem] sm:text-[1.125rem] '>
+                <div className='w-[80vw] sm:w-[100vw] xsm:w-[100vw]'>
+                    {sellingQuery?.data?.data?.length === 0 ? (
+                        <p className='flex text-center min-h-[40vh] items-center justify-center text-[1em]'>No disc Found</p>
+                    ) : (
+                        sellingQuery?.data?.data?.map((value, index) => (
+                            <div key={index}>
+                                <SingleSellItem value={value} />
+                            </div>
+                        ))
+                    )}
+                </div>
+            </div>
+        )
 }
 
 export default Selling

@@ -4,6 +4,7 @@ import signin from './../assets/signin.svg';
 import useAuth from '../hooks/useAuth';
 import { Menu, MenuItem } from '@mui/material';
 import AuthContext from '../context/AuthProvider';
+import { io } from 'socket.io-client';
 
 const settings = ['Profile', 'Logout'];
 
@@ -12,8 +13,7 @@ const Navbar = () => {
     const [showShadow, setShowShadow] = useState(false);
     const [anchorElUser, setAnchorElUser] = useState(null);
     const navigate = useNavigate()
-    const { auth } = useAuth();
-    const { setAuth } = useContext(AuthContext)
+    const { auth, setAuth, setSocket, socket } = useAuth();
     const [notifications, setNotifications] = useState([{}, {}])
 
     const handleOpenUserMenu = (event) => {
@@ -40,11 +40,31 @@ const Navbar = () => {
         }
     };
 
+    useEffect(() => {
+        const socket = io('http://localhost:5001');
+
+        // Emit 'newUser' event when auth.userId changes
+        if (auth.userId) {
+            socket.emit('newUser', auth.userId);
+            console.log(socket);
+            setSocket(socket);
+        }
+
+        return () => {
+            // Emit 'removeUser' event and close socket when component unmounts
+            if (auth.userId) {
+                socket.emit('removeUser', socket.id);
+            }
+            socket.close();
+        };
+    }, [auth.userId]);
+
+
     const handleLogout = (e) => {
         handleCloseUserMenu(e);
         setAuth({})
+        socket?.emit("newUser", auth.userId)
         navigate('/signin')
-
     }
 
     return (

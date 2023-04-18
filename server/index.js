@@ -12,6 +12,7 @@ import { errorHandler } from './middlewares/errorHandler.js'
 import discRoutes from './routes/discRoutes.js'
 import token from './routes/tokenRoutes.js'
 import userRoutes from './routes/userRoutes.js'
+import deliveryRoutes from './routes/deliveryRoutes.js'
 import { checkDiscTime } from './controllers/discController.js'
 
 const app = express()
@@ -29,15 +30,22 @@ const removeUser = (socketId) => {
 }
 
 export const getUsers = (userId) => {
-    console.log(onlineUsers)
     return onlineUsers.find(user => user.userId === userId)
 }
 
 io.on('connection', (socket) => {
-    // console.log('connected');
     //new user
     socket.on('newUser', (userId) => {
+        console.log('new user connected ');
         addNewUser(userId, socket.id)
+        console.log(onlineUsers);
+    })
+
+    //remove user
+    socket.on('removeUser', (userId) => {
+        console.log('user removed');
+        removeUser(socket.id)
+        console.log(onlineUsers);
     })
 
     //disconnect function
@@ -57,6 +65,7 @@ app.use(cors(corsOptions))
 app.use('/user', userRoutes)
 app.use('/token', token)
 app.use('/disc', discRoutes)
+app.use('/delivery', deliveryRoutes)
 
 cron.schedule('*/30 * * * * *', () => {
     checkDiscTime()

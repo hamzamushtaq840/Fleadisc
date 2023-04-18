@@ -2,13 +2,9 @@ import { Disc } from '../models/disc.js';
 import { tryCatch } from '../utils/tryCatch.js';
 import AppError from '../utils/AppError.js';
 import { groupBy } from 'lodash-es';
-import CurrencyConverter from 'currency-converter-lt';
 import { io } from '../index.js';
-import { BoughtDisc } from '../models/boughtDisc.js';
-import moment from 'moment'
 import { FinishedListing } from '../models/finishedListing.js';
-import { User } from '../models/user.js';
-import mongoose from 'mongoose';
+import { TempDisc } from '../models/tempDisc.js';
 
 export const postDisc = tryCatch(async (req, res) => {
     const { seller, pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime } = req.body;
@@ -146,12 +142,43 @@ export const buyDisc = tryCatch(async (req, res) => {
         createdAt: new Date(),
     };
 
+    const sellerId = disc.seller
+
     disc.buyer = buyer;
     disc.isActive = false;
+
+    const currentDate = new Date();
+
+    // Get the year, month, and day from the current date
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+
+    // Get the hours and minutes from the current time
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    disc.endDay = `${year}-${month}-${day}`;
+    disc.endTime = `${hours}:${minutes}`;
     await disc.save();
+    // check if disc.buyer and dics.seller are found in that collection then add it to there disc array 
+    // only if the last added disc has paymentSent = false
+    const existingTempDisc = await TempDisc.findOne({ buyer: userId, seller: sellerId, paymentSent: false }).lean();
+
+    if (existingTempDisc) {
+        await TempDisc.updateOne(
+            { _id: existingTempDisc._id },
+            { $push: { disc: { discId: listingId } } }
+        );
+    }
+    else {
+        await TempDisc.create({
+            buyer: userId,
+            seller: sellerId,
+            disc: [{ discId: listingId }]
+        });
+    }
 
     io.emit("bid_added");
-
     res.status(200).json({ success: true, data: disc });
 });
 
@@ -170,13 +197,27 @@ export const checkDiscTime = async () => {
                         )[0];
 
                         const buyer = {
-                            user: highestBid._id,
+                            user: highestBid.user,
                             buyPrice: highestBid.bidPrice,
                             createdAt: new Date(),
                         };
                         disc.buyer = buyer;
                         disc.isActive = false;
                         await disc.save();
+                        const existingTempDisc = await TempDisc.findOne({ buyer: highestBid.user, seller: disc.seller, paymentSent: false }).lean();
+                        if (existingTempDisc) {
+                            await TempDisc.updateOne(
+                                { _id: existingTempDisc._id },
+                                { $push: { disc: { discId: disc._id } } }
+                            );
+                        }
+                        else {
+                            await TempDisc.create({
+                                buyer: highestBid.user,
+                                seller: disc.seller,
+                                disc: [{ discId: disc._id }]
+                            });
+                        }
                         io.emit("bid_added");
 
                     } else {
@@ -401,38 +442,16 @@ export const reListDisc = tryCatch(async (req, res) => {
 export const buyingDiscs = tryCatch(async (req, res) => {
 
     const { userId } = req.params;
+    const discs = await TempDisc.find({ buyer: userId }).populate('seller').populate('buyer').populate('disc.discId');
 
-    const discs = await Disc.aggregate([
-        {
-            $match: {
-                "buyer.user": new mongoose.Types.ObjectId(userId),
-                isActive: false
-            }
-        },
-        {
-            $lookup: {
-                from: "users",
-                localField: "seller",
-                foreignField: "_id",
-                as: "seller"
-            }
-        },
-        {
-            $unwind: "$seller"
-        },
-        {
-            $group: {
-                _id: "$seller._id",
-                seller: {
-                    $first: "$seller"
-                },
-                discs: {
-                    $push: "$$ROOT"
-                }
-            }
-        }
-    ]);
+    res.status(200).json(discs);
 
+})
+export const sellingDiscs = tryCatch(async (req, res) => {
+
+    const { userId } = req.params;
+
+    const discs = await TempDisc.find({ seller: userId }).populate('seller').populate('buyer').populate('disc.discId');
 
     res.status(200).json(discs);
 

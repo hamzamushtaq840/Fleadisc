@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactFlagsSelect from "react-flags-select";
 import add from '../../assets/addd.svg';
 import cross from '../../assets/cross.svg';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import useAuth from '../../hooks/useAuth';
 import axios from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +11,9 @@ import { toast } from 'react-toastify';
 const PrivateInfoEdit = () => {
     const { auth } = useAuth()
     const navigate = useNavigate()
-    const userInfoQuery = useQuery(['userData', auth.userId], () => axios.get(`/user/${auth.userId}`), {
+    const queryClient = useQueryClient()
+
+    const userInfoQuery = useQuery(['userDataEdt', auth.userId], () => axios.get(`/user/${auth.userId}`), {
         onSuccess: (res) => {
         },
         onError: (error) => {
@@ -23,6 +25,8 @@ const PrivateInfoEdit = () => {
         onSuccess: () => {
             userInfoQuery.refetch()
             toast.success('Profile updated')
+            queryClient.invalidateQueries('userDataPrivate')
+            navigate('/profile/private')
         },
         onError: (error) => {
             console.log(error);

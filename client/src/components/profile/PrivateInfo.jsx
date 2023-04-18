@@ -10,7 +10,7 @@ import axios from '../../api/axios';
 const PrivateInfo = () => {
     const { auth } = useAuth()
 
-    const userInfoQuery = useQuery(['userData', auth.userId], () => axios.get(`/user/${auth.userId}`), {
+    const userInfoQuery = useQuery(['userDataPrivate', auth.userId], () => axios.get(`/user/${auth.userId}`), {
         onSuccess: (res) => {
         },
         onError: (error) => {
@@ -54,22 +54,22 @@ const PrivateInfo = () => {
                                 <p className='text-[.75em] font-[500]'>{getCountryInfoByISO(userInfoQuery.data.data.country).countryName}</p>
                             </div>
                         </div>
-                        {(userInfoQuery?.data?.data?.deliveryAddress?.city || userInfoQuery?.data?.data?.deliveryAddress?.country) &&
+                        {(userInfoQuery?.data?.data?.deliveryAddress?.city || userInfoQuery?.data?.data?.deliveryAddress?.country || userInfoQuery?.data?.data?.deliveryAddress?.line1 || userInfoQuery?.data?.data?.deliveryAddress?.line2) &&
                             <div className='flex flex-col'>
                                 <h1 className='text-[0.75em] font-[600]'>Delivery Address</h1>
                                 <h1 className='text-[0.75em] max-w-[150px] font-[500] text-[#595959bf]'>
                                     {userInfoQuery?.data?.data?.deliveryAddress?.line1 ? userInfoQuery?.data?.data?.deliveryAddress?.line1 + ", " : ""}
                                     {userInfoQuery?.data?.data?.deliveryAddress?.line2 ? userInfoQuery?.data?.data?.deliveryAddress?.line2 + ", " : ""}
-                                    {userInfoQuery?.data?.data?.deliveryAddress?.city ? userInfoQuery?.data?.data?.deliveryAddress?.city + "," : ""}
+                                    {userInfoQuery?.data?.data?.deliveryAddress?.city ? userInfoQuery?.data?.data?.deliveryAddress?.city + ", " : ""}
                                     {userInfoQuery?.data?.data?.deliveryAddress?.country ? userInfoQuery?.data?.data?.deliveryAddress?.country : ""}</h1>
                             </div>}
                         {(userInfoQuery?.data?.data?.shippingAddress?.city || userInfoQuery?.data?.data?.shippingAddress?.country || userInfoQuery?.data?.data?.shippingAddress?.line1 || userInfoQuery?.data?.data?.shippingAddress?.line2) &&
                             <div className='flex flex-col'>
-                                <h1 className='text-[0.75em] font-[600]'>Delivery Address</h1>
+                                <h1 className='text-[0.75em] font-[600]'>Shipping Address</h1>
                                 <h1 className='text-[0.75em] max-w-[150px] font-[500] text-[#595959bf]'>
                                     {userInfoQuery?.data?.data?.shippingAddress?.line1 ? userInfoQuery?.data?.data?.shippingAddress?.line1 + ", " : ""}
                                     {userInfoQuery?.data?.data?.shippingAddress?.line2 ? userInfoQuery?.data?.data?.shippingAddress?.line2 + ", " : ""}
-                                    {userInfoQuery?.data?.data?.shippingAddress?.city ? userInfoQuery?.data?.data?.shippingAddress?.city + "," : ""}
+                                    {userInfoQuery?.data?.data?.shippingAddress?.city ? userInfoQuery?.data?.data?.shippingAddress?.city + ", " : ""}
                                     {userInfoQuery?.data?.data?.shippingAddress?.country ? userInfoQuery?.data?.data?.shippingAddress?.country : ""}</h1>
                             </div>}
                     </div>

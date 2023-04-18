@@ -1,6 +1,6 @@
 const router = express.Router();
 import express from 'express';
-import { buyDisc, buyingDiscs, deleteDisc, editDisc, getActiveDiscs, getActiveDiscs2, getAllDiscsWithSellers, getDiscBids, getFinishedDiscs, getFinishedDiscs2, postBid, postDisc, reListDisc } from '../controllers/discController.js';
+import { buyDisc, buyingDiscs, deleteDisc, editDisc, getActiveDiscs, getActiveDiscs2, getAllDiscsWithSellers, getDiscBids, getFinishedDiscs, getFinishedDiscs2, postBid, postDisc, reListDisc, sellingDiscs } from '../controllers/discController.js';
 
 router.post('/', postDisc);
 router.delete('/delete/:discId', deleteDisc);
@@ -10,6 +10,7 @@ router.get('/', getAllDiscsWithSellers);
 router.post('/bid', postBid);
 router.post('/buy', buyDisc);
 router.get('/buying/:userId', buyingDiscs);
+router.get('/selling/:userId', sellingDiscs);
 router.get('/getBids/:discId/bids', getDiscBids);
 router.get('/getActiveDiscs/:userId', getActiveDiscs);
 router.get('/getActiveDiscs2/:userId/:userCurrency', getActiveDiscs2);

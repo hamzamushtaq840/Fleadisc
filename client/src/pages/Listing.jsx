@@ -45,7 +45,7 @@ const Listing = () => {
             applyFilters(appliedFilters)
             return response.data;
         },
-        { refetchOnMount: false, refetchOnWindowFocus: false, refetchOnReconnect: false }
+        // { refetchOnMount: false, refetchOnWindowFocus: false, refetchOnReconnect: false }
     );
 
     useEffect(() => {
@@ -99,7 +99,7 @@ const Listing = () => {
                 return response.data;
             },
             {
-                staleTime: 60000000000 // Set stale time to 1 minute
+                // staleTime: 60000000000 // Set stale time to 1 minute
             }
         ));
     }

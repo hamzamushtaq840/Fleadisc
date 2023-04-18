@@ -205,29 +205,28 @@ export const changePicture = tryCatch(async (req, res) => {
 });
 export const editUser = tryCatch(async (req, res) => {
 
-    console.log('i ran');
     const userId = req.params.userId;
     const updates = req.body;
 
     const user = await User.findById(userId);
 
     // // Update the user document with the new form data
-    user.name = updates.name || user.name;
-    user.country = updates.country || user.country;
-    user.deliveryAddress.line1 = updates.deliveryAddressLine1 || user.deliveryAddress.line1;
-    user.deliveryAddress.line2 = updates.deliveryAddressLine2 || user.deliveryAddress.line2;
-    user.deliveryAddress.postalCode = updates.deliveryPostalCode || user.deliveryAddress.postalCode;
-    user.deliveryAddress.city = updates.deliveryCity || user.deliveryAddress.city;
-    user.deliveryAddress.state = updates.deliveryState || user.deliveryAddress.state;
-    user.deliveryAddress.country = updates.deliveryCountry || user.deliveryAddress.country;
-    user.shippingAddress.line1 = updates.shippingAddressLine1 || user.shippingAddress.line1;
-    user.shippingAddress.line2 = updates.shippingAddressLine2 || user.shippingAddress.line2;
-    user.shippingAddress.postalCode = updates.shippingPostalCode || user.shippingAddress.postalCode;
-    user.shippingAddress.city = updates.shippingCity || user.shippingAddress.city;
-    user.shippingAddress.state = updates.shippingState || user.shippingAddress.state;
-    user.shippingAddress.country = updates.shippingCountry || user.shippingAddress.country;
-    user.paymentMethods = updates.paymentMethods || user.paymentMethods;
-    user.shippingCostPaidBy = updates.shippingCostPaidBy || user.shippingCostPaidBy;
+    user.name = updates.name
+    user.country = updates.country
+    user.deliveryAddress.line1 = updates.deliveryAddressLine1
+    user.deliveryAddress.line2 = updates.deliveryAddressLine2
+    user.deliveryAddress.postalCode = updates.deliveryPostalCode
+    user.deliveryAddress.city = updates.deliveryCity
+    user.deliveryAddress.state = updates.deliveryState
+    user.deliveryAddress.country = updates.deliveryCountry
+    user.shippingAddress.line1 = updates.shippingAddressLine1
+    user.shippingAddress.line2 = updates.shippingAddressLine2
+    user.shippingAddress.postalCode = updates.shippingPostalCode
+    user.shippingAddress.city = updates.shippingCity
+    user.shippingAddress.state = updates.shippingState
+    user.shippingAddress.country = updates.shippingCountry
+    user.paymentMethods = updates.paymentMethods
+    user.shippingCostPaidBy = updates.shippingCostPaidBy
 
     // Save the updated user document to the database
     await user.save();

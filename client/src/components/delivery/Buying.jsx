@@ -1,11 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import SingleBuyItem from './SingleBuyItem';
 import useAuth from './../../hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import axios from '../../api/axios';
+import { ColorRing } from 'react-loader-spinner';
+import { io } from 'socket.io-client'
+import { toast } from 'react-toastify'
+
+const Loader =
+    <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>
+        <ColorRing
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="blocks-loading"
+            wrapperStyle={{}}
+            wrapperClass="blocks-wrapper"
+            colors={['#494949', '#494949', '#494949', '#494949', '#494949']}
+        />
+    </div>
 
 const Buying = () => {
-    const { auth } = useAuth()
+    const { auth, socket } = useAuth()
     const wonBids = [
         {
             id: '123',
@@ -234,28 +250,62 @@ const Buying = () => {
         },
     ]
 
-    const userInfoQuery = useQuery(['buyingDiscs', auth.userId], () => axios.get(`/disc/buying/${auth.userId}`), {
+    const buyingQuery = useQuery(['buyingDiscs', auth.userId], () => axios.get(`/disc/buying/${auth.userId}`), {
         onSuccess: (res) => {
-            console.log(res.data);
         },
         onError: (error) => {
             console.log(error);
         }
     });
 
-    return (
-        <div className=' bg-[#FAFAFA] flex justify-center px-[1.25em] py-[0.625em] text-[1.2rem] xsm:text-[1rem] sm:text-[1rem] '>
-            <div className='w-[80vw] sm:w-[100vw] xsm:w-[100vw]'>
-                {wonBids.map((value, index) => {
-                    return (
-                        <div key={index}>
-                            <SingleBuyItem value={value} />
-                        </div>
-                    )
-                })}
+
+    useEffect(() => {
+        buyingQuery.refetch()
+        if (socket) {
+            socket.on('refetchBuying', () => {
+                // Handle incoming data from server
+                buyingQuery.refetch()
+                toast.success('You have a new notification', { position: toast.POSITION.TOP_RIGHT, });
+                // Update state or perform other actions
+            })
+        }
+    }, [])
+
+
+    if (buyingQuery.isLoading || buyingQuery.isRefetching && !buyingQuery.data) {
+        return (
+            <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>
+                <ColorRing
+                    visible={true}
+                    height="80"
+                    width="80"
+                    ariaLabel="blocks-loading"
+                    wrapperStyle={{}}
+                    wrapperClass="blocks-wrapper"
+                    colors={['#494949', '#494949', '#494949', '#494949', '#494949']}
+                />
             </div>
-        </div >
-    )
+
+        )
+    }
+    else
+        return (
+            <div className=' bg-[#FAFAFA] flex justify-center px-[1.25em] py-[0.625em] text-[1.2rem] xsm:text-[1rem] sm:text-[1rem] '>
+                <div className='w-[80vw] sm:w-[100vw] xsm:w-[100vw]'>
+                    {buyingQuery?.data?.data?.length === 0 ? (
+                        <p className='flex text-center min-h-[40vh] items-center justify-center text-[1em]'>No disc Found</p>
+                    ) : (
+                        buyingQuery?.data?.data?.map((value, index) => {
+                            return (
+                                <div key={index}>
+                                    <SingleBuyItem value={value} />
+                                </div>
+                            )
+                        })
+                    )}
+                </div>
+            </div >
+        )
 }
 
 export default Buying

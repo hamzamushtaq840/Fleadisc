@@ -8,12 +8,20 @@ export const AuthProvider = ({ children }) => {
         return storedAuth ? JSON.parse(storedAuth) : {};
     });
 
+    const [socket, setSocket] = useState(""); // State to store socket.id
+
     useEffect(() => {
         localStorage.setItem("auth", JSON.stringify(auth));
     }, [auth]);
 
+    useEffect(() => {
+        localStorage.setItem("socket", socket); // Persist socketId in local storage
+    }, [socket]);
+
     return (
-        <AuthContext.Provider value={{ auth, setAuth }}>
+        <AuthContext.Provider
+            value={{ auth, setAuth, socket, setSocket }}
+        >
             {children}
         </AuthContext.Provider>
     );

@@ -65,7 +65,7 @@ const FinishedListing = ({ value, userCurrency }) => {
                     </div>
                     <div className='flex mt-[5px] flex-col  text-[#595959]'>
                         <span className='font-[600] text-[0.6em]'>{getMonthAndDate(value.endDay)} - {value.endTime} </span>
-                        <span className='font-[500] text-[#595959BF] text-[0.55em]'>{remainingTime(value.endDay, value.endTime)} ago</span>
+                        <span className='font-[500] text-[#595959BF] text-[0.55em]'>Ended {remainingTime(value.endDay, value.endTime)}</span>
                     </div>
                 </div>
 
