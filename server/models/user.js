@@ -70,6 +70,7 @@ const userSchema = mongoose.Schema({
     shippingCostPaidBy: {
         type: String,
         enum: ["Buyer", "Me"],
+        default: 'Buyer',
         required: false,
     },
     deliveryAddress: {

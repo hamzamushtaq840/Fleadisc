@@ -1,35 +1,65 @@
-import React, { useMemo, useRef, useState } from 'react'
-import user from './../../assets/signin.svg'
 import Rating from '@mui/material/Rating';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import user from './../../assets/signin.svg';
 import SingleBuyDisc from './SingleBuyDisc';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+import axios from '../../api/axios';
+import { FaSpinner } from 'react-icons/fa';
 
 const SingleBuyItem = ({ value }) => {
-    const [addresses, setAddresses] = useState(value.buyer.address);
     const textareaRef = useRef();
+    const [addresses, setAddresses] = useState('');
+    const addressValues = [value.buyer.deliveryAddress.city, value.buyer.deliveryAddress.country, value.buyer.deliveryAddress.line1, value.buyer.deliveryAddress.line2, value.buyer.deliveryAddress.postalCode, value.buyer.deliveryAddress.state];
+    const filteredAddressValues = addressValues.filter(val => val !== "");
     const navigate = useNavigate()
-    const [selected, setSelected] = useState("SE");
-    const [buyerChecked, setBuyerChecked] = useState(true);
-    const [meChecked, setMeChecked] = useState(false);
+    const queryClient = useQueryClient()
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
+    const userCurrency = 'SEK'
 
-    function handleBuyerChange(event) {
-        setBuyerChecked(event.target.checked);
-        setMeChecked(false);
-    }
+    useEffect(() => {
+        if (value.addressSent === true)
+            setAddresses(value.address);
+        else {
+            const concatenatedAddresses = filteredAddressValues.map((val, index) => {
+                if (index === filteredAddressValues.length - 1) {
+                    return val;
+                } else {
+                    return val + ', ';
+                }
+            }).join('');
+            if (concatenatedAddresses === '')
+                setAddresses('No address found');
+            else
+                setAddresses(concatenatedAddresses);
+        }
+    }, []);
 
-    function handleMeChange(event) {
-        setMeChecked(event.target.checked);
-        setBuyerChecked(false);
-    }
+    const handleBuyerChange = (event) => {
+        const selectedPaymentMethodId = event.target.id;
+        setSelectedPaymentMethod(selectedPaymentMethodId);
+    };
 
     const handleButtonClick = () => {
         textareaRef.current.disabled = false;
         textareaRef.current.select();
     };
 
-    const handleAddress = () => {
-        console.log(value.buyer);
-    }
+    const sendAddress = useMutation((data) => axios.post(`/delivery/sendAddress`, data), {
+        onSuccess: () => {
+            console.log('success');
+            queryClient.invalidateQueries('buyingDiscs')
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+
+    const totalCost = value.disc.reduce((acc, curr) => {
+        return acc + curr.discId.buyer.buyPrice
+    }, 0)
+
 
     return (
         <div className='flex flex-col'>
@@ -73,65 +103,64 @@ const SingleBuyItem = ({ value }) => {
                         <div className='div h-full flex flex-col'></div>
                     </div>
                     <div className='flex w-full items-start gap-[0.875em] mt-[-0.3em]'>
-                        <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} onClick={handleAddress} className={` text-[#ffffff] min-w-[105px] rounded-[8px] py-[0.5em] px-[0.906em] text-[0.75em] ${value.purchaseConfirmed ? 'bg-primary' : 'bg-[#81b29a4b]'} `} disabled={value.addressSent === true || value.purchaseConfirmed === false ? true : false}>{value.addressSent ? "Address Sent" : "Send Address"}</button>
-                        <textarea ref={textareaRef} disabled className={`sm:w-full xsm:w-full max-h-[45px] resize-none text-[0.75em] bg-[#fafafa00] ${value.purchaseConfirmed ? 'text-[#000000]' : 'text-[#78636382]'} ${value.addressSent === true ? " overflow-hidden" : ""}`} onChange={(e) => setAddresses(e.target.value)} value={addresses} />
+                        <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }}
+                            onClick={() => { if (addresses.trim() === '' || addresses.trim() === 'No address found') { toast.error('Please add address'); return }; sendAddress.mutate({ id: value._id, sellerId: value.seller._id, address: addresses }) }}
+                            className={`text-[#ffffff] relative min-w-[105px] min-h-[30px] rounded-[8px] py-[0.5em] px-[0.906em] text-[0.75em] ${value.purchaseConfirmed ? 'bg-primary' : 'bg-[#81b29a4b]'} ${sendAddress.isLoading ? "opacity-50 cursor-wait" : ""} `}
+                            disabled={value.addressSent === true || value.purchaseConfirmed === false ? true : false}>
+                            {sendAddress.isLoading && (
+                                <FaSpinner
+                                    className="animate-spin absolute inset-0 m-auto"
+                                    style={{ width: "1em", height: "1em" }}
+                                />
+                            )}
+                            {!sendAddress.isLoading && (value.addressSent ? "Address Sent" : "Send Address")}
+                        </button>
+                        <textarea ref={textareaRef} disabled className={`sm:w-full xsm:w-full min-h-[50px] resize-none bg-[#ffffff] pl-[5px] rounded-[6px] border-[#333] text-[0.75em] bg-[#fafafa00] ${value.purchaseConfirmed ? 'text-[#000000]' : 'text-[#78636382]'} ${value.addressSent === true ? " overflow-hidden" : ""}`} onChange={(e) => setAddresses(e.target.value)} value={addresses} />
                         <button className={` text-[0.7em] ${value.purchaseConfirmed === true && value.addressSent === false ? 'text-[#000000] hover:underline' : 'hidden text-[#78636382]'}`} onClick={handleButtonClick} disabled={value.addressSent === true || value.purchaseConfirmed === false ? true : false}>Change</button>
                     </div>
                 </div>
-                <div className={`flex gap-[0.688em]  ${value.accountNo !== null ? "xsm:h-[135px] sm:h-[135px] h-[160px]" : "xsm:h-[85px] sm:h-[85px] h-[110px]"}`}>
+                <div className={`flex gap-[0.688em]  ${value.paymentMethod.length !== 0 ? "xsm:h-[135px] sm:h-[135px] h-[160px]" : "xsm:h-[95px] sm:h-[95px] h-[110px]"}`}>
                     <div className='flex flex-col items-center '>
                         <div className={`p-[0.363em] mt-[2px] rounded-full border-[0.063em]  ${value.paymentSent ? 'bg-[#81b29aac] border-[#81B29A33]' : 'bg-[#ffffff] border-[#ccc]'} `}></div>
                         <div className='div h-full flex flex-col'></div>
                     </div>
                     <div>
-                        <h1 className={`text-[0.75em] mb-[10px] font-[300] ${value.addressSent ? 'text-[#000000]' : 'text-[#78636382]'}`}>{value.paymentAddressConfimed === true ? value.seller.whoPayShipping === 'buyer' ? `Total cost inc shipping: 150 kr (${value.bidWonPrice} + ${value.shippingCost})` : `Total cost excluding shipping: (${value.bidWonPrice})` : "Total cost : Awaiting seller"}</h1>
+                        <h1 className={`text-[0.75em] mb-[10px] font-[300] ${value.addressSent ? 'text-[#000000]' : 'text-[#78636382]'}`}>{value.paymentAddressConfirmed === true ? value.seller.shippingCostPaidBy === 'Buyer' ? `Total cost inc shipping: ${totalCost} ${userCurrency} (${totalCost} + ${value.shippingCost === null ? "0" : value.shippingCost})` : `Total cost excluding shipping: (${totalCost})` : "Total cost : Awaiting seller"}</h1>
                         <div className='flex flex-col  items-start '>
-                            {value.accountNo !== null && <div className='flex flex-col items-start '>
+                            {value.paymentMethod.length !== 0 && <div className='flex mt-[5px] mb-[10px] flex-col items-start '>
                                 <div className='flex gap-[0.625em]'>
-                                    <div className=' flex  gap-[6px]'>
-                                        <input
-                                            id="buyer"
-                                            name='check'
-                                            type="checkbox"
-                                            checked={buyerChecked}
-                                            onChange={handleBuyerChange}
-                                            disabled={value.paymentSent === true ? true : false}
-                                            className="peer/published w-[18px] h-[18px] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black"
-                                        />
-                                        <div className='flex  mt-[-2px] flex-col gap-[2px]'>
-                                            <p className='text-[#000000] text-[12px] font-[600]'>Swish</p>
-                                            <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[12px] font-[500]'>0707721066</p>
-                                        </div>
-                                    </div>
-                                    <div className=' flex  gap-[6px]'>
-                                        <input
-                                            id="me"
-                                            name='check'
-                                            type="checkbox"
-                                            onChange={handleMeChange}
-                                            checked={meChecked}
-                                            disabled={value.paymentSent === true ? true : false}
-                                            className="peer/published w-[18px] h-[18px] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black"
-                                        />
-                                        <div className='flex  mt-[-2px] flex-col gap-[2px]'>
-                                            <p className='text-[#000000] text-[12px] font-[600]'>Bank transaction</p>
-                                            <p className='text-[#000000] text-[12px] font-[500]'>Handelsbanken</p>
-                                            <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[12px] font-[500]'>0707721066</p>
-                                        </div>
-                                    </div>
+                                    {value.paymentMethod.map((v) => {
+                                        return (
+                                            <div className=' flex gap-[6px]'>
+                                                <input
+                                                    id={v.accountNo}
+                                                    name='check'
+                                                    checked={selectedPaymentMethod === v.accountNo}
+                                                    type='checkbox'
+                                                    onChange={handleBuyerChange}
+                                                    disabled={value.paymentSent === true ? true : false}
+                                                    className='peer/published w-[18px] h-[18px] border border-gray-400 rounded-md bg-white checked:border-transparent checked:background-[#fffff] focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-black'
+                                                />
+                                                <div className='flex  mt-[-2px] flex-col gap-[2px]'>
+                                                    <p className='text-[#000000] text-[12px] font-[600]'>{v.name}</p>
+                                                    <p className='peer-checked/published:text-[#000000] text-[#AAAAAA] text-[12px] font-[500]'>{v.accountNo}</p>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
                                 </div>
                             </div>}
-                            <button className={`button text-[#ffffff] ${value.accountNo !== null ? "mt-[5px]" : ""} min-w-[105px] rounded-[8px] py-[0.5em] px-[0.906em] text-[0.75em] ${value.paymentAddressConfimed === true ? 'bg-primary' : 'bg-[#81b29a4b]'} `} disabled={value.paymentAddressConfimed === false || value.paymentSent === true ? true : false}>{value.paymentSent ? "Payment Sent" : "Send Payment"}</button>
+                            <button onClick={() => console.log(selectedPaymentMethod)} className={`button text-[#ffffff] ${value.accountNo !== null ? "mt-[5px]" : ""} min-w-[105px] rounded-[8px] py-[0.5em] px-[0.906em] text-[0.75em] ${value.paymentAddressConfirmed === true ? 'bg-primary' : 'bg-[#81b29a4b]'} `} disabled={value.paymentAddressConfirmed === false || value.paymentSent === true ? true : false}>{value.paymentSent ? "Payment Sent" : "Confirm Payment"}</button>
                         </div>
                     </div>
                 </div>
                 <div className={`flex gap-[0.688em] sm:h-[45px] xsm:h-[45px] h-[75px] `}>
                     <div className='flex flex-col items-center '>
-                        <div className={`p-[0.363em] mt-[2px] rounded-full border-[0.063em] ${value.paymentConfimed ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
+                        <div className={`p-[0.363em] mt-[2px] rounded-full border-[0.063em] ${value.paymentConfirmed ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
                         <div className='div h-full flex flex-col'></div>
                     </div>
                     <div>
-                        <h1 className={`text-[0.75em] font-[300] ${value.paymentSent ? 'text-[#000000]' : 'text-[#78636382]'}`}>{value.paymentConfimed ? "Payment confirmed by seller." : "Waiting for payment to be confirmed by seller."}</h1>
+                        <h1 className={`text-[0.75em] font-[300] ${value.paymentSent ? 'text-[#000000]' : 'text-[#78636382]'}`}>{value.paymentConfirmed ? "Payment confirmed by seller." : "Waiting for payment to be confirmed by seller."}</h1>
                     </div>
                 </div>
                 <div className={`flex gap-[0.688em] ${!value.parcelSent ? 'sm:h-[60px] xsm:h-[60px] h-[70px] ' : 'sm:h-[45px] xsm:h-[45px] h-[70px] '}`}>

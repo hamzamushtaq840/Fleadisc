@@ -13,7 +13,7 @@ const PrivateInfoEdit = () => {
     const navigate = useNavigate()
     const queryClient = useQueryClient()
 
-    const userInfoQuery = useQuery(['userDataEdt', auth.userId], () => axios.get(`/user/${auth.userId}`), {
+    const userInfoQuery = useQuery(['userData', auth.userId], () => axios.get(`/user/${auth.userId}`), {
         onSuccess: (res) => {
         },
         onError: (error) => {
@@ -32,7 +32,6 @@ const PrivateInfoEdit = () => {
             console.log(error);
         }
     });
-
     const [formData, setFormData] = useState({
         name: userInfoQuery.data.data.name || "",
         country: userInfoQuery.data.data.country || "",
@@ -65,7 +64,6 @@ const PrivateInfoEdit = () => {
             const lastName = parts[1];
 
             const index = parseInt(name.substring('paymentMethod'.length));
-            console.log(index);
             const paymentMethods = [...formData.paymentMethods];
             paymentMethods[index] = { ...paymentMethods[index], [lastName]: target.value };
             setFormData({
@@ -88,9 +86,9 @@ const PrivateInfoEdit = () => {
         }
     };
 
-    const handleRemoveLastPaymentMethod = () => {
+    const handleRemovePaymentMethod = (index) => {
         const paymentMethods = [...formData.paymentMethods];
-        paymentMethods.pop();
+        paymentMethods.splice(index, 1); // Remove the item at the specified index
         setFormData({
             ...formData,
             paymentMethods,
@@ -98,12 +96,23 @@ const PrivateInfoEdit = () => {
     };
 
     const handlePost = () => {
-        console.log(formData);
+        let hasError = false; // Flag variable to track if an error occurred
+
         if (formData.name === '') {
-            toast.error('Name can not be empty')
-            return
+            toast.error('Name can not be empty');
+            hasError = true;
         }
-        userEditMutation.mutate(formData)
+
+        formData.paymentMethods.forEach((element) => {
+            if (element.name === '' || element.accountNo === '') {
+                toast.error('Payment fields can not be empty');
+                hasError = true;
+            }
+        });
+
+        if (!hasError) {
+            userEditMutation.mutate(formData)
+        }
     }
 
     const copyDeliveryToShipping = () => {
@@ -238,15 +247,16 @@ const PrivateInfoEdit = () => {
                 <div className='flex w-full flex-col gap-[0.6em] mt-[10px]'>
                     <label className='text-[0.75em] font-[600]' htmlFor="Payment Methods">Payment methods</label>
                     {formData.paymentMethods.map((paymentMethod, index) => (
-                        <div key={index} className='flex flex-col gap-[0.75em]'>
-                            <input value={paymentMethod.name} name={`paymentMethod${index}.name`} id={index} className='name text-[0.75em] pl-[5px] ml-[0.625em] w-[50%] placeholder:font-[500]  border-[1px] border-[#595959]  xsm:h-[27px] sm:h-[27px] h-[2.938em] rounded-[2px]' placeholder='Name of method' onChange={handleInputChange} />
-                            <input value={paymentMethod.accountNo} name={`paymentMethod${index}.accountNo`} className='accountNo text-[0.75em] pl-[5px] ml-[0.625em] w-[70%] placeholder:font-[500]  border-[1px] border-[#595959]  xsm:h-[27px] sm:h-[27px] h-[2.938em] rounded-[2px]' placeholder='Account No i.e IBAN, BSB, IFSC etc' onChange={handleInputChange} />
-
+                        <div key={index} className='flex gap-[0.75em]'>
+                            <div className='flex w-[70%] flex-col gap-[0.75em]'>
+                                <input value={paymentMethod.name} name={`paymentMethod${index}.name`} id={index} className='name text-[0.75em] pl-[5px] ml-[0.625em] w-[80%] placeholder:font-[500]  border-[1px] border-[#595959]  xsm:h-[27px] sm:h-[27px] h-[2.938em] rounded-[2px]' placeholder='Name of method' onChange={handleInputChange} />
+                                <input value={paymentMethod.accountNo} name={`paymentMethod${index}.accountNo`} className='accountNo text-[0.75em] pl-[5px] ml-[0.625em] w-full placeholder:font-[500]  border-[1px] border-[#595959]  xsm:h-[27px] sm:h-[27px] h-[2.938em] rounded-[2px]' placeholder='Account No i.e IBAN, BSB, IFSC etc' onChange={handleInputChange} />
+                            </div>
+                            <div className='flex justify-center w-[30%] items-center'><button className='h-[1.875em] w-[1.875em] bg-[#F21111] flex justify-center items-center' onClick={() => handleRemovePaymentMethod(index)}><img src={cross} alt="" /></button></div>
                         </div>
                     ))}
                     <div className=' flex gap-[0.625em]  justify-center' >
                         <button onClick={() => setFormData({ ...formData, paymentMethods: [...formData.paymentMethods, { name: '', accountNo: '' }] })} className='h-[1.875em] w-[1.875em] bg-primary flex justify-center items-center'><img src={add} alt="" /></button>
-                        <button className='h-[1.875em] w-[1.875em] bg-[#F21111] flex justify-center items-center' onClick={handleRemoveLastPaymentMethod}><img src={cross} alt="" /></button>
                     </div>
                 </div>
 
