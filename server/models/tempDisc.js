@@ -1,10 +1,4 @@
 import mongoose from "mongoose";
-const buyerSchema = mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-});
-const sellerSchema = mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-});
 
 const discSchema = mongoose.Schema({
     discId: { type: mongoose.Schema.Types.ObjectId, ref: "Disc", required: true },
@@ -21,6 +15,7 @@ const tempSchema = mongoose.Schema({
     addressSent: { type: Boolean, default: false },
     address: { type: String, default: null },
     shippingCost: { type: Number, default: null },
+    shippingCostPaidBy: { type: String, default: null },
     paymentAddressConfirmed: { type: Boolean, default: false },
     paymentMethod: { type: Array, default: [] },
     paymentSent: { type: Boolean, default: false },

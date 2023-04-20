@@ -20,8 +20,9 @@ const ChoosePayment = ({ seller, setModel, paymentMethod }) => {
                 toast.error("Please enter payment account number");
                 return
             }
-            if (selectedPaymentMethods.some((item) => { return item.id === 0 })) {
-                const abc = selectedPaymentMethods.filter(item => { return item.id !== 0 });
+
+            if (selectedPaymentMethods.some((item) => { return item._id === 0 })) {
+                const abc = selectedPaymentMethods.filter(item => { return item._id !== 0 });
                 setSelectedPaymentMethods(abc);
                 return
             }
@@ -45,7 +46,8 @@ const ChoosePayment = ({ seller, setModel, paymentMethod }) => {
                     if (item.id === 0) {
                         return {
                             ...item,
-                            [name]: value
+                            selected: false,
+                            [name]: value,
                         };
                     }
                     return item;
@@ -56,14 +58,23 @@ const ChoosePayment = ({ seller, setModel, paymentMethod }) => {
             return {
                 ...prev,
                 _id: 0,
-                [name]: value
+                selected: false,
+                [name]: value,
             }
         });
     }
 
     // Function to handle confirm button click
     const handleConfirm = () => {
-        paymentMethod(selectedPaymentMethods);
+        if (selectedPaymentMethods.length === 0) {
+            toast.error("Please select at least one payment method");
+            return
+        }
+        let seletedPayment = selectedPaymentMethods.map(item => {
+            return { ...item, selected: false }
+        });
+
+        paymentMethod(seletedPayment);
         setModel(false);
     }
 
@@ -96,7 +107,7 @@ const ChoosePayment = ({ seller, setModel, paymentMethod }) => {
                                 type="checkbox"
                                 className="w-[1em] h-[1em]"
                                 name="paymentMethod"
-                                checked={selectedPaymentMethods.some((item) => { return item.id === 0 })}
+                                checked={selectedPaymentMethods.some((item) => { return item._id === 0 })}
                                 onChange={() => handleCheckboxChange("add")}
                             />
                             <div className='flex w-full flex-col gap-[0.75em]'>
@@ -117,7 +128,13 @@ const ChoosePayment = ({ seller, setModel, paymentMethod }) => {
                     }
                     <div className='flex my-[1.25em] gap-[10px]'>
                         {!add && <button onClick={() => setAdd(true)} className='h-[2.1em] w-[2em] bg-primary flex justify-center items-center'><img src={addd} alt="" /></button>}
-                        {add && <button onClick={() => setAdd(false)} className='h-[2.1em] w-[2em]  bg-[#F21111] flex justify-center items-center'><img src={cross} alt="" /></button>}
+                        {add && <button onClick={() => {
+                            if (selectedPaymentMethods.some((item) => { return item._id === 0 })) {
+                                const abc = selectedPaymentMethods.filter(item => { return item._id !== 0 });
+                                setSelectedPaymentMethods(abc);
+                            }
+                            setAdd(false)
+                        }} className='h-[2.1em] w-[2em]  bg-[#F21111] flex justify-center items-center'><img src={cross} alt="" /></button>}
                         <button onClick={handleConfirm} className='py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary'>Confirm</button>
                     </div>
                 </div>

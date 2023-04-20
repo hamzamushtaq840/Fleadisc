@@ -43,6 +43,8 @@ const Messages = () => {
         navigate("/messages/chat", { state: { chatId: id } })
     }
 
+
+
     return (
         <div className='flex justify-center'>
             <div className='px-[1.25em] xsm:w-full sm:w-full w-[98%] sm:text-[1rem] xsm:text-[1rem] text-[1.2rem] min-h-[90vh]'>

@@ -13,6 +13,7 @@ import discRoutes from './routes/discRoutes.js'
 import token from './routes/tokenRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import deliveryRoutes from './routes/deliveryRoutes.js'
+import chatRoutes from './routes/chatRoutes.js'
 import { checkDiscTime } from './controllers/discController.js'
 
 const app = express()
@@ -65,6 +66,7 @@ app.use(cors(corsOptions))
 app.use('/user', userRoutes)
 app.use('/token', token)
 app.use('/disc', discRoutes)
+app.use('/chat', chatRoutes)
 app.use('/delivery', deliveryRoutes)
 
 cron.schedule('*/30 * * * * *', () => {
