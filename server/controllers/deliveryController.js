@@ -58,9 +58,6 @@ export const sendPaymentDetails = tryCatch(async (req, res) => {
     // Update isSold field to true
     await TempDisc.findByIdAndUpdate(id, { paymentAddressConfirmed: true, paymentMethod: paymentMethod, shippingCost: shippingCost, shippingCostPaidBy: shippingCostPaidBy });
     const receiver = getUsers(buyerId);
-    console.log('----------------');
-    console.log(receiver);
-    console.log('----------------');
 
     if (receiver && receiver.socketId) {
         io.to(receiver.socketId).emit('refetchBuying');

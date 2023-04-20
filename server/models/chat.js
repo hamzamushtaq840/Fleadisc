@@ -20,8 +20,12 @@ const messageSchema = mongoose.Schema({
     },
     read: {
         type: Boolean,
-        default: true
+        default: false
     },
+    type: {
+        type: String,
+        required: true
+    }
 });
 
 const chatSchema = mongoose.Schema({
@@ -39,7 +43,7 @@ const chatSchema = mongoose.Schema({
         type: [messageSchema],
         default: [],
         required: false
-    }
+    },
 });
 
 export const Chat = mongoose.model("Chat", chatSchema);

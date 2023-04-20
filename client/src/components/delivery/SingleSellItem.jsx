@@ -4,15 +4,12 @@ import { FaSpinner } from "react-icons/fa"
 import { useNavigate } from 'react-router-dom'
 import CancelSeller from './CancelSeller'
 import SingleSellDisc from './SingleSellDisc'
-import useAuth from '../../hooks/useAuth'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from '../../api/axios'
 import ChoosePayment from './ChoosePayment'
 
 const SingleSellItem = ({ value }) => {
-    const [accountNo, setAccountNo] = useState(value.seller.paymentCardNo);
     const [shippingCost, setshippingCost] = useState("");
-    const textareaRef = useRef(null);
     const [model, setModel] = useState(false)
     const [choosePayment, setChoosePayment] = useState(false)
     const navigate = useNavigate()
@@ -86,7 +83,7 @@ const SingleSellItem = ({ value }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className='flex'><button className='text-[#ffffff]  button rounded-[4px] text-[.75em] py-[0.5em] px-[1.125em] bg-primary '>Message buyer</button></div>
+                        <div className='flex'><button className='text-[#ffffff]  button rounded-[4px] text-[.75em] py-[0.5em] px-[1.125em] bg-primary' onClick={() => navigate("/messages/chat", { state: { user2: value.buyer._id, userName: value.buyer.name, userImage: value.buyer.profilePicture !== null ? value.buyer.profilePicture : null, from: 'delivery' } })}>Message buyer</button></div>
                     </div>
                     <div className='flex gap-[20px] '>
                         {value.disc.map((v, index) => {

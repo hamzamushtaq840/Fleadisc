@@ -92,7 +92,7 @@ const SingleBuyItem = ({ value }) => {
                             </div>
                         </div>
                     </div>
-                    <div className='flex'><button className='text-[#ffffff]  button rounded-[4px] text-[.75em] py-[0.5em] px-[1.125em] bg-primary '>Message Seller</button></div>
+                    <div className='flex'><button onClick={() => navigate("/messages/chat", { state: { user2: value.seller._id, userName: value.seller.name, userImage: value.seller.profilePicture !== null ? value.seller.profilePicture : null, from: 'delivery' } })} className='text-[#ffffff]  button rounded-[4px] text-[.75em] py-[0.5em] px-[1.125em] bg-primary '>Message Seller</button></div>
                 </div>
                 <div className='flex gap-[20px] '>
                     {value.disc.map((v, index) => {

@@ -89,7 +89,7 @@ const PrivateProfile = () => {
         }
     });
 
-    if (userInfoQuery.isLoading && !userInfoQuery.isLoading.data) {
+    if (userInfoQuery.isLoading && !userInfoQuery.data) {
         return (
             <Loader />
         )

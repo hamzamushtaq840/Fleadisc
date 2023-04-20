@@ -3,8 +3,9 @@ import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import signin from './../assets/signin.svg';
 import useAuth from '../hooks/useAuth';
 import { Menu, MenuItem } from '@mui/material';
-import AuthContext from '../context/AuthProvider';
 import { io } from 'socket.io-client';
+import { toast } from 'react-toastify'
+
 
 const settings = ['Profile', 'Logout'];
 
@@ -15,6 +16,7 @@ const Navbar = () => {
     const navigate = useNavigate()
     const { auth, setAuth, setSocket, socket } = useAuth();
     const [notifications, setNotifications] = useState([{}, {}])
+    const [isSocketReady, setIsSocketReady] = useState(false);
 
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -42,6 +44,7 @@ const Navbar = () => {
 
     useEffect(() => {
         const socket = io('http://localhost:5001');
+        console.log('socket changed ran');
 
         // Emit 'newUser' event when auth.userId changes
         if (auth.userId) {
@@ -49,6 +52,11 @@ const Navbar = () => {
             console.log(socket);
             setSocket(socket);
         }
+
+        // Set isSocketReady to true once socket is ready
+        socket.on('connect', () => {
+            setIsSocketReady(true);
+        });
 
         return () => {
             // Emit 'removeUser' event and close socket when component unmounts
@@ -58,6 +66,14 @@ const Navbar = () => {
             socket.close();
         };
     }, [auth.userId]);
+
+    useEffect(() => {
+        if (isSocketReady && socket) { // Check if socket is ready before using it
+            socket.on('refetchChat', (data) => {
+                console.log(location.pathname);
+            })
+        }
+    }, [isSocketReady, socket]);
 
 
     const handleLogout = (e) => {
