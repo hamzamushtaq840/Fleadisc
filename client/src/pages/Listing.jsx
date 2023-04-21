@@ -10,24 +10,15 @@ import { ColorRing } from 'react-loader-spinner';
 import { io } from 'socket.io-client'
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
-
-const Loader =
-    <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>
-        <ColorRing
-            visible={true}
-            height="80"
-            width="80"
-            ariaLabel="blocks-loading"
-            wrapperStyle={{}}
-            wrapperClass="blocks-wrapper"
-            colors={['#494949', '#494949', '#494949', '#494949', '#494949']}
-        />
-    </div>
+import Loader from '../components/Loader';
 
 const Listing = () => {
     const navigate = useNavigate()
     const [selected, setSelected] = useState('SE');
+    const [appliedFilters, setAppliedFilters] = useState([]);
+    const [searchInput, setSearchInput] = useState('');
     const [moreFilters, setMoreFilters] = useState(false)
+    const [filteredData, setFilteredData] = useState([])
     const [data, setData] = useState([])
     const { auth } = useAuth();
     const userCurrency = "SEK";
@@ -45,8 +36,9 @@ const Listing = () => {
             applyFilters(appliedFilters)
             return response.data;
         },
-        // { refetchOnMount: false, refetchOnWindowFocus: false, refetchOnReconnect: false }
     );
+    let followingDataQuery;
+    let followingData;
 
     useEffect(() => {
         const newSocket = io('http://localhost:5001');
@@ -81,9 +73,7 @@ const Listing = () => {
         applyFilters(appliedFilters)
     }, [])
 
-    const [appliedFilters, setAppliedFilters] = useState([]);
-    let followingDataQuery;
-    let followingData;
+
     if (Object.keys(auth).length !== 0) {
         followingDataQuery = useMemo(
             () => ['following', { userId: auth.userId }],
@@ -98,14 +88,18 @@ const Listing = () => {
                 const response = await axios.get(`/user/following/${auth.userId}`);
                 return response.data;
             },
-            {
-                // staleTime: 60000000000 // Set stale time to 1 minute
-            }
         ));
     }
 
     const applyFilters = (appliedFilters2) => {
-        let tempDiscs = listingsData;
+        let tempDiscs
+        if (searchInput !== 0) {
+            tempDiscs = filteredData
+        }
+        else {
+
+            tempDiscs = listingsData;
+        }
 
         if (appliedFilters2.length > 0) {
             tempDiscs = tempDiscs.map((disc) => {
@@ -149,10 +143,33 @@ const Listing = () => {
             tempDiscs = tempDiscs.filter((disc) => disc.discs.length > 0);
             setData(tempDiscs);
         } else {
-            setData(listingsData);
+            if (searchInput !== 0) {
+                setData(filteredData)
+            }
+            else
+                setData(listingsData);
         }
     };
 
+    const handleSearchInputChange = (e) => {
+        const inputValue = e.target.value.toLowerCase(); // Convert input value to lowercase for case-insensitive search
+        setSearchInput(e.target.value); // Update the searchInput state with the input value
+        const filteredArray = listingsData.map((value) => {
+            const discMatchesSearch = value.discs.filter((disc) => {
+                return Object.values(disc).some((property, index) => {
+                    return (
+                        property !== null &&
+                        typeof property === 'string' && Object.keys(disc)[index] !== "pictureURL" &&
+                        property.toLowerCase().includes(inputValue)
+                    );
+                });
+            });
+            return { ...value, discs: discMatchesSearch };
+        });
+        let filteredArray2 = filteredArray.filter((disc) => disc.discs.length > 0);
+        setFilteredData(filteredArray2)
+        setData(filteredArray2)
+    };
 
     const handleFilterClick = filter => {
         let tempFilters = [...appliedFilters];
@@ -167,12 +184,18 @@ const Listing = () => {
         applyFilters(tempFilters)
     }
 
-
     return (
         <div className=' w-full m-auto text-[1.2rem] sm:text-[1rem] xsm:text-[1rem]'>
             <div className='listingBackgroundImage flex justify-center h-[35vw] min-h-[135px] max-h-[300px] bg-[rgba(0,0,0,0.1)] relative'>
                 <h1 className='text-[35px] sm:text-[20px] xsm:text-[20px] w-[80%] md:text-[30px] text-[white] font-logo text-center relative z-10 sm:mt-[30px] my-auto xsm:mt-[30px]'>Disc-over your game with pre-loved gear</h1>
-                <input style={{ boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)' }} className='border-[1px] w-[64.10vw] max-w-[500px] min-w-[250px] border-[#81B29A] absolute bottom-[-24px] bg-[white] z-10 h-[47px] rounded-lg px-[14px] font-sans' type='text' placeholder='Search...'></input>
+                <input
+                    style={{ boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)' }}
+                    className='border-[1px] w-[64.10vw] max-w-[500px] min-w-[250px] border-[#81B29A] absolute bottom-[-24px] bg-[white] z-10 h-[47px] rounded-lg px-[14px] font-sans'
+                    type='text'
+                    placeholder='Search...'
+                    value={searchInput}
+                    onChange={handleSearchInputChange}
+                />
             </div>
             <div className='mt-[45px] xsm:mt-[35px] sm:mt-[35px] xsm:mb-[5px] sm:mb-[5px] mb-[10px] px-[5px] xsm:px-0 flex gap-[10px] xsm:gap-[5px] items-center xsm:justify-start  justify-center  xsm:w-[310px] w-full m-auto '>
                 <div className='pl-[4px] xsm:border-[0px] border-[1px] rounded-[2px] h-[27px] flex items-center '>
@@ -220,7 +243,7 @@ const Listing = () => {
             </div>
             {(isLoadingListings) ? (
                 <div style={{ position: "relative", minHeight: "200px" }}>
-                    {Loader}
+                    <Loader />
                 </div>
             ) : (
                 <div className='flex flex-col xsm:w-full sm:w-full w-[90%] m-auto overflow-hidden mb-[50px]'>
@@ -228,7 +251,7 @@ const Listing = () => {
                         <p className='mt-[20px] text-[1em] font-[500] text-center'>No discs found</p>
                         :
                         listingsData?.length > 0 ?
-                            appliedFilters.length > 0 ?
+                            (appliedFilters.length > 0 || searchInput !== 0) ?
                                 data?.map((value, index) => {
                                     return (
                                         <React.Fragment key={index}>

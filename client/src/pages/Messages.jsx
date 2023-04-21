@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import user from './../assets/user.svg'
+import message from './../assets/message.svg'
 import { useQuery } from '@tanstack/react-query'
 import useAuth from '../hooks/useAuth'
 import axios from '../api/axios'
@@ -37,11 +37,16 @@ const Messages = () => {
             <div className='px-[1.25em] xsm:w-full sm:w-full w-[98%] sm:text-[1rem] xsm:text-[1rem] text-[1.2rem] min-h-[90vh]'>
                 <h1 className='mt-[0.438em] text-[1.25em] font-[700] mb-[0.875em]'>Messages</h1>
                 <div className='flex flex-col gap-[18px]'>
-                    {chats?.data?.data.map((value, index) => {
-                        return (
+                    {chats?.data?.data.length === 0 ? (
+                        <div className='flex min-h-[50vh] justify-center items-center flex-col gap-[0.625rem]'>
+                            <img src={message} className='h-[1.8em] opacity-[0.5] ' alt="" />
+                            <p className='flex  text-[.9em] font-[400] justify-center items-center'>You don't have any conversations</p>
+                        </div>
+                    ) : (
+                        chats?.data?.data.map((value, index) => (
                             <Chats key={index} value={value} index={index} chats={chats} />
-                        )
-                    })}
+                        ))
+                    )}
                 </div>
             </div>
         </div>

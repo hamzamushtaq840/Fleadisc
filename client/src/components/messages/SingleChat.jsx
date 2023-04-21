@@ -37,7 +37,6 @@ const SingleChat = () => {
             const handleRefetchChat = (data) => {
                 if (data.chatId === id) {
                     chats.refetch()
-                    console.log('in chat react inside single chat');
                     messageRead2.mutate({ chatId: id, userId: auth.userId })
                 }
             };
@@ -147,6 +146,7 @@ const SingleChat = () => {
 
     const messageRead2 = useMutation((data) => axios.post(`/chat/messageRead`, data), {
         onSuccess: (res) => {
+            chats.refetch()
             client.invalidateQueries("allChats")
         },
         onError: (error) => {
@@ -156,8 +156,6 @@ const SingleChat = () => {
 
     const sendMessage = useMutation((data) => axios.post(`/chat/newMessage`, data), {
         onSuccess: (res) => {
-            console.log(res);
-
             chats.refetch()
         },
         onError: (error) => {
@@ -302,6 +300,10 @@ const SingleChat = () => {
                                                     {value.type === 'text' && <p className='w-[100%] xsm:text-[0.75em] sm:text-[0.75em] text-[0.85em] font-[600]' >{value.content}</p>}
                                                     {value.type === 'image' && <img src={value.content} className='xsm:w-[40vw] sm:w-[40vw] w-[20vw]' alt="image" />}
                                                 </div>
+                                                {(value.read === true && index + 1 === chats?.data?.data?.messages?.length) && <div className='flex items-center justify-end'>
+                                                    <img src={location.state.userImage !== null ? location.state.userImage : user} onClick={() => navigate('/profile/public')} className="mr-[0.4em]  h-[1em] cursor-pointer rounded-full" alt="user" />
+                                                    <p className='text-[0.65em] font-[300]'>Read</p>
+                                                </div>}
                                             </div>
                                             {/* <img src={user} onClick={() => navigate('/profile/private')} className="ml-[0.5em] cursor-pointer h-[1.875em]" alt="user" /> */}
                                         </div>
@@ -321,18 +323,18 @@ const SingleChat = () => {
                             }
                         })}
                     </div>
-                    <form onSubmit={handleMessage} className='border-t-[0.5px] border-t-[#ccc] flex justify-between items-center px-[1.875em] xsm:h-[3.75em] sm:h-[3.75em] h-[4.75em]'>
-                        <label for="fileInput" className="cursor-pointer">
-                            <img src={imagesend} alt="send an image" />
-                        </label>
+                    <form onSubmit={handleMessage} className='border-t-[0.5px] border-t-[#ccc] flex justify-between items-center pr-[1.875em] xsm:h-[3.75em] sm:h-[3.75em] h-[4.75em]'>
                         <input
                             id="fileInput"
                             type="file"
                             style={{ display: 'none' }}
                             onChange={(e) => handleUpload(e)}
                         />
-                        <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} required className='border-[0.5px] px-[0.3125em] text-[0.75em] font-[500] flex-1 mx-4 h-[39px] resize-none rounded-[8px]' />
-                        <button type='submit'><img src={send} className="cursor-pointer" alt="send message" /></button>
+                        <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} placeholder='Write a message' required className='border-[0.5px] px-[0.7125em] text-[0.75em] font-[500] flex-1 mx-4 h-[39px] resize-none rounded-[8px]' />
+                        {message === '' && <label for="fileInput" className="cursor-pointer">
+                            <img src={imagesend} className='hey' alt="send an image" />
+                        </label>}
+                        {message !== '' && <button type='submit'><img src={send} className="cursor-pointer" alt="send message" /></button>}
                     </form>
                 </div> : <><Loader /></>}
         </>
