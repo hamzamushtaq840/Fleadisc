@@ -1,6 +1,6 @@
 const router = express.Router();
 import express from 'express';
-import { cancel, confirmParcel, confirmParcelSent, confirmPayment, confirmPurchase, getSellingCancel, giveRating, paymentSent, rating, removeCancel, sendAddress, sendPaymentDetails } from '../controllers/deliveryController.js';
+import { cancel, confirmParcel, confirmParcelSent, confirmPayment, confirmPurchase, getBuyingCancel, getSellingCancel, giveRating, paymentSent, rating, removeCancel, sendAddress, sendPaymentDetails } from '../controllers/deliveryController.js';
 
 router.post('/confirmPurchase', confirmPurchase);
 router.post('/sendAddress', sendAddress);
@@ -12,6 +12,7 @@ router.post('/confirmParcel', confirmParcel);
 router.post('/rating', rating);
 router.post('/cancel', cancel);
 router.get('/getSellingCancel/:userId', getSellingCancel);
+router.get('/getBuyingCancel/:userId', getBuyingCancel);
 router.post('/removeCancel', removeCancel);
 router.post('/giveRating', giveRating);
 

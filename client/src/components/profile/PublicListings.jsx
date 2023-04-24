@@ -50,7 +50,6 @@ const PublicListing = () => {
         }
     });
 
-
     function handleScrollRight() {
         let value = 220;
         if (screenSize.width > 1279) {

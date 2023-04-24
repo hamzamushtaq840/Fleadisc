@@ -263,7 +263,6 @@ const PrivatePurchases = () => {
             console.log(error);
         }
     });
-    console.log();
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -292,7 +291,7 @@ const PrivatePurchases = () => {
                     <h1 className='font-[700] pl-[4px] text-[1.25em] mb-[10px]'>Purchased Listings</h1>
                     <span className='text-[1.25em] font-[700] text-[#00000080]'>(1500 sek)</span>
                 </div>
-                {boughtDiscQuery?.data?.data?.length === 0 && <div className='flex justify-center text-[1em] min-h-[20vh] items-center w-full'>No Purchases</div>}
+                {boughtDiscQuery?.data?.data?.length === 0 && <div className='flex justify-center text-[.9em] min-h-[20vh] items-center w-full text-[#00000080]'>No Purchases</div>}
                 {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
                 <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[4px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"} pb-[5px] gap-[10px] mt-[11px]`}>
                     {boughtDiscQuery?.data?.data.map((value, index) => {

@@ -12,7 +12,6 @@ const FinishedListing = ({ value, userCurrency }) => {
 
     function getMonthAndDate(dateString) {
         const date = moment(dateString);
-
         const monthName = date.format("MMM");
         const dayOfMonth = date.format("D");
         return `${dayOfMonth} ${monthName}`;

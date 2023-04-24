@@ -16,8 +16,10 @@ const CancelSellerConfirm = ({ setModel, val }) => {
             console.log(error);
         }
     });
+
     const giveRating = useMutation((data) => axios.post(`/delivery/giveRating`, data), {
-        onSuccess: () => {
+        onSuccess: (res) => {
+            console.log('done rating');
         },
         onError: (error) => {
             console.log(error);
@@ -28,6 +30,7 @@ const CancelSellerConfirm = ({ setModel, val }) => {
         setModel(false)
         cancelRemove.mutate({ removeId: val._id })
         if (rating !== 0) {
+            console.log('i ran');
             giveRating.mutate({ userId: val.buyerId._id, rating: rating })
         }
     }
@@ -45,9 +48,12 @@ const CancelSellerConfirm = ({ setModel, val }) => {
                 <h1 className='text-[1.25em] '>Cancel confirm</h1>
                 <p className='w-[80%] text-center text-[.75em] font-[400] mt-[0.688em]'><span className='font-[800]'>{val.buyerId.name} </span>has canceled the purchase of <span className='font-[800]'>{val.disc.discName}</span>, <span className='font-[800]'>{val.disc.brand}</span></p>
                 <p className='w-[80%] text-center text-[.75em] font-[400] mt-[1.5em]'>Leave a rating of <span className='font-[800]'>buyer.</span></p>
-                <Rating size='large' className='mb-[20px]' name="half-rating-read" onChange={(e) => console.log(e.target.value)} precision={0.5} />
+                <Rating size='large' className='mb-[20px]' name="simple-controlled" value={rating}
+                    onChange={(event, newValue) => {
+                        setRating(newValue);
+                    }} precision={0.5} />
                 {val.disc.priceType === 'auction' && <div className='flex flex-col gap-[0.625em] items-center '>
-                    <button onClick={() => navigate('/create/relist', { state: disc })} className='py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary'>Offer to next bidder</button>
+                    <button onClick={() => navigate('/create/relist', { state: disc })} className='py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary button rounded-[2px]'>Offer to next bidder</button>
                     <div className='flex gap-[20px]  mb-[20px] items-center'>
                         <div className='flex gap-[0.563em]  '>
                             <img onClick={() => navigate('/profile/public')} src={user} className="cursor-pointer mt-[3px] xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] " alt="user" />
@@ -66,8 +72,8 @@ const CancelSellerConfirm = ({ setModel, val }) => {
                     </div>
                 </div>}
                 <div className='flex flex-col gap-[11px] mb-[1em] mt-[.5em]'>
-                    <button onClick={handleRelist} className='py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary'>Re-list</button>
-                    <button onClick={removeCancel} className='py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-[#F21111]'>Cancel</button>
+                    <button onClick={handleRelist} className='py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary button rounded-[2px]'>Re-list</button>
+                    <button onClick={removeCancel} className='py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-[#F21111] button rounded-[2px]'>Confirm</button>
                 </div>
             </div >
         </>

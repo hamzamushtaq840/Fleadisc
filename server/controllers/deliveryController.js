@@ -170,7 +170,6 @@ export const rating = tryCatch(async (req, res) => {
             rating: rating
         }
         seller.rating.push(ratings)
-        // listing.isBought = true
         await seller.save()
     }
     await TempDisc.findOneAndRemove({ _id: id })
@@ -193,8 +192,8 @@ export const cancel = tryCatch(async (req, res) => {
     const { listingId, discId, sellerId, buyerId, from } = req.body;
     const listing = await TempDisc.findOne({ _id: listingId }).populate('disc.discId'); // Assuming TempDisc is the model for tempSchema
     const discIndex = listing.disc.findIndex(disc => disc.discId._id.toString() === discId); // Replace "id" with the appropriate property name of the disc object
-    await Disc.findByIdAndUpdate(discId, { isFinished: true })
-    const removedDisc = listing.disc.splice(discIndex, 1)[0];
+    await Disc.findByIdAndUpdate(discId, { isFinished: true, buyer: null })
+    listing.disc.splice(discIndex, 1)[0];
 
     if (listing.disc.length === 0) {
         await TempDisc.deleteOne({ _id: listingId });
@@ -202,7 +201,6 @@ export const cancel = tryCatch(async (req, res) => {
         // Save the updated TempDisc document
         await listing.save();
     }
-
     const cancelDisc = new CancelDisc({
         disc: discId,
         cancelFrom: from,
@@ -221,6 +219,7 @@ export const cancel = tryCatch(async (req, res) => {
     if (receiver && receiver.socketId) {
         io.to(receiver.socketId).emit('refetchSelling');
     }
+    res.status(200).json('success');
 });
 
 export const getSellingCancel = tryCatch(async (req, res) => {
@@ -229,14 +228,21 @@ export const getSellingCancel = tryCatch(async (req, res) => {
     res.status(200).json(listing);
 });
 
+export const getBuyingCancel = tryCatch(async (req, res) => {
+    const { userId } = req.params;
+    const listing = await CancelDisc.find({ buyerId: userId, cancelFrom: 'sell' }).populate('disc').populate('sellerId')
+    res.status(200).json(listing);
+});
+
 export const removeCancel = tryCatch(async (req, res) => {
     const { removeId } = req.body;
-    await CancelDisc.deleteOne({ _id: removeId, buyer: null })
+    await CancelDisc.deleteOne({ _id: removeId })
     res.status(200).json({ message: 'success' });
 });
 
 export const giveRating = tryCatch(async (req, res) => {
     const { userId, rating } = req.body
+    console.log('i ran');
     const u = await User.findOne({ _id: userId })
     let ratings = {
         user: userId,

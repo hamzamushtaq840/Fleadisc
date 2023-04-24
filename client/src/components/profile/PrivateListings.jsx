@@ -83,6 +83,21 @@ const PrivateListings = () => {
         }
     });
 
+    let finishedCost = 0;
+    let activeCost = 0;
+
+    finishedDiscsQuery.data.data?.forEach(disc => {
+        if (disc.buyer === null) {
+            finishedCost += parseInt(disc.startingPrice, 10); // Convert string to number with base 10 and then add
+        } else {
+            finishedCost += parseInt(disc.buyer.buyPrice, 10); // Convert string to number with base 10 and then add
+        }
+    });
+
+    activeDiscsQuery.data.data?.forEach(disc => {
+        activeCost += parseInt(disc.startingPrice, 10);
+    });
+
     function handleScrollRight() {
         let value = 220;
         if (screenSize.width > 1279) {
@@ -98,7 +113,6 @@ const PrivateListings = () => {
             value = 160
         }
 
-        console.log(value);
         scrollableDivRef.current.scrollBy({
             left: value,
             behavior: 'smooth',
@@ -173,9 +187,9 @@ const PrivateListings = () => {
                 <div className={`relative xsm:w-screen sm:w-screen w-[100%] ${screenSize.width > 768 ? "px-[25px]" : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                     <div className='flex gap-[0.8125em]'>
                         <h1 className='font-[700] pl-[10px] text-[1.25em] mb-[10px]'>Active Listings</h1>
-                        <span className='text-[1.25em] font-[700] text-[#00000080]'>(1500 sek)</span>
+                        <span className='text-[1.25em] font-[700] text-[#00000080]'>({activeCost} sek)</span>
                     </div>
-                    {activeDiscsQuery?.data?.data?.length === 0 && <div className='flex justify-center text-[1em] min-h-[20vh] items-center w-full'>No Active Discs</div>}
+                    {activeDiscsQuery?.data?.data?.length === 0 && <div className='flex justify-center text-[.9em] min-h-[20vh] items-center w-full text-[#00000080]'>No Active Discs</div>}
                     <>
                         {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
                         <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[10px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"} pb-[5px] gap-[10px] mt-[11px]`}>
@@ -229,9 +243,9 @@ const PrivateListings = () => {
                 <div className={`relative xsm:w-screen sm:w-screen w-[100%] ${screenSize.width > 768 ? "px-[25px]" : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                     <div className='flex gap-[0.8125em]'>
                         <h1 className='font-[700] pl-[10px] text-[1.25em] mb-[10px]'>Finished Listings</h1>
-                        <span className='text-[1.25em] font-[700] text-[#00000080]'>(1500 sek)</span>
+                        <span className='text-[1.25em] font-[700] text-[#00000080]'>({finishedCost} sek)</span>
                     </div>
-                    {finishedDiscsQuery?.data?.data?.length === 0 && <div className='flex justify-center text-[1em] min-h-[20vh] items-center w-full'>No Finished Discs</div>}
+                    {finishedDiscsQuery?.data?.data?.length === 0 && <div className='flex justify-center text-[.9em] min-h-[20vh] text-[#00000080] items-center w-full'>No Finished Discs</div>}
                     <div>
                         {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
                         <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[10px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"} pb-[5px] gap-[10px] mt-[11px]`}>

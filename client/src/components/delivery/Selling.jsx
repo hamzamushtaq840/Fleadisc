@@ -250,6 +250,7 @@ const Selling = () => {
             console.log(error);
         }
     });
+
     const cancelQuery = useQuery(['sellingCancel', auth.userId], () => axios.get(`/delivery/getSellingCancel/${auth.userId}`), {
         onSuccess: (res) => {
         },

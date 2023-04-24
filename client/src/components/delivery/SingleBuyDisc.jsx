@@ -64,21 +64,21 @@ const SingleBuyDisc = ({ value, temp }) => {
                                 <div className='flex items-start'>
                                     <div className='flex flex-col mr-[0.425em]'>
                                         <h1 className='text-[0.75em] font-[700]' >{value.discId.discName}</h1>
-                                        <h1 className='text-[0.55em] font-[500] mt-[-0.413em] text-[##595959]' >{value.discId.brand}</h1>
+                                        <h1 className='text-[0.55em] font-[500] mt-[-0.413em] min-w-[55px] text-[##595959]' >{value.discId.brand}</h1>
                                     </div>
                                     <span className='px-[0.5em] mt-[2px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.discId.condition}</span>
                                 </div>
                                 <div className='flex flex-col '>
                                     <div className='flex mt-[5px] flex-col  text-[#595959]'>
                                         <span className='font-[600] text-[0.6em]'>{getMonthAndDate(value.discId.endDay)} - {value.discId.endTime} </span>
-                                        <span className='font-[500] text-[#595959BF] text-[0.55em]'>Ended {remainingTime(value.discId.endDay, value.discId.endTime)}</span>
+                                        <span className='font-[500] text-[#595959BF] text-[0.55em]'>Bought {remainingTime(value.discId.endDay, value.discId.endTime)}</span>
                                     </div>
                                 </div>
                             </div>
                             <div className='flex flex-col h-full justify-end items-end'>
                                 <div className='flex flex-col items-end'>
-                                    <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{value.discId.startingPrice} {userCurrency}</span>
-                                    {value.discId.priceType === 'fixedPrice' && <span className='text-[0.6em] font-[500] text-[#595959bf]'>Fixed price</span>}
+                                    <span className='text-[0.65em] mb-[-3px] text-end flex items-end  font-[600]'>{value.discId.startingPrice} {userCurrency}</span>
+                                    {value.discId.priceType === 'fixedPrice' && <span className='text-[0.6em] min-w-[57px] text-end font-[500] text-[#595959bf]'>Fixed price</span>}
                                     {(value.discId.priceType !== 'fixedPrice') &&
                                         <div className='flex items-center  text-[1em]'>
                                             <p onClick={(e) => {

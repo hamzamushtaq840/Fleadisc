@@ -61,8 +61,6 @@ const SingleSellItem = ({ value }) => {
         return acc + curr.discId.buyer.buyPrice
     }, 0)
 
-
-
     return (
         <>
             <div className='flex flex-col '>
@@ -79,7 +77,7 @@ const SingleSellItem = ({ value }) => {
                                 }
                                 } >{value.buyer.name}</h1>
                                 <div className='ml-[-0.2em] flex gap-[5px] mb-[6px]'>
-                                    <Rating size='small' name="half-rating-read" onChange={(e) => console.log(e.target.value)} defaultValue="0" precision={0.5} readOnly />
+                                    <Rating size='small' name="half-rating-read" defaultValue={Math.min(Math.max(value.buyer.rating.reduce((acc, rating) => acc + rating.rating, 0) / value.buyer.rating.length, 0), 5)} precision={0.5} readOnly />
                                     <p className='text-[0.7em] font-[500]'>({value.buyer.rating.length})</p>
                                 </div>
                             </div>
@@ -90,7 +88,7 @@ const SingleSellItem = ({ value }) => {
                         {value.disc.map((v, index) => {
                             return (
                                 <React.Fragment key={index}>
-                                    <SingleSellDisc value={v} seller={value.seller} />
+                                    <SingleSellDisc value={v} val={value._id} seller={value.seller} />
                                 </React.Fragment >
                             )
                         })}

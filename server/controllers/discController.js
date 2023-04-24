@@ -230,6 +230,7 @@ export const checkDiscTime = async () => {
                         let listing = await Disc.findOne({ _id: disc._id });
                         listing.isActive = false
                         listing.isFinished = true
+                        listing.buyer = null
                         await listing.save()
                         io.emit("bid_added");
                     }
@@ -301,7 +302,7 @@ export const getActiveDiscs2 = tryCatch(async (req, res) => {
 export const getFinishedDiscs = tryCatch(async (req, res) => {
     const { userId } = req.params;
     // Retrieve all discs belonging to seller where isActive is true
-    const discs = await Disc.find({ seller: userId, isActive: false, isFinished: true });
+    const discs = await Disc.find({ seller: userId, isActive: false, isFinished: true }).populate('buyer');
     res.send(discs);
 })
 
