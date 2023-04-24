@@ -5,6 +5,8 @@ import axios from '../../api/axios';
 import useAuth from '../../hooks/useAuth';
 import { ColorRing } from 'react-loader-spinner';
 import { toast } from 'react-toastify'
+import Show from './Show';
+
 
 const Loader =
     <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>
@@ -248,15 +250,20 @@ const Selling = () => {
             console.log(error);
         }
     });
+    const cancelQuery = useQuery(['sellingCancel', auth.userId], () => axios.get(`/delivery/getSellingCancel/${auth.userId}`), {
+        onSuccess: (res) => {
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
 
     useEffect(() => {
         sellingQuery.refetch()
         if (socket) {
             socket.on('refetchSelling', () => {
-                // Handle incoming data from server
                 sellingQuery.refetch()
                 toast.success('You have a new notification', { position: toast.POSITION.TOP_RIGHT, });
-                // Update state or perform other actions
             })
         }
     }, [])
@@ -291,6 +298,13 @@ const Selling = () => {
                         ))
                     )}
                 </div>
+                {cancelQuery?.data?.data?.length > 0 &&
+                    cancelQuery?.data?.data?.map((val, index) => {
+                        return (
+                            <Show key={index} val={val} />
+                        )
+                    })
+                }
             </div>
         )
 }

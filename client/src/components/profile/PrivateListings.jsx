@@ -16,7 +16,7 @@ const PrivateListings = () => {
     const navigate = useNavigate();
     const scrollableDivRef = useRef(null);
     const { auth } = useAuth();
-    const userCurrency =  "SEK";
+    const userCurrency = "SEK";
     const [isHovered, setIsHovered] = useState(false);
     const [screenSize, setScreenSize] = useState({
         width: window.innerWidth,
@@ -175,7 +175,7 @@ const PrivateListings = () => {
                         <h1 className='font-[700] pl-[10px] text-[1.25em] mb-[10px]'>Active Listings</h1>
                         <span className='text-[1.25em] font-[700] text-[#00000080]'>(1500 sek)</span>
                     </div>
-                    {activeDiscsQuery?.data?.data?.length === 0 && <div className='flex justify-center text-[1em] min-h-[150px] items-center w-full'>No Active Discs</div>}
+                    {activeDiscsQuery?.data?.data?.length === 0 && <div className='flex justify-center text-[1em] min-h-[20vh] items-center w-full'>No Active Discs</div>}
                     <>
                         {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
                         <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[10px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"} pb-[5px] gap-[10px] mt-[11px]`}>
@@ -194,7 +194,7 @@ const PrivateListings = () => {
                                                 </div>
                                                 <div className='flex mt-[5px] flex-col  text-[#595959]'>
                                                     <span className='font-[600] text-[0.6em]'>{getMonthAndDate(value.endDay)} - {value.endTime} </span>
-                                                    <span className='font-[500] text-[#595959BF] text-[0.55em]'>{remainingTime(value.endDay, value.endTime)} ago</span>
+                                                    <span className='font-[500] text-[#595959BF] text-[0.55em]'>{remainingTime(value.endDay, value.endTime)}</span>
                                                 </div>
                                             </div>
 
@@ -231,15 +231,18 @@ const PrivateListings = () => {
                         <h1 className='font-[700] pl-[10px] text-[1.25em] mb-[10px]'>Finished Listings</h1>
                         <span className='text-[1.25em] font-[700] text-[#00000080]'>(1500 sek)</span>
                     </div>
-                    {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
-                    <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[10px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"} pb-[5px] gap-[10px] mt-[11px]`}>
-                        {finishedDiscsQuery?.data?.data?.map((value, index) => {
-                            return (
-                                <FinishedListing key={index} value={value} userCurrency={userCurrency} />
-                            )
-                        })}
+                    {finishedDiscsQuery?.data?.data?.length === 0 && <div className='flex justify-center text-[1em] min-h-[20vh] items-center w-full'>No Finished Discs</div>}
+                    <div>
+                        {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
+                        <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[10px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"} pb-[5px] gap-[10px] mt-[11px]`}>
+                            {finishedDiscsQuery?.data?.data?.map((value, index) => {
+                                return (
+                                    <FinishedListing key={index} value={value} userCurrency={userCurrency} />
+                                )
+                            })}
+                        </div>
+                        {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
                     </div>
-                    {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
                 </div>
                 {oldModal && oldModalComponent}
 

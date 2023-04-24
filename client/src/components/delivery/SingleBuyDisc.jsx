@@ -3,7 +3,7 @@ import moment from 'moment'
 import OlderBids from '../listings/OlderBids';
 import CancelBuyer from './CancelBuyer';
 
-const SingleBuyDisc = ({ value, seller }) => {
+const SingleBuyDisc = ({ value, temp }) => {
     const [model, setModel] = useState(false)
     const [oldModal, setOldModal] = useState(false)
     const oldModalComponent = useMemo(() => <OlderBids setModel={setOldModal} discId={value._id} />, [setOldModal]);
@@ -11,7 +11,6 @@ const SingleBuyDisc = ({ value, seller }) => {
 
     function getMonthAndDate(dateString) {
         const date = moment(dateString);
-
         const monthName = date.format("MMM");
         const dayOfMonth = date.format("D");
         return `${dayOfMonth} ${monthName}`;
@@ -31,17 +30,17 @@ const SingleBuyDisc = ({ value, seller }) => {
 
         let passedTime;
         if (years > 0) {
-            passedTime = `${years} ${years === 1 ? 'year' : 'years'}`;
+            passedTime = `${years} ${years === 1 ? 'y' : 'y'}`;
         } else if (months > 0) {
-            passedTime = `${months} ${months === 1 ? 'month' : 'months'}`;
+            passedTime = `${months} ${months === 1 ? 'm' : 'm'}`;
         } else if (days > 0) {
-            passedTime = `${days} ${days === 1 ? 'day' : 'days'} ${hours}h`;
+            passedTime = `${days} ${days === 1 ? 'd' : 'd'} ${hours}h`;
         } else if (hours > 0) {
-            passedTime = `${hours}h ${minutes} ${minutes === 1 ? 'min' : 'mins'}`;
+            passedTime = `${hours}h ${minutes}${minutes === 1 ? 'm' : 'm'}`;
         } else if (minutes > 0) {
-            passedTime = `${minutes} ${minutes === 1 ? 'min' : 'mins'}`;
+            passedTime = `${minutes}${minutes === 1 ? 'm' : 'm'}`;
             if (seconds > 0) {
-                passedTime += ` ${seconds} s`;
+                passedTime += ` ${seconds}s`;
             }
         } else {
             passedTime = `${seconds} s`;
@@ -91,13 +90,11 @@ const SingleBuyDisc = ({ value, seller }) => {
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} className='bg-[#F21111] font-[600] text-[0.75em] text-[white] rounded-[4px] py-[0.45em] px-[1em] ' onClick={handleCancel}>Cancel Purchase</button>
             </div>
-            {model && <CancelBuyer setModel={setModel} disc={value.discId} seller={seller} />}
-
+            {model && <CancelBuyer temp={temp} setModel={setModel} disc={value.discId} />}
         </>
     )
 }

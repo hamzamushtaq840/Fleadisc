@@ -19,7 +19,13 @@ const Listing = () => {
     const [searchInput, setSearchInput] = useState('');
     const [moreFilters, setMoreFilters] = useState(false)
     const [filteredData, setFilteredData] = useState([])
+    const [brand, setBrand] = useState('')
+    const [condition, setCondition] = useState('')
+    const [range, setRange] = useState('')
     const [data, setData] = useState([])
+    const [added, setAdded] = useState(false)
+    const [added2, setAdded2] = useState(false)
+    const [added3, setAdded3] = useState(false)
     const { auth } = useAuth();
     const userCurrency = "SEK";
     const [screenSize, setScreenSize] = useState({
@@ -36,6 +42,7 @@ const Listing = () => {
             applyFilters(appliedFilters)
             return response.data;
         },
+        { staleTime: Infinity }
     );
     let followingDataQuery;
     let followingData;
@@ -69,10 +76,6 @@ const Listing = () => {
         };
     }, []);
 
-    useEffect(() => {
-        applyFilters(appliedFilters)
-    }, [])
-
 
     if (Object.keys(auth).length !== 0) {
         followingDataQuery = useMemo(
@@ -93,14 +96,12 @@ const Listing = () => {
 
     const applyFilters = (appliedFilters2) => {
         let tempDiscs
-        if (searchInput !== 0) {
+        if (searchInput !== '') {
             tempDiscs = filteredData
         }
         else {
-
             tempDiscs = listingsData;
         }
-
         if (appliedFilters2.length > 0) {
             tempDiscs = tempDiscs.map((disc) => {
                 const filteredDiscs = disc.discs.filter((d) => {
@@ -129,6 +130,15 @@ const Listing = () => {
                         if (filter === "unamed") {
                             return !d.named;
                         }
+                        if (filter === "brand") {
+                            return d.brand === brand;
+                        }
+                        if (filter === "condition") {
+                            return d.condition === Number(condition);
+                        }
+                        if (filter === "range") {
+                            return d.range === range
+                        }
                         if (filter === "popular") {
                             return d.bids.length > 5;
                         }
@@ -143,13 +153,68 @@ const Listing = () => {
             tempDiscs = tempDiscs.filter((disc) => disc.discs.length > 0);
             setData(tempDiscs);
         } else {
-            if (searchInput !== 0) {
+            if (searchInput !== '') {
                 setData(filteredData)
             }
             else
                 setData(listingsData);
         }
     };
+
+    useEffect(() => {
+        applyFilters(appliedFilters);
+    }, [brand, condition, appliedFilters]);
+
+    const handleBrand = (e) => {
+        setBrand(e.target.value)
+        if (e.target.value === 'brand') {
+            setAdded(false)
+            handleFilterClick('brand')
+        }
+        else
+            if (!added) {
+                handleFilterClick('brand')
+                applyFilters(appliedFilters)
+                setAdded(true)
+            }
+            else {
+                applyFilters(appliedFilters)
+            }
+    }
+
+    const handleCondition = (e) => {
+        setCondition(e.target.value)
+        if (e.target.value === 'condition') {
+            setAdded2(false)
+            handleFilterClick('condition')
+        }
+        else
+            if (!added2) {
+                handleFilterClick('condition')
+                applyFilters(appliedFilters)
+                setAdded2(true)
+            }
+            else {
+                applyFilters(appliedFilters)
+            }
+    }
+
+    const handleRange = (e) => {
+        setRange(e.target.value)
+        if (e.target.value === 'range') {
+            setAdded3(false)
+            handleFilterClick('range')
+        }
+        else
+            if (!added3) {
+                handleFilterClick('range')
+                applyFilters(appliedFilters)
+                setAdded3(true)
+            }
+            else {
+                applyFilters(appliedFilters)
+            }
+    }
 
     const handleSearchInputChange = (e) => {
         const inputValue = e.target.value.toLowerCase(); // Convert input value to lowercase for case-insensitive search
@@ -171,7 +236,7 @@ const Listing = () => {
         setData(filteredArray2)
     };
 
-    const handleFilterClick = filter => {
+    const handleFilterClick = (filter) => {
         let tempFilters = [...appliedFilters];
 
         if (tempFilters.includes(filter)) {
@@ -179,9 +244,13 @@ const Listing = () => {
         } else {
             tempFilters.push(filter);
         }
-
         setAppliedFilters(tempFilters);
         applyFilters(tempFilters)
+    }
+
+    const handleCountry = (country) => {
+        setSelected(country)
+        // appliedFilters(tempFilters)
     }
 
     return (
@@ -204,21 +273,78 @@ const Listing = () => {
                         fullWidth={true}
                         searchable={true}
                         alignOptionsToRight={true}
-                        onSelect={(code) => { setSelected(code); console.log(code); }}
+                        onSelect={(code) => { handleCountry(code) }}
                         className='min-w-[125px] xsm:min-w-[0px] text-text font-sans'
                         placeholder=""
                         showSelectedLabel={screenSize.width > 576 ? true : false}
                         showOptionLabel={true}
                     />
                 </div>
-                <select defaultValue='range' className='outline-none w-[74px] text-[#1E1E21] text-center border-[1px] border-[#000000] text-[12px] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
-                    <option disabled value='range'>Range</option>
+                <select onChange={handleRange} defaultValue='range' className='outline-none w-[74px] text-[#1E1E21] text-center border-[1px] border-[#000000] text-[12px] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
+                    <option value='range'>Range</option>
+                    <option value='Putt & Approach'>Putt & Approach</option>
+                    <option value='Midrange'>Midrange</option>
+                    <option value='Fairway drivers'>Fairway drivers</option>
+                    <option value='Distance Drivers'>Distance Drivers</option>
                 </select>
-                <select defaultValue='brand' className='outline-none w-[76px]  text-[#1E1E21] text-center border-[1px] border-[#000000] text-[12px] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
-                    <option disabled value='brand'>Brand</option>
+                <select onChange={handleBrand} defaultValue='brand' className='outline-none w-[76px]  text-[#1E1E21] text-center border-[1px] border-[#000000] text-[12px] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
+                    <option value='brand'>Brand</option>
+                    <option value='Aerobie'>Aerobie</option>
+                    <option value='Alfa Discs'>Alfa Discs</option>
+                    <option value='Axiom Discs'>Axiom Discs</option>
+                    <option value='Bushnell'>Bushnell</option>
+                    <option value='Clash Discs'>Clash Discs</option>
+                    <option value='DGA'>DGA</option>
+                    <option value='DiscGolf Pins'>DiscGolf Pins</option>
+                    <option value='DiscGolfPark'>DiscGolfPark</option>
+                    <option value='Discmania'>Discmania</option>
+                    <option value='Discraft'>Discraft</option>
+                    <option value='Discsport'>Discsport</option>
+                    <option value='Dynamic Discs'>Dynamic Discs</option>
+                    <option value='E-RaY'>E-RaY</option>
+                    <option value='European Birdies'>European Birdies</option>
+                    <option value='EV-7'>EV-7</option>
+                    <option value='Fossa'>Fossa</option>
+                    <option value='Galaxy Discs'>Galaxy Discs</option>
+                    <option value='Gateway'>Gateway</option>
+                    <option value='Grip Eq'>Grip Eq</option>
+                    <option value='Hero Disc'>Hero Disc</option>
+                    <option value='Innova'>Innova</option>
+                    <option value='Jacquard'>Jacquard</option>
+                    <option value='Kastaplast'>Kastaplast</option>
+                    <option value='Keen'>Keen</option>
+                    <option value='KnA games'>KnA games</option>
+                    <option value='Latitude 64'>Latitude 64</option>
+                    <option value='Launch Discs'>Launch Discs</option>
+                    <option value='Legacy Discs'>Legacy Discs</option>
+                    <option value='Løft Discs (loft)'>Løft Discs (loft)</option>
+                    <option value='Millennium'>Millennium</option>
+                    <option value='Momentum SE'>Momentum SE</option>
+                    <option value='MVP Discs'>MVP Discs</option>
+                    <option value='Oak Socks'>Oak Socks</option>
+                    <option value='Prodigy'>Prodigy</option>
+                    <option value='Prodiscus'>Prodiscus</option>
+                    <option value='PUG Förlag'>PUG Förlag</option>
+                    <option value='Streamline Discs'>Streamline Discs</option>
+                    <option value='Swedisc'>Swedisc</option>
+                    <option value='Ugglan'>Ugglan</option>
+                    <option value='Westside'>Westside</option>
+                    <option value='Wham-O'>Wham-O</option>
+                    <option value='Other'>Other</option>
                 </select>
-                <select defaultValue='condition' className='outline-none w-[92px] text-[#1E1E21] text-center border-[1px] border-[#000000] text-[12px] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
-                    <option disabled value='condition'>Condition</option>
+                <select defaultValue='condition' onChange={handleCondition} className='outline-none w-[92px] text-[#1E1E21] text-center border-[1px] border-[#000000] text-[12px] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
+                    <option value='condition'>Condition</option>
+                    <option value='1'>1</option>
+                    <option value='2'>2</option>
+                    <option value='3'>3</option>
+                    <option value='4'>4</option>
+                    <option value='5'>5</option>
+                    <option value='6'>6</option>
+                    <option value='7'>7</option>
+                    <option value='8'>8</option>
+                    <option value='9'>9</option>
+                    <option value='10'>10</option>
+                    <option value='11'>11</option>
                 </select>
             </div>
             <div className='px-[5px] xsm:px-0 flex gap-[10px] xsm:gap-[5px] items-center xsm:justify-start justify-center flex-wrap xsm:w-[320px] w-[405px]  m-auto'>
@@ -247,18 +373,20 @@ const Listing = () => {
                 </div>
             ) : (
                 <div className='flex flex-col xsm:w-full sm:w-full w-[90%] m-auto overflow-hidden mb-[50px]'>
-                    {data?.length === 0 || listingsData?.length === 0 ?
+                    {listingsData?.length === 0 ?
                         <p className='mt-[20px] text-[1em] font-[500] text-center'>No discs found</p>
                         :
                         listingsData?.length > 0 ?
-                            (appliedFilters.length > 0 || searchInput !== 0) ?
-                                data?.map((value, index) => {
-                                    return (
-                                        <React.Fragment key={index}>
-                                            <SingleList value={value} discs={value.discs} index={index} />
-                                        </React.Fragment>
-                                    )
-                                })
+                            (appliedFilters.length > 0 || searchInput !== '') ?
+                                data?.length === 0
+                                    ? <p className='mt-[20px] min-h-[20vh] flex items-center justify-center text-[1em] font-[500] text-center'>No discs found</p>
+                                    : data?.map((value, index) => {
+                                        return (
+                                            <React.Fragment key={index}>
+                                                <SingleList value={value} discs={value.discs} index={index} />
+                                            </React.Fragment>
+                                        )
+                                    })
                                 :
                                 listingsData?.map((value, index) => {
                                     return (

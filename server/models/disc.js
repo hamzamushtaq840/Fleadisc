@@ -44,8 +44,8 @@ const discSchema = mongoose.Schema({
         required: false
     },
     isActive: { type: Boolean, default: true, required: false },
-    winner: { type: mongoose.Schema.Types.ObjectId, ref: 'Bid', required: false },
-
+    isBought: { type: Boolean, default: false, required: false },
+    isFinished: { type: Boolean, default: false, required: false },
 });
 
 

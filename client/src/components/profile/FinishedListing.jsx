@@ -32,17 +32,17 @@ const FinishedListing = ({ value, userCurrency }) => {
 
         let passedTime;
         if (years > 0) {
-            passedTime = `${years} ${years === 1 ? 'year' : 'years'}`;
+            passedTime = `${years} ${years === 1 ? 'y' : 'y'}`;
         } else if (months > 0) {
-            passedTime = `${months} ${months === 1 ? 'month' : 'months'}`;
+            passedTime = `${months} ${months === 1 ? 'm' : 'm'}`;
         } else if (days > 0) {
-            passedTime = `${days} ${days === 1 ? 'day' : 'days'} ${hours}h`;
+            passedTime = `${days} ${days === 1 ? 'd' : 'd'} ${hours}h`;
         } else if (hours > 0) {
-            passedTime = `${hours}h ${minutes} ${minutes === 1 ? 'min' : 'mins'}`;
+            passedTime = `${hours}h ${minutes}${minutes === 1 ? 'm' : 'm'}`;
         } else if (minutes > 0) {
-            passedTime = `${minutes} ${minutes === 1 ? 'min' : 'mins'}`;
+            passedTime = `${minutes}${minutes === 1 ? 'm' : 'm'}`;
             if (seconds > 0) {
-                passedTime += ` ${seconds} s`;
+                passedTime += ` ${seconds}s`;
             }
         } else {
             passedTime = `${seconds} s`;
@@ -86,10 +86,12 @@ const FinishedListing = ({ value, userCurrency }) => {
 
 
             </div>
-            {(value.bids.length === 0 && auth.userId === value.seller._id) && <div className='px-[10px]'>
+            {(value.priceType === 'auction' && value.bids.length === 0 && auth.userId === value.seller._id) && <div className='px-[10px]'>
                 <button onClick={() => navigate('/create/relist', { state: value })} className='w-full py-[.3em] rounded-[4px] text-[#ffffff] bg-[#F21111] mb-[0.6em] text-[0.75em]'>Re-list</button>
-            </div>
-            }
+            </div>}
+            {value.priceType === 'fixedPrice' && (value.buyer === null && auth.userId === value.seller._id) && <div className='px-[10px]'>
+                <button onClick={() => navigate('/create/relist', { state: value })} className='w-full py-[.3em] rounded-[4px] text-[#ffffff] bg-[#F21111] mb-[0.6em] text-[0.75em]'>Re-list</button>
+            </div>}
             {oldModal && oldModalComponent}
         </div>
     )

@@ -1,10 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs";
 import disc from './../../assets/disc.svg';
+import useAuth from '../../hooks/useAuth'
+import { useQuery } from '@tanstack/react-query';
+import axios from '../../api/axios';
+import moment from 'moment';
 
 const PrivatePurchases = () => {
     const [isHovered, setIsHovered] = useState(false);
     const scrollableDivRef = useRef(null);
+    const { auth } = useAuth()
     const [screenSize, setScreenSize] = useState({
         width: window.innerWidth,
         height: window.innerHeight
@@ -210,6 +215,55 @@ const PrivatePurchases = () => {
             behavior: 'smooth',
         });
     }
+    function getMonthAndDate(dateString) {
+        const date = moment(dateString);
+
+        const monthName = date.format("MMM");
+        const dayOfMonth = date.format("D");
+        return `${dayOfMonth} ${monthName}`;
+    }
+
+    function remainingTime(endDay, endTime) {
+        const endDateTime = moment(`${endDay} ${endTime}`);
+        const now = moment();
+        const diff = endDateTime.diff(now);
+        const duration = moment.duration(diff);
+        const years = duration.years();
+        const months = duration.months();
+        const days = duration.days();
+        const hours = duration.hours();
+        const minutes = duration.minutes();
+        const seconds = duration.seconds();
+
+        let remainingTime;
+        if (years > 0) {
+            remainingTime = `${years} ${years === 1 ? 'year' : 'years'}`;
+        } else if (months > 0) {
+            remainingTime = `${months} ${months === 1 ? 'month' : 'months'}`;
+        } else if (days > 0) {
+            remainingTime = `${days} ${days === 1 ? 'day' : 'days'} ${hours}h`;
+        } else if (hours > 0) {
+            remainingTime = `${hours}h ${minutes} ${minutes === 1 ? 'min' : 'mins'}`;
+        } else if (minutes > 0) {
+            remainingTime = `${minutes} ${minutes === 1 ? 'min' : 'mins'}`;
+            if (seconds > 0) {
+                remainingTime += ` ${seconds} s`;
+            }
+        } else {
+            remainingTime = `${seconds} s`;
+        }
+
+        return remainingTime;
+    }
+
+    const boughtDiscQuery = useQuery(['discsBySellerId', auth.userId], () => axios.get(`/disc/boughtListing/${auth.userId}`), {
+        onSuccess: () => {
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+    console.log();
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -238,12 +292,13 @@ const PrivatePurchases = () => {
                     <h1 className='font-[700] pl-[4px] text-[1.25em] mb-[10px]'>Purchased Listings</h1>
                     <span className='text-[1.25em] font-[700] text-[#00000080]'>(1500 sek)</span>
                 </div>
+                {boughtDiscQuery?.data?.data?.length === 0 && <div className='flex justify-center text-[1em] min-h-[20vh] items-center w-full'>No Purchases</div>}
                 {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
                 <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[4px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"} pb-[5px] gap-[10px] mt-[11px]`}>
-                    {activeDiscs.map((value, index) => {
+                    {boughtDiscQuery?.data?.data.map((value, index) => {
                         return (
-                            <div className={`flex relative mb-[10px] xsm:text-[1.07rem] sm:text-[1.07rem] text-[1.2rem] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[165px] sm:min-w-[165px] md:min-w-[200px] lg:min-w-[210px] xl:min-w-[220px] 2xl:min-w-[240px]  h-[0%] flex-col`}>
-                                <img src={disc} className=' w-full' alt="" />
+                            <div key={index} className={`flex relative mb-[10px]  xsm:text-[1.07rem] sm:text-[1.07rem] text-[1.2rem] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[165px] xsm:max-w-[165px] sm:min-w-[165px] sm:max-w-[165px] md:min-w-[200px] md:max-w-[200px] lg:min-w-[210px] lg:max-w-[210px] xl:min-w-[220px] xl:max-w-[220px] 2xl:min-w-[240px] 2xl:max-w-[240px]  h-[0%] flex-col`}>
+                                <img src={value.pictureURL} className=' w-full' alt="" />
                                 <div className='flex justify-between px-[0.625em] py-[0.425em]'>
                                     <div className='flex flex-col justify-between'>
 
@@ -255,13 +310,12 @@ const PrivatePurchases = () => {
                                             <span className='px-[0.5em] mt-[2px] text-[0.563em] border-[1px] rounded-full border-[#595959]'>{value.condition}</span>
                                         </div>
                                         <div className='flex mt-[5px] flex-col  text-[#595959]'>
-                                            <span className='font-[600] text-[0.6em]'>{value.endTime}</span>
-                                            <span className='font-[500] text-[0.55em] text-[#595959BF]'>23h 23 min</span>
+                                            <span className='font-[600] text-[0.6em]'>{getMonthAndDate(value.endDay)} - {value.endTime} </span>
+                                            <span className='font-[500] text-[#595959BF] text-[0.55em]'>{remainingTime(value.endDay, value.endTime)}</span>
                                         </div>
                                     </div>
 
-                                    <div className='flex flex-col justify-between items-end'>
-                                        <button className='text-[0.60em] xsm:w-[50px] sm:w-[50px] w-[80px] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px]'>Follow</button>
+                                    <div className='flex flex-col justify-end items-end'>
                                         <div className='flex flex-col'>
                                             <span className='text-[0.75em] font-[600]'>{value.startingPrice} kr</span>
                                             <span className='text-[0.6em] font-[500] text-[#595959bf]'>15 bids</span>

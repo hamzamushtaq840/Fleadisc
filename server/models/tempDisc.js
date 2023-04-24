@@ -22,7 +22,7 @@ const tempSchema = mongoose.Schema({
     paymentConfirmed: { type: Boolean, default: false },
     parcelSent: { type: Boolean, default: false },
     parcelReceived: { type: Boolean, default: false },
-    cancelPayment: { type: Boolean, default: false },
+    soldToNextBidder: { type: Boolean, default: false }
 })
 
 export const TempDisc = mongoose.model("Temp", tempSchema);

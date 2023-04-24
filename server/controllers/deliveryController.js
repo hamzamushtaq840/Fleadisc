@@ -2,8 +2,11 @@ import { Disc } from '../models/disc.js';
 import { tryCatch } from '../utils/tryCatch.js';
 import AppError from '../utils/AppError.js';
 import { TempDisc } from '../models/tempDisc.js';
+import { User } from '../models/user.js';
 import { FinishedListing } from '../models/finishedListing.js';
 import { getUsers, io } from '../index.js';
+import { CancelDisc } from '../models/cancelDiscs.js';
+import mongoose from 'mongoose';
 
 export const confirmPurchase = tryCatch(async (req, res) => {
     const { id, buyerId } = req.body;
@@ -143,3 +146,104 @@ export const confirmParcel = tryCatch(async (req, res) => {
     }
     res.status(201).json({ message: 'Parcel Confirmed' });
 });
+
+export const rating = tryCatch(async (req, res) => {
+    const { id, sellerId, buyerId, from, rating } = req.body;
+    const listing = await TempDisc.findOne({ _id: id }).populate('disc.discId');
+    listing.disc.forEach(async element => {
+        console.log(element.discId._id);
+        await Disc.findOneAndUpdate(element.discId._id, { isFinished: true })
+    });
+    if (from === 'buy') {
+        const buyer = await User.findOne({ _id: buyerId })
+        let ratings = {
+            user: buyerId,
+            rating: rating
+        }
+        buyer.rating.push(ratings)
+        await buyer.save()
+    }
+    if (from === 'seller') {
+        const seller = await User.findOne({ _id: sellerId })
+        let ratings = {
+            user: buyerId,
+            rating: rating
+        }
+        seller.rating.push(ratings)
+        // listing.isBought = true
+        await seller.save()
+    }
+    await TempDisc.findOneAndRemove({ _id: id })
+
+    let receiver
+    if (from === 'buy')
+        receiver = getUsers(sellerId);
+    else
+        receiver = getUsers(buyerId);
+    if (receiver && receiver.socketId) {
+        if (from === 'buy')
+            io.to(receiver.socketId).emit('refetchSelling');
+        else
+            io.to(receiver.socketId).emit('refetchBuying');
+    }
+    res.status(201).json(listing);
+});
+
+export const cancel = tryCatch(async (req, res) => {
+    const { listingId, discId, sellerId, buyerId, from } = req.body;
+    const listing = await TempDisc.findOne({ _id: listingId }).populate('disc.discId'); // Assuming TempDisc is the model for tempSchema
+    const discIndex = listing.disc.findIndex(disc => disc.discId._id.toString() === discId); // Replace "id" with the appropriate property name of the disc object
+    await Disc.findByIdAndUpdate(discId, { isFinished: true })
+    const removedDisc = listing.disc.splice(discIndex, 1)[0];
+
+    if (listing.disc.length === 0) {
+        await TempDisc.deleteOne({ _id: listingId });
+    } else {
+        // Save the updated TempDisc document
+        await listing.save();
+    }
+
+    const cancelDisc = new CancelDisc({
+        disc: discId,
+        cancelFrom: from,
+        sellerId: sellerId,
+        buyerId: buyerId
+    });
+
+    // Save the CancelDisc document
+    await cancelDisc.save();
+
+    let receiver
+    if (from === 'buy')
+        receiver = getUsers(sellerId);
+    else
+        receiver = getUsers(buyerId);
+    if (receiver && receiver.socketId) {
+        io.to(receiver.socketId).emit('refetchSelling');
+    }
+});
+
+export const getSellingCancel = tryCatch(async (req, res) => {
+    const { userId } = req.params;
+    const listing = await CancelDisc.find({ sellerId: userId, cancelFrom: 'buy' }).populate('disc').populate('buyerId')
+    res.status(200).json(listing);
+});
+
+export const removeCancel = tryCatch(async (req, res) => {
+    const { removeId } = req.body;
+    await CancelDisc.deleteOne({ _id: removeId, buyer: null })
+    res.status(200).json({ message: 'success' });
+});
+
+export const giveRating = tryCatch(async (req, res) => {
+    const { userId, rating } = req.body
+    const u = await User.findOne({ _id: userId })
+    let ratings = {
+        user: userId,
+        rating: rating
+    }
+    u.rating.push(ratings)
+    await u.save()
+    res.status(200).json({ message: 'success' });
+});
+

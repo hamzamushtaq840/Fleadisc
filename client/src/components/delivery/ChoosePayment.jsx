@@ -83,7 +83,7 @@ const ChoosePayment = ({ seller, setModel, paymentMethod }) => {
             <div className='modalBackground' onClick={() => setModel(false)}></div>
             <div className='modalContainer xsm:text-[1rem] sm:text-[1rem] text-[1.25rem] sm:w-[80%] xsm:w-[80%] w-[40%] flex flex-col justify-center items-center'>
                 <h1 className='text-[1.25em] my-[0.925em]'>Choose Payment Method</h1>
-                <div className='flex w-[80%]'>
+                <div className='flex flex-col items-start w-[80%]'>
                     {seller.paymentMethods.length === 0 ?
                         (!add && <h1 className='flex mt-[0.625em] text-center p-[0.625em] text-[0.75em]'>No payment method found</h1>) :
                         (seller.paymentMethods.map((method, index) => {

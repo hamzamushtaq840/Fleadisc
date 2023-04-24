@@ -34,17 +34,17 @@ const SingleSellDisc = ({ value, seller }) => {
 
         let passedTime;
         if (years > 0) {
-            passedTime = `${years} ${years === 1 ? 'year' : 'years'}`;
+            passedTime = `${years} ${years === 1 ? 'y' : 'y'}`;
         } else if (months > 0) {
-            passedTime = `${months} ${months === 1 ? 'month' : 'months'}`;
+            passedTime = `${months} ${months === 1 ? 'm' : 'm'}`;
         } else if (days > 0) {
-            passedTime = `${days} ${days === 1 ? 'day' : 'days'} ${hours}h`;
+            passedTime = `${days} ${days === 1 ? 'd' : 'd'} ${hours}h`;
         } else if (hours > 0) {
-            passedTime = `${hours}h ${minutes} ${minutes === 1 ? 'min' : 'mins'}`;
+            passedTime = `${hours}h ${minutes}${minutes === 1 ? 'm' : 'm'}`;
         } else if (minutes > 0) {
-            passedTime = `${minutes} ${minutes === 1 ? 'min' : 'mins'}`;
+            passedTime = `${minutes}${minutes === 1 ? 'm' : 'm'}`;
             if (seconds > 0) {
-                passedTime += ` ${seconds} s`;
+                passedTime += ` ${seconds}s`;
             }
         } else {
             passedTime = `${seconds} s`;
@@ -97,7 +97,7 @@ const SingleSellDisc = ({ value, seller }) => {
 
                     </div>
                 </div>
-                <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} className='bg-[#F21111] font-[600] text-[0.75em] text-[white] rounded-[4px] py-[0.45em] px-[1em] ' onClick={handleCancel}>Cancel Purchase</button>
+                <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} className='bg-[#F21111] font-[600] text-[0.75em] text-[white] rounded-[4px] py-[0.45em] px-[1em] ' onClick={handleCancel}>Cancel Sale</button>
             </div>
             {model && <CancelSeller setModel={setModel} disc={value.discId} seller={seller} />}
 

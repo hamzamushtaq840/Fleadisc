@@ -7,6 +7,7 @@ import SingleSellDisc from './SingleSellDisc'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from '../../api/axios'
 import ChoosePayment from './ChoosePayment'
+import signin from './../../assets/signin.svg'
 
 const SingleSellItem = ({ value }) => {
     const [shippingCost, setshippingCost] = useState("");

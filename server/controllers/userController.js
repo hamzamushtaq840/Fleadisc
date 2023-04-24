@@ -7,9 +7,6 @@ import AppError from '../utils/AppError.js';
 import { RefreshToken } from "../models/refreshToken.js";
 
 export const signinController = tryCatch(async (req, res) => {
-    console.log('i ran 2');
-
-
     if (req.body.googleAccessToken) {
         const userInfo = await axios.get(
             'https://www.googleapis.com/oauth2/v3/userinfo',

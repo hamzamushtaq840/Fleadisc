@@ -89,7 +89,6 @@ export const getAllDiscsWithSellers = tryCatch(async (req, res) => {
                 minPrice: minPrice,
             };
         }));
-        console.log(convertedDiscs);
         return {
             seller,
             discs: convertedDiscs,
@@ -163,7 +162,6 @@ export const buyDisc = tryCatch(async (req, res) => {
     // check if disc.buyer and dics.seller are found in that collection then add it to there disc array 
     // only if the last added disc has paymentSent = false
     const existingTempDisc = await TempDisc.findOne({ buyer: userId, seller: sellerId, paymentSent: false }).lean();
-
     if (existingTempDisc) {
         await TempDisc.updateOne(
             { _id: existingTempDisc._id },
@@ -221,16 +219,18 @@ export const checkDiscTime = async () => {
                         io.emit("bid_added");
 
                     } else {
-                        const finishedDisc = new FinishedListing(disc.toJSON());
-                        await finishedDisc.save();
-                        await Disc.deleteOne({ _id: disc._id });
+                        let listing = await Disc.findOne({ _id: disc._id });
+                        listing.isActive = false
+                        listing.isFinished = true
+                        await listing.save()
                         io.emit("bid_added");
                     }
                 } else if (disc.priceType === "fixedPrice") {
                     if (disc.isActive) {
-                        const finishedDisc = new FinishedListing(disc.toJSON());
-                        await finishedDisc.save();
-                        await Disc.deleteOne({ _id: disc._id });
+                        let listing = await Disc.findOne({ _id: disc._id });
+                        listing.isActive = false
+                        listing.isFinished = true
+                        await listing.save()
                         io.emit("bid_added");
                     }
                 }
@@ -241,24 +241,18 @@ export const checkDiscTime = async () => {
     }
 }
 
-
 export const getActiveDiscs = tryCatch(async (req, res) => {
-
     const { userId } = req.params;
-    console.log(userId);
 
     // Retrieve all discs belonging to seller where isActive is true
-    const discs = await Disc.find({ seller: userId, isActive: true });
-    console.log(discs);
+    const discs = await Disc.find({ seller: userId, isActive: true, isFinished: false, isBought: false });
     res.send(discs);
 })
 
 export const getActiveDiscs2 = tryCatch(async (req, res) => {
     const { userId, userCurrency } = req.params;
-    console.log(req.params);
-    console.log('---------------');
 
-    const discs = await Disc.find({ seller: userId, isActive: true })
+    const discs = await Disc.find({ seller: userId, isActive: true, isFinished: false, isBought: false })
         .populate('seller')
         .populate('bids.user')
         .exec();
@@ -301,27 +295,20 @@ export const getActiveDiscs2 = tryCatch(async (req, res) => {
             minPrice: startingPrice,
         };
     }));
-    console.log(convertedDiscs);
 
     res.status(200).json(convertedDiscs);
 });
 export const getFinishedDiscs = tryCatch(async (req, res) => {
-
     const { userId } = req.params;
-    console.log(userId);
-
     // Retrieve all discs belonging to seller where isActive is true
-    const discs = await FinishedListing.find({ seller: userId });
-    console.log(discs);
+    const discs = await Disc.find({ seller: userId, isActive: false, isFinished: true });
     res.send(discs);
 })
 
 export const getFinishedDiscs2 = tryCatch(async (req, res) => {
-
     const { userId, userCurrency } = req.params;
-    console.log(req.params);
 
-    const discs = await FinishedListing.find({ seller: userId, isActive: true })
+    const discs = await Disc.find({ seller: userId, isActive: false, isFinished: true })
         .populate('seller')
         .populate('bids.user')
         .exec();
@@ -376,13 +363,11 @@ export const deleteDisc = tryCatch(async (req, res) => {
     const { discId } = req.params;
 
     // Check if the disc exists
-    const disc = await FinishedListing.findById(discId);
+    const disc = await Disc.findByIdAndDelete(discId);
     if (!disc) {
         return res.status(404).send('Disc not found');
     }
 
-    // Delete the disc
-    await disc.remove();
     io.emit("bid_added");
     res.send('Disc deleted successfully');
 });
@@ -426,35 +411,31 @@ export const editDisc = tryCatch(async (req, res) => {
 
 export const reListDisc = tryCatch(async (req, res) => {
     const { discId } = req.params;
-
     // Delete the disc in FinishedListing
-    await FinishedListing.findByIdAndDelete(discId);
-
-    // Create a new disc in Disc
     const { seller, pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime } = req.body;
-    console.log(req.body);
-    await Disc.create({ seller, pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime });
+    await Disc.findByIdAndUpdate(discId, { isActive: true, isFinished: false, seller, pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime });
     io.emit("bid_added");
     res.send('Disc relisted successfully');
 });
 
 
 export const buyingDiscs = tryCatch(async (req, res) => {
-
     const { userId } = req.params;
     const discs = await TempDisc.find({ buyer: userId }).populate('seller').populate('buyer').populate('disc.discId');
-
     res.status(200).json(discs);
 
 })
 
 export const sellingDiscs = tryCatch(async (req, res) => {
-
     const { userId } = req.params;
-
     const discs = await TempDisc.find({ seller: userId }).populate('seller').populate('buyer').populate('disc.discId');
-
     res.status(200).json(discs);
-
 })
+
+export const boughtListing = tryCatch(async (req, res) => {
+    const { buyerId } = req.params;
+    const listing = await Disc.find({ "buyer.user": buyerId, isActive: false, isFinished: true })
+    console.log(listing);
+    res.status(201).json(listing);
+});
 

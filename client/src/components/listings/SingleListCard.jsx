@@ -182,7 +182,7 @@ const SingleListCard = ({ val, seller }) => {
 
     return (
         <div className={`flex relative mb-[10px] xsm:text-[1.07rem] sm:text-[1.07rem] text-[1.2rem] pb-[8px] card rounded-[8px] bg-[#ffffff] flex-wrap xsm:min-w-[165px] xsm:max-w-[165px] sm:min-w-[165px] sm:max-w-[165px] md:min-w-[200px] md:max-w-[200px] lg:min-w-[210px] lg:max-w-[210px] xl:min-w-[220px] xl:max-w-[220px] 2xl:min-w-[240px] 2xl:max-w-[240px] h-[0%] flex-col`}>
-            <div className='flex rounded-t-[8px] hover:bg-[#000000fb] justify-center'><img src={val.pictureURL} className=' hover:opacity-[0.8] xsm:h-[165px] sm:h-[165px] md:h-[200px] lg:h-[210px] xsm:min-w-[165px] xsm:max-w-[165px] sm:min-w-[165px] sm:max-w-[165px] md:min-w-[200px] md:max-w-[200px] lg:min-w-[210px] lg:max-w-[210px] xl:min-w-[220px] xl:h-[220px] xl:max-w-[220px] 2xl:min-w-[240px] 2xl:max-w-[240px] 2xl:h-[240px] cursor-pointer' alt="" onClick={() => setImageModal(true)} /></div>
+            <div className='flex rounded-t-[8px] hover:bg-[#000000fb] justify-center'><img src={val.pictureURL} className=' hover:opacity-[0.8] xsm:h-[165px] rounded-t-[8px] sm:h-[165px] md:h-[200px] lg:h-[210px] xsm:min-w-[165px] xsm:max-w-[165px] sm:min-w-[165px] sm:max-w-[165px] md:min-w-[200px] md:max-w-[200px] lg:min-w-[210px] lg:max-w-[210px] xl:min-w-[220px] xl:h-[220px] xl:max-w-[220px] 2xl:min-w-[240px] 2xl:max-w-[240px] 2xl:h-[240px] cursor-pointer' alt="" onClick={() => setImageModal(true)} /></div>
             <div onClick={() => setExtra(prev => !prev)} className='flex justify-between cursor-pointer px-[0.625em] pt-[0.425em]'>
                 <div className='flex flex-col justify-between'>
                     <div className='flex items-start'>
@@ -303,8 +303,8 @@ const SingleListCard = ({ val, seller }) => {
             {imageModal && (
                 <>
                     <div className='modalBackground' onClick={() => setImageModal(false)}></div>
-                    <div className='modalContainer2 sm:w-[100%] xsm:w-[100%] flex justify-center items-center w-[60%] '>
-                        <img onClick={(e) => e.stopPropagation()} src={val.pictureURL} alt="image" className=" w-full md:max-h-[300px] lg:max-h-[300px] xl:max-h-[300px] 2xl:max-h-[300px] object-contain" />
+                    <div className='modalContainer2 sm:w-[90%] xsm:w-[100%] flex justify-center items-center w-[60%]'>
+                        <img onClick={(e) => e.stopPropagation()} src={val.pictureURL} alt="image" className="w-full sm:max-h-[350px] md:max-h-[480px] lg:max-h-[480px] xl:max-h-[480px] 2xl:max-h-[480px] object-contain" />
                     </div>
                 </>
             )}

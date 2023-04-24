@@ -1,21 +1,22 @@
 import Rating from '@mui/material/Rating';
-import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import user from './../../assets/signin.svg';
-import SingleBuyDisc from './SingleBuyDisc';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import React, { useEffect, useRef, useState } from 'react';
+import { FaSpinner } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from '../../api/axios';
-import { FaSpinner } from 'react-icons/fa';
+import user from './../../assets/signin.svg';
+import SingleBuyDisc from './SingleBuyDisc';
 
 const SingleBuyItem = ({ value }) => {
     const textareaRef = useRef();
-    const [addresses, setAddresses] = useState('');
-    const addressValues = [value.buyer.deliveryAddress.city, value.buyer.deliveryAddress.country, value.buyer.deliveryAddress.line1, value.buyer.deliveryAddress.line2, value.buyer.deliveryAddress.postalCode, value.buyer.deliveryAddress.state];
-    const filteredAddressValues = addressValues.filter(val => val !== "");
     const navigate = useNavigate()
     const queryClient = useQueryClient()
+    const [ratings, setRating] = useState(0)
+    const [addresses, setAddresses] = useState('');
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
+    const addressValues = [value.buyer.deliveryAddress.city, value.buyer.deliveryAddress.country, value.buyer.deliveryAddress.line1, value.buyer.deliveryAddress.line2, value.buyer.deliveryAddress.postalCode, value.buyer.deliveryAddress.state];
+    const filteredAddressValues = addressValues.filter(val => val !== "");
     const userCurrency = 'SEK'
 
     useEffect(() => {
@@ -56,6 +57,7 @@ const SingleBuyItem = ({ value }) => {
             console.log(error);
         }
     });
+
     const paymentSent = useMutation((data) => axios.post(`/delivery/paymentSent`, data), {
         onSuccess: () => {
             queryClient.invalidateQueries('buyingDiscs')
@@ -64,8 +66,18 @@ const SingleBuyItem = ({ value }) => {
             console.log(error);
         }
     });
+
     const confirmParcel = useMutation((data) => axios.post(`/delivery/confirmParcel`, data), {
         onSuccess: () => {
+            queryClient.invalidateQueries('buyingDiscs')
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+
+    const rating = useMutation((data) => axios.post(`/delivery/rating`, data), {
+        onSuccess: (res) => {
             queryClient.invalidateQueries('buyingDiscs')
         },
         onError: (error) => {
@@ -77,13 +89,17 @@ const SingleBuyItem = ({ value }) => {
         return acc + curr.discId.buyer.buyPrice
     }, 0)
 
+    const handleRating = (e) => {
+        setRating(e.target.value);
+        rating.mutate({ id: value._id, sellerId: value.seller._id, buyerId: value.buyer._id, rating: e.target.value, from: 'buy' })
+    }
 
     return (
         <div className='flex flex-col'>
             <div className='flex flex-col w-full justify-start mt-[20px] gap-[1em] xsm:gap-[1.275em] sm:gap-[1.575em]'>
                 <div className='flex gap-[20px] items-center'>
                     <div className='flex gap-[0.563em] '>
-                        <img onClick={() => navigate('/profile/public')} src={value.seller.profilePicture === null ? user : value.seller.profilePicture} className="cursor-pointer mt-[3px] xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] " alt="user" />
+                        <img onClick={() => navigate('/profile/public')} src={value.seller.profilePicture === null ? user : value.seller.profilePicture} className="cursor-pointer rounded-full mt-[3px] xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] " alt="user" />
                         <div className='flex flex-col justify-start'>
                             <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate('/profile/public')} >{value.seller.name}</h1>
                             <div className='ml-[-0.2em] flex gap-[5px] mb-[6px]'>
@@ -94,11 +110,11 @@ const SingleBuyItem = ({ value }) => {
                     </div>
                     <div className='flex'><button onClick={() => navigate("/messages/chat", { state: { user2: value.seller._id, userName: value.seller.name, userImage: value.seller.profilePicture !== null ? value.seller.profilePicture : null, from: 'delivery' } })} className='text-[#ffffff]  button rounded-[4px] text-[.75em] py-[0.5em] px-[1.125em] bg-primary '>Message Seller</button></div>
                 </div>
-                <div className='flex gap-[20px] '>
+                <div className='flex gap-[20px] flex-wrap'>
                     {value.disc.map((v, index) => {
                         return (
                             <React.Fragment key={index}>
-                                <SingleBuyDisc value={v} seller={value.seller} />
+                                <SingleBuyDisc value={v} temp={value} seller={value.seller} />
                             </React.Fragment >
                         )
                     })}
@@ -226,8 +242,19 @@ const SingleBuyItem = ({ value }) => {
                     </div>
                 </div>
                 {value.parcelReceived === true && <div className='flex flex-col justify-center items-center'>
-                    <p className='text-[0.75em] mb-[6px]'>Leave a rating of<span className='text-[#000000] font-[700]'> seller</span></p>
-                    <Rating size='large' className='mb-[10px]' name="half-rating-read" onChange={(e) => console.log(e.target.value)} precision={0.5} />
+                    {rating.isLoading && (
+                        <div className='bg-primary absolute min-h-[2em]'>
+                            <FaSpinner
+                                className="animate-spin absolute inset-0 m-auto"
+                                style={{ width: "1em", height: "1em" }}
+                            />
+                        </div>
+                    )}
+                    {!rating.isLoading &&
+                        <>
+                            <p className='text-[0.75em] mb-[6px]'>Leave a rating of<span className='text-[#000000] font-[700]'> seller</span></p>
+                            <Rating size='large' className='mb-[10px]' name="half-rating-read" onChange={handleRating} precision={0.5} />
+                        </>}
                 </div>}
             </div>
             <hr className='mt-[10px] w-full mb-[15px]' />

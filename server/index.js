@@ -8,13 +8,13 @@ import mongoose from "mongoose"
 import cron from 'node-cron'
 import { Server } from 'socket.io'
 import { corsOptions } from './config/corsOptions.js'
+import { checkDiscTime } from './controllers/discController.js'
 import { errorHandler } from './middlewares/errorHandler.js'
+import chatRoutes from './routes/chatRoutes.js'
+import deliveryRoutes from './routes/deliveryRoutes.js'
 import discRoutes from './routes/discRoutes.js'
 import token from './routes/tokenRoutes.js'
 import userRoutes from './routes/userRoutes.js'
-import deliveryRoutes from './routes/deliveryRoutes.js'
-import chatRoutes from './routes/chatRoutes.js'
-import { checkDiscTime } from './controllers/discController.js'
 
 const app = express()
 const server = http.createServer(app);
@@ -87,8 +87,6 @@ mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTop
 server.listen(5001, () => {
     console.log(`Server listening on port ${5001}`);
 });
-
-
 
 app.use(errorHandler)
 
