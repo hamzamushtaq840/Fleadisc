@@ -86,7 +86,7 @@ const PrivateListings = () => {
     let finishedCost = 0;
     let activeCost = 0;
 
-    finishedDiscsQuery.data.data?.forEach(disc => {
+    finishedDiscsQuery?.data?.data?.forEach(disc => {
         if (disc.buyer === null) {
             finishedCost += parseInt(disc.startingPrice, 10); // Convert string to number with base 10 and then add
         } else {
@@ -94,7 +94,7 @@ const PrivateListings = () => {
         }
     });
 
-    activeDiscsQuery.data.data?.forEach(disc => {
+    activeDiscsQuery?.data?.data?.forEach(disc => {
         activeCost += parseInt(disc.startingPrice, 10);
     });
 

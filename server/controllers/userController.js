@@ -8,6 +8,7 @@ import { RefreshToken } from "../models/refreshToken.js";
 
 export const signinController = tryCatch(async (req, res) => {
     if (req.body.googleAccessToken) {
+        console.log('abc');
         const userInfo = await axios.get(
             'https://www.googleapis.com/oauth2/v3/userinfo',
             { headers: { Authorization: `Bearer ${req.body.googleAccessToken}` } },
@@ -89,7 +90,7 @@ export const signupController = tryCatch(async (req, res) => {
         if (user) {
             throw new AppError('account_exist', 'Email already exists', 401)
         }
-        await User.create({ name: userInfo.data.name, email: userInfo.data.email, profilePicture: userInfo.data.picture })
+        await User.create({ name: userInfo.data.name, email: userInfo.data.email, profilePicture: userInfo.data.picture, country: 'SE', currency: 'SEK' })
         res.status(201).json({ message: 'User registered successfully' });
     }
     else {
