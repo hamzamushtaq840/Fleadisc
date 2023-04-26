@@ -4,10 +4,8 @@ import signin from './../assets/signin.svg';
 import useAuth from '../hooks/useAuth';
 import { Menu, MenuItem } from '@mui/material';
 import { io } from 'socket.io-client';
-import { toast } from 'react-toastify'
-
-
-const settings = ['Profile', 'Logout'];
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from '../api/axios';
 
 const Navbar = () => {
     const location = useLocation();
@@ -15,8 +13,27 @@ const Navbar = () => {
     const [anchorElUser, setAnchorElUser] = useState(null);
     const navigate = useNavigate()
     const { auth, setAuth, setSocket, socket } = useAuth();
-    const [notifications, setNotifications] = useState([{}, {}])
     const [isSocketReady, setIsSocketReady] = useState(false);
+    const queryClient = useQueryClient();
+    let userInfoQuery
+    if (auth.userId) {
+        userInfoQuery = useQuery(['userNotification', auth.userId], () => axios.get(`/user/getNotification/${auth.userId}`), {
+            onSuccess: () => {
+            },
+            onError: (error) => {
+                console.log(error);
+            }
+        });
+    }
+
+    const setRead = useMutation((data) => axios.post(`/user/setReadNotifications`, data), {
+        onSuccess: (res) => {
+            queryClient.invalidateQueries('userNotification')
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
 
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -65,10 +82,26 @@ const Navbar = () => {
         };
     }, [auth.userId]);
 
+    // useEffect(() => {
+    //     if (isSocketReady && socket) { // Check if socket is ready before using it
+    //         socket.on('refetchChat', (data) => {
+    //             if (location.pathname === '/delivery');
+    //             {
+    //                 console.log('ok');
+    //             }
+    //         })
+    //     }
+    // }, [isSocketReady, socket]);
+
     useEffect(() => {
         if (isSocketReady && socket) { // Check if socket is ready before using it
-            socket.on('refetchChat', (data) => {
-                console.log(location.pathname);
+            socket.on('refetchNotification', (data) => {
+                if (location.pathname === '/delivery') {
+                    setRead.mutate({ userId: auth.userId })
+                }
+                else {
+                    queryClient.invalidateQueries('userNotification')
+                }
             })
         }
     }, [isSocketReady, socket]);
@@ -89,12 +122,12 @@ const Navbar = () => {
                         <svg width="19" height="19"><path d="M0.125 0.125V8.45833H8.45833V0.125H0.125ZM6.375 6.375H2.20833V2.20833H6.375V6.375ZM0.125 10.5417V18.875H8.45833V10.5417H0.125ZM6.375 16.7917H2.20833V12.625H6.375V16.7917ZM10.5417 0.125V8.45833H18.875V0.125H10.5417ZM16.7917 6.375H12.625V2.20833H16.7917V6.375ZM10.5417 10.5417V18.875H18.875V10.5417H10.5417ZM16.7917 16.7917H12.625V12.625H16.7917V16.7917Z" /></svg>
                         <h1 className='text-[.75em]'>Listings</h1>
                     </NavLink>
-                    <NavLink to="/delivery" className="nav-link flex flex-col gap-[3px] min-w-[50px] items-center text-[#00000]" activeclassname="active">
+                    <NavLink onClick={() => { if (auth.userId) { setRead.mutate({ userId: auth.userId }) } }} to="/delivery" className="nav-link flex flex-col gap-[3px] min-w-[50px] items-center text-[#00000]" activeclassname="active">
                         <div className='mt-[-3px] relative'>
                             <svg width="25" height="25" >
                                 <path d="M8.7625 16.0714H0V19.6429H8.7625V25L13.75 17.8571L8.7625 10.7143V16.0714ZM16.2375 14.2857V8.92857H25V5.35714H16.2375V0L11.25 7.14286L16.2375 14.2857Z" />
                             </svg>
-                            {notifications.length > 0 && <span className='absolute bg-[#f71c1cd2] right-[-20px] text-[#ffff] flex justify-center items-center rounded-full top-0 w-[18px] h-[18px] text-[9px]'>{notifications.length}</span>}
+                            {userInfoQuery?.data?.data?.length > 0 && <span className='absolute bg-[#f71c1cd2] right-[-20px] text-[#ffff] flex justify-center items-center rounded-full top-0 w-[18px] h-[18px] text-[9px]'>{userInfoQuery?.data?.data?.length}</span>}
                         </div>
                         <h1 className='text-[.75em] mt-[-3px]'>Delivery</h1>
                     </NavLink>

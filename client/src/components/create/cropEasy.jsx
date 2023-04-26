@@ -11,6 +11,7 @@ import {
 import React, { useState } from 'react';
 import Cropper from 'react-easy-crop';
 import getCroppedImg from '../../utils/cropImage';
+import { styled } from '@mui/material/styles';
 
 const CropEasy = ({ photoURL, setOpenCrop, onFinish, dontCrop }) => {
     const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -21,6 +22,40 @@ const CropEasy = ({ photoURL, setOpenCrop, onFinish, dontCrop }) => {
     const cropComplete = (croppedArea, croppedAreaPixels) => {
         setCroppedAreaPixels(croppedAreaPixels);
     };
+
+    const ColorButton = styled(Button)(({ theme }) => ({
+        backgroundColor: '#F21111',
+        fontSize: '.7em',
+        cursor: "pointer",
+        color: "#ffffff",
+        borderRadius: '4px',
+        borderColor: '#F21111',
+        letterSpacing: "1px",
+        transition: "transform 80ms ease-in",
+        '&:hover': {
+            backgroundColor: '#F21111',
+            borderColor: '#F21111',
+        },
+    }));
+
+    const ColorButton2 = styled(Button)(({ theme }) => ({
+        backgroundColor: '#81B29A',
+        fontSize: '.7em',
+        cursor: "pointer",
+        color: "#ffffff",
+        borderRadius: '4px',
+        borderColor: '#81B29A',
+        letterSpacing: "1px",
+        transition: "transform 80ms ease-in",
+        '&:hover': {
+            backgroundColor: '#81B29A',
+            borderColor: '#81B29A',
+        },
+    }));
+
+    const Slider2 = styled(Slider)(({ theme }) => ({
+        color: "#81B29A",
+    }));
 
     const cropImage = async () => {
         try {
@@ -55,7 +90,7 @@ const CropEasy = ({ photoURL, setOpenCrop, onFinish, dontCrop }) => {
                         crop={crop}
                         zoom={zoom}
                         rotation={rotation}
-                        aspect={20 / 20}
+                        aspect={16 / 16}
                         showGrid={true}
                         onZoomChange={setZoom}
                         onRotationChange={setRotation}
@@ -67,7 +102,7 @@ const CropEasy = ({ photoURL, setOpenCrop, onFinish, dontCrop }) => {
                     <Box sx={{ width: '100%', mb: 1 }}>
                         <Box>
                             <Typography>Zoom: {zoomPercent(zoom)}</Typography>
-                            <Slider
+                            <Slider2
                                 valueLabelDisplay="auto"
                                 valueLabelFormat={zoomPercent}
                                 min={1}
@@ -79,7 +114,7 @@ const CropEasy = ({ photoURL, setOpenCrop, onFinish, dontCrop }) => {
                         </Box>
                         <Box>
                             <Typography>Rotation: {rotation + '°'}</Typography>
-                            <Slider
+                            <Slider2
                                 valueLabelDisplay="auto"
                                 min={0}
                                 max={360}
@@ -95,20 +130,22 @@ const CropEasy = ({ photoURL, setOpenCrop, onFinish, dontCrop }) => {
                             flexWrap: 'wrap',
                         }}
                     >
-                        <Button
+                        <ColorButton
+                            className='buttonAnimation'
                             variant="outlined"
                             startIcon={<Cancel />}
                             onClick={() => { dontCrop(photoURL); setOpenCrop(false) }}
                         >
                             Dont Crop
-                        </Button>
-                        <Button
+                        </ColorButton>
+                        <ColorButton2
+                            className='buttonAnimation'
                             variant="contained"
                             startIcon={<CropIcon />}
                             onClick={cropImage}
                         >
                             Crop
-                        </Button>
+                        </ColorButton2>
                     </Box>
                 </DialogActions>
 

@@ -5,6 +5,7 @@ import { User } from '../models/user.js'
 import { tryCatch } from '../utils/tryCatch.js';
 import AppError from '../utils/AppError.js';
 import { RefreshToken } from "../models/refreshToken.js";
+import { Notification } from "../models/notification.js";
 
 export const signinController = tryCatch(async (req, res) => {
     if (req.body.googleAccessToken) {
@@ -237,11 +238,24 @@ export const editUser = tryCatch(async (req, res) => {
     user.shippingAddress.country = updates.shippingCountry
     user.paymentMethods = updates.paymentMethods
     user.shippingCostPaidBy = updates.shippingCostPaidBy
-
     // Save the updated user document to the database
     await user.save();
-
     // Send the updated user document as the response
     res.json(user);
-
 })
+
+export const getNotifications = tryCatch(async (req, res) => {
+    const { userId } = req.params;
+    const notifications = await Notification.find({ user: userId, read: false, type: "Disc" })
+    res.status(200).json(notifications);
+});
+
+export const setReadNotifications = tryCatch(async (req, res) => {
+    const { userId } = req.body;
+    const notifications = await Notification.find({ user: userId, read: false, type: "Disc" })
+    notifications.forEach(async (notification) => {
+        notification.read = true
+        await notification.save()
+    })
+    res.status(200).json({ message: "Notifications set to read" });
+});

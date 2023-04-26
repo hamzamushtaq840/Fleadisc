@@ -229,7 +229,6 @@ export const getSellingCancel = tryCatch(async (req, res) => {
             model: 'User'
         }
     }).populate('buyerId')
-    console.log(listing);
     res.status(200).json(listing);
 });
 
@@ -286,8 +285,13 @@ export const offerToNextBidder = tryCatch(async (req, res) => {
     await CancelDisc.findOneAndRemove({ _id: cancelId })
     let receiver = getUsers(sellerId);
     let receiver2 = getUsers(buyerId);
-    io.to(receiver.socketId).emit('refetchSelling');
-    io.to(receiver2.socketId).emit('refetchBuying');
+    if (receiver && receiver.socketId) {
+        io.to(receiver.socketId).emit('refetchSelling');
+    }
+    if (receiver2 && receiver2.socketId) {
+        io.to(receiver2.socketId).emit('refetchBuying');
+    }
     res.status(200).json({ message: 'success' });
 });
+
 

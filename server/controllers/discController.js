@@ -2,8 +2,9 @@ import { Disc } from '../models/disc.js';
 import { tryCatch } from '../utils/tryCatch.js';
 import AppError from '../utils/AppError.js';
 import { groupBy } from 'lodash-es';
-import { io } from '../index.js';
+import { getUsers, io } from '../index.js';
 import { TempDisc } from '../models/tempDisc.js';
+import { Notification } from '../models/notification.js';
 
 export const postDisc = tryCatch(async (req, res) => {
     const { seller, pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime } = req.body;
@@ -214,6 +215,23 @@ export const checkDiscTime = async () => {
                                 seller: sellerId,
                                 disc: [{ discId: disc._id }]
                             });
+                        }
+                        await Notification.create({
+                            user: highestBid.user,
+                            type: 'Disc'
+                        });
+                        await Notification.create({
+                            user: sellerId,
+                            type: 'Disc'
+                        });
+                        let receiver = getUsers(sellerId);
+                        let receiver2 = getUsers(highestBid.user);
+                        if (receiver && receiver.socketId) {
+
+                            io.to(receiver.socketId).emit('refetchNotification');
+                        }
+                        if (receiver2 && receiver2.socketId) {
+                            io.to(receiver2.socketId).emit('refetchNotification');
                         }
                         io.emit("bid_added");
                     } else {
