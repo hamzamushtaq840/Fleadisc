@@ -7,19 +7,7 @@ import { ColorRing } from 'react-loader-spinner';
 import { io } from 'socket.io-client'
 import { toast } from 'react-toastify'
 import Show2 from './Show2';
-
-const Loader =
-    <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>
-        <ColorRing
-            visible={true}
-            height="80"
-            width="80"
-            ariaLabel="blocks-loading"
-            wrapperStyle={{}}
-            wrapperClass="blocks-wrapper"
-            colors={['#494949', '#494949', '#494949', '#494949', '#494949']}
-        />
-    </div>
+import Loader from '../Loader';
 
 const Buying = () => {
     const { auth, socket } = useAuth()
@@ -261,7 +249,6 @@ const Buying = () => {
 
     const cancelQuery = useQuery(['buyingCancel', auth.userId], () => axios.get(`/delivery/getBuyingCancel/${auth.userId}`), {
         onSuccess: (res) => {
-            console.log(res.data);
         },
         onError: (error) => {
             console.log(error);
@@ -281,18 +268,7 @@ const Buying = () => {
 
     if (buyingQuery.isLoading || buyingQuery.isRefetching && !buyingQuery.data) {
         return (
-            <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>
-                <ColorRing
-                    visible={true}
-                    height="80"
-                    width="80"
-                    ariaLabel="blocks-loading"
-                    wrapperStyle={{}}
-                    wrapperClass="blocks-wrapper"
-                    colors={['#494949', '#494949', '#494949', '#494949', '#494949']}
-                />
-            </div>
-
+            <Loader />
         )
     }
     else
@@ -300,7 +276,7 @@ const Buying = () => {
             <div className=' bg-[#FAFAFA] flex justify-center px-[1.25em] py-[0.625em] text-[1.2rem] xsm:text-[1rem] sm:text-[1rem] '>
                 <div className='w-[80vw] sm:w-[100vw] xsm:w-[100vw]'>
                     {buyingQuery?.data?.data?.length === 0 ? (
-                        <p className='flex text-center min-h-[40vh] items-center justify-center text-[1em]'>No disc Found</p>
+                        <p className='flex text-center min-h-[40vh] items-center justify-center text-[1em] text-[#00000080]'>No Purchase Found</p>
                     ) : (
                         buyingQuery?.data?.data?.map((value, index) => {
                             return (

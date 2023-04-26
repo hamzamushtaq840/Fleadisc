@@ -44,12 +44,10 @@ const Navbar = () => {
 
     useEffect(() => {
         const socket = io('http://localhost:5001');
-        console.log('socket changed ran');
 
         // Emit 'newUser' event when auth.userId changes
         if (auth.userId) {
             socket.emit('newUser', auth.userId);
-            console.log(socket);
             setSocket(socket);
         }
 

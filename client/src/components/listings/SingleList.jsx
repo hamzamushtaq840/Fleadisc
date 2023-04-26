@@ -112,7 +112,7 @@ const SingleList = ({ value, index, discs }) => {
                         }
                         } >{value.seller.name}</h1>
                         <div className='ml-[-0.2em] flex items-center gap-[0.3125em]'>
-                            <Rating size='small' name="half-rating-read" defaultValue={value.rating} precision={0.5} readOnly />
+                            <Rating size='small' name="half-rating-read" value={Math.min(Math.max(value.seller.rating.reduce((acc, rating) => acc + rating.rating, 0) / value.seller.rating.length, 0), 5)} precision={0.5} readOnly />
                             <p className='text-[0.7em] font-[500]'>({value.seller.rating.length})</p>
                         </div>
                     </div>

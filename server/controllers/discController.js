@@ -3,7 +3,6 @@ import { tryCatch } from '../utils/tryCatch.js';
 import AppError from '../utils/AppError.js';
 import { groupBy } from 'lodash-es';
 import { io } from '../index.js';
-import { FinishedListing } from '../models/finishedListing.js';
 import { TempDisc } from '../models/tempDisc.js';
 
 export const postDisc = tryCatch(async (req, res) => {
@@ -193,16 +192,26 @@ export const checkDiscTime = async () => {
                         const highestBid = disc.bids.sort(
                             (a, b) => b.bidPrice - a.bidPrice
                         )[0];
-
                         const buyer = {
                             user: highestBid.user,
                             buyPrice: highestBid.bidPrice,
                             createdAt: new Date(),
                         };
+                        const sellerId = disc.seller
                         disc.buyer = buyer;
                         disc.isActive = false;
+                        const currentDate = new Date();
+                        // Get the year, month, and day from the current date
+                        const year = currentDate.getFullYear();
+                        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                        const day = String(currentDate.getDate()).padStart(2, '0');
+                        // Get the hours and minutes from the current time
+                        const hours = String(currentDate.getHours()).padStart(2, '0');
+                        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                        disc.endDay = `${year}-${month}-${day}`;
+                        disc.endTime = `${hours}:${minutes}`;
                         await disc.save();
-                        const existingTempDisc = await TempDisc.findOne({ buyer: highestBid.user, seller: disc.seller, paymentSent: false }).lean();
+                        const existingTempDisc = await TempDisc.findOne({ buyer: highestBid.user, seller: sellerId, paymentSent: false }).lean();
                         if (existingTempDisc) {
                             await TempDisc.updateOne(
                                 { _id: existingTempDisc._id },
@@ -212,16 +221,16 @@ export const checkDiscTime = async () => {
                         else {
                             await TempDisc.create({
                                 buyer: highestBid.user,
-                                seller: disc.seller,
+                                seller: sellerId,
                                 disc: [{ discId: disc._id }]
                             });
                         }
                         io.emit("bid_added");
-
                     } else {
                         let listing = await Disc.findOne({ _id: disc._id });
                         listing.isActive = false
                         listing.isFinished = true
+                        listing.buyer = null
                         await listing.save()
                         io.emit("bid_added");
                     }

@@ -3,10 +3,8 @@ import { tryCatch } from '../utils/tryCatch.js';
 import AppError from '../utils/AppError.js';
 import { TempDisc } from '../models/tempDisc.js';
 import { User } from '../models/user.js';
-import { FinishedListing } from '../models/finishedListing.js';
 import { getUsers, io } from '../index.js';
 import { CancelDisc } from '../models/cancelDiscs.js';
-import mongoose from 'mongoose';
 
 export const confirmPurchase = tryCatch(async (req, res) => {
     const { id, buyerId } = req.body;

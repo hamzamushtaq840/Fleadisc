@@ -129,7 +129,7 @@ const PrivateInfoEdit = () => {
 
     return (
         <div className='flex justify-center'>
-            <div className='flex flex-col xsm:w-[93%] sm:w-[93%] xsm:text-[1rem] sm:text-[1rem] text-[1.2rem] w-[80%] xsm:gap-[0.6875em] sm:gap-[0.6875em] gap-[1em] justify-center mt-[1.1875em]'>
+            <div className='flex flex-col xsm:w-[90%] sm:w-[90%] xsm:text-[1rem] sm:text-[1rem] text-[1.2rem] w-[80%] xsm:gap-[0.6875em] sm:gap-[0.6875em] gap-[1em] justify-center mt-[20px]'>
                 <div className='flex w-full flex-col gap-[0.5em]'>
                     <label className='text-[0.75em] font-[600]' htmlFor="name">Full Name</label>
                     <input name='name'

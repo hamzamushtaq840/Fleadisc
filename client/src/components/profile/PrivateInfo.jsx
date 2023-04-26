@@ -26,7 +26,7 @@ const PrivateInfo = () => {
     else
         return (
             <>
-                <div className='flex mx-[10px] xsm:justify-between sm:justify-between px-[10px] mt-[20px] gap-[0.938em] justify-center md:gap-[5.5em] lg:gap-[8.4em] xl:gap-[8em] 2xl:gap-[10em]'>
+                <div className='flex mx-[20px] xsm:justify-between sm:justify-between px-[10px] mt-[20px] gap-[0.938em] justify-center md:gap-[5.5em] lg:gap-[8.4em] xl:gap-[8em] 2xl:gap-[10em]'>
                     <div className='flex gap-[20px] flex-col'>
                         <div className='flex flex-col'>
                             <div>
@@ -34,8 +34,12 @@ const PrivateInfo = () => {
                                 <h1 className='text-[0.5em] font-[500] text-[#595959bf]' >Joined {userInfoQuery?.data?.data?.createdAt.substring(0, 4)}</h1>
                             </div>
                             <div className='flex items-center gap-[3px]'>
-                                <p className='text-[0.75em] font-[700]'>4.0</p>
-                                <Rating size='small' name="half-rating-read" defaultValue={3.5} precision={0.5} readOnly />
+                                <p className='text-[0.75em] font-[700]'>
+                                    {isNaN(userInfoQuery?.data?.data?.rating.reduce((acc, rating) => acc + rating.rating, 0) / userInfoQuery?.data?.data?.rating.length)
+                                        ? 0
+                                        : Math.min(Math.max(userInfoQuery?.data?.data?.rating.reduce((acc, rating) => acc + rating.rating, 0) / userInfoQuery?.data?.data?.rating.length, 0), 5).toFixed(1)}
+                                </p>
+                                <Rating size='small' name="half-rating-read" value={Math.min(Math.max(userInfoQuery?.data?.data?.rating.reduce((acc, rating) => acc + rating.rating, 0) / userInfoQuery?.data?.data?.rating.length, 0), 5)} precision={0.5} readOnly />
                                 <p className='text-[0.75em] text-[#595959]'>({userInfoQuery?.data?.data?.rating.length})</p>
                             </div>
                         </div>

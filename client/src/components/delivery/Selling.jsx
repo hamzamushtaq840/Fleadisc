@@ -6,20 +6,7 @@ import useAuth from '../../hooks/useAuth';
 import { ColorRing } from 'react-loader-spinner';
 import { toast } from 'react-toastify'
 import Show from './Show';
-
-
-const Loader =
-    <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>
-        <ColorRing
-            visible={true}
-            height="80"
-            width="80"
-            ariaLabel="blocks-loading"
-            wrapperStyle={{}}
-            wrapperClass="blocks-wrapper"
-            colors={['#494949', '#494949', '#494949', '#494949', '#494949']}
-        />
-    </div>
+import Loader from '../Loader';
 
 const Selling = () => {
     const { auth, socket } = useAuth()
@@ -261,6 +248,7 @@ const Selling = () => {
 
     useEffect(() => {
         sellingQuery.refetch()
+        cancelQuery.refetch()
         if (socket) {
             socket.on('refetchSelling', () => {
                 sellingQuery.refetch()
@@ -271,18 +259,7 @@ const Selling = () => {
 
     if (sellingQuery.isLoading || sellingQuery.isRefetching && !sellingQuery.data) {
         return (
-            <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>
-                <ColorRing
-                    visible={true}
-                    height="80"
-                    width="80"
-                    ariaLabel="blocks-loading"
-                    wrapperStyle={{}}
-                    wrapperClass="blocks-wrapper"
-                    colors={['#494949', '#494949', '#494949', '#494949', '#494949']}
-                />
-            </div>
-
+            <Loader />
         )
     }
     else
@@ -290,7 +267,7 @@ const Selling = () => {
             <div className=' bg-[#FAFAFA] flex justify-center px-[1.25em] py-[0.625em] text-[1.2rem] xsm:text-[1rem] sm:text-[1.125rem] '>
                 <div className='w-[80vw] sm:w-[100vw] xsm:w-[100vw]'>
                     {sellingQuery?.data?.data?.length === 0 ? (
-                        <p className='flex text-center min-h-[40vh] items-center justify-center text-[1em]'>No disc Found</p>
+                        <p className='flex text-center min-h-[40vh] items-center justify-center text-[1em] text-[#00000080]'>No Sale Found</p>
                     ) : (
                         sellingQuery?.data?.data?.map((value, index) => (
                             <div key={index}>

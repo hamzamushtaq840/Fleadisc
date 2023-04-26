@@ -6,24 +6,34 @@ import axios from '../../api/axios';
 import back from './../../assets/back.svg';
 import { toast } from 'react-toastify';
 import { getCountryInfoByISO } from '../../utils/iso-country-currency';
+import { FaSpinner } from 'react-icons/fa';
 
 const ChooseCountry = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const registrationState = location.state;
     const [selected, setSelected] = useState("SE");
     const { mutate, isLoading } = useMutation((formData) => {
         return axios.post('/user/register', formData);
     });
 
     const handleCountry = () => {
-        const formData = {
-            name: registrationState.name,
-            email: registrationState.email,
-            password: registrationState.password,
-            country: selected,
-            currency: getCountryInfoByISO(selected).currency,
-        };
+        let formData
+        if (location.state.from === 'google') {
+            formData = {
+                googleAccessToken: location.state.googleAccessToken,
+                country: selected,
+                currency: getCountryInfoByISO(selected).currency,
+            }
+        }
+        else {
+            formData = {
+                name: location.state.registrationState.name,
+                email: location.state.registrationState.email,
+                password: location.state.registrationState.password,
+                country: selected,
+                currency: getCountryInfoByISO(selected).currency,
+            }
+        }
         mutate(formData, {
             onSuccess: (res) => {
                 console.log(res);
@@ -52,7 +62,9 @@ const ChooseCountry = () => {
                         placeholder="Choose a country"
                     />
                 </div>
-                <div className='flex xsm:w-[100%] sm:w-[100%]  '><button className='w-[5.188em] h-[2.313em] text-[0.875em] font-[700] bg-primary text-[#ffff] shadow-2xl rounded-[6px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }} onClick={handleCountry}>{!isLoading ? 'Finish' : 'wait...'}</button></div>
+                <div className='flex xsm:w-[100%] sm:w-[100%]'><button className='relative buttonAnimation w-[5.188em] h-[2.313em] text-[0.875em] font-[700] bg-primary text-[#ffff] shadow-2xl rounded-[6px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }} onClick={handleCountry}>
+                    {!isLoading ? 'Finish' : <FaSpinner className="animate-spin absolute inset-0 m-auto" style={{ fontSize: "0.875em" }} />}
+                </button></div>
             </div>
         </div>
     )

@@ -7,21 +7,17 @@ import back from './../assets/back.svg';
 import google from './../assets/google.svg';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-// import { useAuth0 } from '@auth0/auth0-react';
+import { FaSpinner } from 'react-icons/fa';
 
 const Signin = () => {
     const navigate = useNavigate();
     const [registrationState, setRegistrationState] = useState({ email: '', password: '' })
     const [loginState, setLoginState] = useState({ email: '', password: '' })
     const { setAuth } = useContext(AuthContext)
-    // const { user, loginWithRedirect, isAuthenticated } = useAuth0();
     const { mutate, isLoading } = useMutation((formData) => {
         return axios.post('/user/login', formData);
     });
 
-    // if (isAuthenticated) {
-    //     console.log(user);
-    // }
     const handleSigninChange = (e) => {
         setLoginState({ ...loginState, [e.target.name]: e.target.value })
     }
@@ -46,12 +42,18 @@ const Signin = () => {
     //for google login
     const login = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
-            axios.post('/user/login', { googleAccessToken: tokenResponse.access_token })
-                .then((res) => {
+            mutate({ googleAccessToken: tokenResponse.access_token }, {
+                onSuccess: (res) => {
+                    if (!res.data.profilePicture)
+                        res.data.profilePicture = null
+                    console.log(res.data);
                     setAuth(res.data)
                     navigate('/')
-                })
-                .catch(e => console.log(e))
+                },
+                onError: (err) => {
+                    toast.error(err.response.data.message);
+                },
+            });
         },
         onError: errorResponse => console.log(errorResponse),
     });
@@ -71,7 +73,7 @@ const Signin = () => {
                         <input required type="email" className='p-[0.75em] max-w-[600px] w-full bg-[#F5F5F5] font-sans font-[500] text-[0.875em] border rounded-[4px] border-[#D9D9D9]' placeholder='Email address' value={loginState.email} name="email" onChange={handleSigninChange} />
                         <input required type="password" className='p-[0.75em] max-w-[600px] w-full bg-[#F5F5F5] font-sans font-[500] text-[0.875em] border rounded-[4px] border-[#D9D9D9]' placeholder='Password' value={loginState.password} name="password" onChange={handleSigninChange} />
                         <div className='flex justify-center'>
-                            <button type="submit" className='buttonAnimation w-[7.5em] h-[2.3125em] mt-[9px] text-[0.875em] font-[700] bg-primary text-[#ffff] shadow-2xl rounded-[6px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>{isLoading ? "wait..." : 'Sign in'}</button>
+                            <button type="submit" disabled={isLoading} className='relative buttonAnimation w-[7.5em] h-[2.3125em] mt-[9px] text-[0.875em] font-[700] bg-primary text-[#ffff] shadow-2xl rounded-[6px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>{isLoading ? <FaSpinner className="animate-spin absolute inset-0 m-auto" style={{ fontSize: "0.875em" }} /> : 'Sign in'}</button>
                         </div>
                     </form>
                     <div className='mt-6 mx-4 w-full max-w-[380px] h-[2px] bg-[#D9D9D9]'></div>

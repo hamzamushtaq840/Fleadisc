@@ -142,7 +142,7 @@ const SingleChat = () => {
         if (containerRef.current) {
             containerRef.current.scrollTop = containerRef.current.scrollHeight;
         }
-    }, [chat]);
+    }, [chats.data]);
 
     const messageRead2 = useMutation((data) => axios.post(`/chat/messageRead`, data), {
         onSuccess: (res) => {
@@ -249,7 +249,7 @@ const SingleChat = () => {
                 <img src={location.state.userImage !== null ? location.state.userImage : user} onClick={() => navigate(`/profile/public/${location.state.user2}/listings`)} className="h-[1.5em] rounded-full cursor-pointer" alt="user" />
                 <h1 onClick={() => navigate(`/profile/public/${location.state.user2}/listings`)} className='text-[0.75em] cursor-pointer text-[#595959] font-[700] ml-[0.75em]'>{location.state.userName}</h1>
             </div>
-            {!chat.isLoading ?
+            {!chats.isLoading ?
                 <div className=' flex flex-col ' style={{ height: "calc(100vh - 121px)", scrollBehavior: "smooth" }}>
                     <div className='flex flex-col pb-[10px] flex-1 pt-[1.25em] px-[.6em] xsm:px-[0] sm:px-[0] gap-[0.9375em] overflow-y-auto' ref={containerRef}>
                         {chats?.data?.data?.messages?.map((value, index) => {
@@ -278,7 +278,7 @@ const SingleChat = () => {
                                             </div>
                                         ) : (
                                             <div className='flex px-[0.8125em] justify-center mr-auto items-start' key={index}>
-                                                <img src={user} onClick={() => navigate('/profile/public')} className="mr-[0.5em] mt-[2px] h-[1.875em] cursor-pointer" alt="user" />
+                                                <img src={location.state.userImage !== null ? location.state.userImage : user} onClick={() => navigate(`/profile/public/${location.state.user2}/listings`)} className="mr-[0.5em] mt-[2px] h-[1.875em] cursor-pointer" alt="user" />
                                                 <div className='flex flex-col gap-[5px]'>
                                                     <p className='text-[0.65em] font-[300]'>{value.time}</p>
                                                     <div className='flex justify-center items-center py-[0.675em] px-[1em] rounded-[4px] bg-primary'>
@@ -309,7 +309,7 @@ const SingleChat = () => {
                                         </div>
                                     ) : (
                                         <div className='flex px-[0.8125em] justify-center mr-auto items-start' key={index}>
-                                            <img src={user} onClick={() => navigate('/profile/public')} className="mr-[0.5em] mt-[2px] h-[1.875em] cursor-pointer" alt="user" />
+                                            <img src={location.state.userImage !== null ? location.state.userImage : user} onClick={() => navigate(`/profile/public/${location.state.user2}/listings`)} className="mr-[0.5em] mt-[2px] h-[1.875em] cursor-pointer" alt="user" />
                                             <div className='flex flex-col gap-[5px]'>
                                                 <p className='text-[0.65em] font-[300]'>{value.time}</p>
                                                 <div className='flex justify-center items-center py-[0.675em] px-[1em] rounded-[4px] bg-primary'>
@@ -331,7 +331,7 @@ const SingleChat = () => {
                             onChange={(e) => handleUpload(e)}
                         />
                         <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} placeholder='Write a message' required className='border-[0.5px] px-[0.7125em] text-[0.75em] font-[500] flex-1 mx-4 h-[39px] resize-none rounded-[8px]' />
-                        {message === '' && <label for="fileInput" className="cursor-pointer">
+                        {message === '' && <label htmlFor="fileInput" className="cursor-pointer">
                             <img src={imagesend} className='hey' alt="send an image" />
                         </label>}
                         {message !== '' && <button type='submit'><img src={send} className="cursor-pointer" alt="send message" /></button>}

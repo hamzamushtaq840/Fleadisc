@@ -73,8 +73,8 @@ const CancelSeller = ({ setModel, disc, val }) => {
                 </div>}
 
                 <div className='flex flex-col gap-[11px] mb-[1em] mt-[.5em]'>
-                    <button onClick={() => navigate('/create/relist', { state: disc })} className='py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary button rounded-[2px]'>Re-list</button>
-                    <button onClick={handleRemove} className='py-[0.625em] relative min-h-[2.4625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-[#F21111] button rounded-[2px]'>
+                    <button onClick={() => navigate('/create/relist', { state: disc })} className='buttonAnimation py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary button rounded-[2px]'>Re-list</button>
+                    <button onClick={handleRemove} className='py-[0.625em] buttonAnimation relative min-h-[2.4625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-[#F21111] button rounded-[2px]'>
                         {(cancelBuy.isLoading || giveRating.isLoading) && (
                             <FaSpinner
                                 className="animate-spin absolute inset-0 m-auto"

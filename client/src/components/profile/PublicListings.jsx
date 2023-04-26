@@ -9,19 +9,7 @@ import { useParams } from 'react-router-dom';
 import { getCountryInfoByISO } from '../../utils/iso-country-currency';
 import FinishedListing from './FinishedListing';
 import { ColorRing } from 'react-loader-spinner';
-
-const Loader =
-    <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>
-        <ColorRing
-            visible={true}
-            height="80"
-            width="80"
-            ariaLabel="blocks-loading"
-            wrapperStyle={{}}
-            wrapperClass="blocks-wrapper"
-            colors={['#494949', '#494949', '#494949', '#494949', '#494949']}
-        />
-    </div>
+import Loader from '../Loader';
 
 const PublicListing = () => {
     const { id } = useParams();
@@ -112,35 +100,37 @@ const PublicListing = () => {
 
     if (activeDiscsQuery.isLoading || finishedDiscsQuery.isLoading && !activeDiscsQuery.isLoading.data || !finishedDiscsQuery.data) {
         return (
-            <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>
-                <ColorRing
-                    visible={true}
-                    height="80"
-                    width="80"
-                    ariaLabel="blocks-loading"
-                    wrapperStyle={{}}
-                    wrapperClass="blocks-wrapper"
-                    colors={['#494949', '#494949', '#494949', '#494949', '#494949']}
-                />
-            </div>
+            <Loader />
         )
     }
     else
         return (
-            <div className='flex items-center   flex-col mt-[20px] gap-[30px]'>
-                <div className={`relative  w-[100%] ${screenSize.width > 768 ? "px-[25px] " : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+            <div className='flex items-center flex-col mt-[25px] gap-[30px]'>
+                {activeDiscsQuery?.data?.data?.length === 0 &&
+                    <div className='flex w-full flex-col'>
+                        <h1 className='font-[700] w-full px-[25px] text-[1.25em] mb-[15px]'>Active Listings</h1>
+                        <div className='flex justify-center text-[.9em] min-h-[30vh] text-[#00000080] items-center w-full'>No Active Listings</div>
+                    </div>
+                }
+                {activeDiscsQuery?.data?.data?.length > 0 && <div className={`relative  w-[100%] ${screenSize.width > 768 ? "px-[25px] " : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                     <h1 className='font-[700] pl-[5px] text-[1.25em] mb-[15px]'>Active Listings</h1>
                     {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
                     <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[5px]  ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"} pb-[5px] gap-[10px] mt-[11px] `}>
-                        {activeDiscsQuery?.data?.data.map((val, index) => {
+                        {activeDiscsQuery?.data?.data?.map((val, index) => {
                             return (
                                 <SingleListCard key={index} val={val} seller={val.seller} index={index} />
                             )
                         })}
                     </div>
                     {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
-                </div>
-                <div className={`relative  w-[100%] ${screenSize.width > 768 ? "px-[25px]" : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                </div>}
+                {finishedDiscsQuery?.data?.data?.length === 0 &&
+                    <div className='flex w-full flex-col'>
+                        <h1 className='font-[700] w-full px-[25px] text-[1.25em] mb-[15px]'>Finished Listings</h1>
+                        <div className='flex justify-center text-[.9em] min-h-[30vh] text-[#00000080] items-center w-full'>No Finished Listings</div>
+                    </div>
+                }
+                {finishedDiscsQuery?.data?.data?.length > 0 && <div className={`relative  w-[100%] ${screenSize.width > 768 ? "px-[25px]" : "pl-[18px]"}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                     <div className='flex'>
                         <h1 className='font-[700] pl-[5px] text-[1.25em] mb-[5px]'>Finished Listings</h1>
                     </div>
@@ -153,7 +143,7 @@ const PublicListing = () => {
                         })}
                     </div>
                     {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
-                </div>
+                </div>}
             </div>
         )
 }

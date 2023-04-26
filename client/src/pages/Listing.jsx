@@ -15,8 +15,8 @@ import Loader from '../components/Loader';
 
 const Listing = () => {
     const navigate = useNavigate()
-    const [selected, setSelected] = useState('SE');
-    const [appliedFilters, setAppliedFilters] = useState([]);
+    const [selected, setSelected] = useState('PK');
+    const [appliedFilters, setAppliedFilters] = useState(['country']);
     const [searchInput, setSearchInput] = useState('');
     const [moreFilters, setMoreFilters] = useState(false)
     const [filteredData, setFilteredData] = useState([])
@@ -43,7 +43,7 @@ const Listing = () => {
             applyFilters(appliedFilters)
             return response.data;
         },
-        { staleTime: Infinity }
+        // { staleTime: Infinity }
     );
     let followingDataQuery;
     let followingData;
@@ -77,13 +77,11 @@ const Listing = () => {
         };
     }, []);
 
-
     if (Object.keys(auth).length !== 0) {
         followingDataQuery = useMemo(
             () => ['following', { userId: auth.userId }],
             [auth.userId]
         );
-
         ({
             data: followingData,
         } = useQuery(
@@ -104,9 +102,9 @@ const Listing = () => {
             tempDiscs = listingsData;
         }
         if (appliedFilters2.length > 0) {
-            tempDiscs = tempDiscs.map((disc) => {
-                const filteredDiscs = disc.discs.filter((d) => {
-                    return appliedFilters2.every((filter) => {
+            tempDiscs = tempDiscs?.map((disc) => {
+                const filteredDiscs = disc?.discs?.filter((d) => {
+                    return appliedFilters2?.every((filter) => {
                         if (filter === "shortOnTime") {
                             const endDateTime = moment(`${d.endDay} ${d.endTime}`, "YYYY-MM-DD HH:mm");
                             const twoHoursFromNow = moment().add(10, "hours");
@@ -140,6 +138,9 @@ const Listing = () => {
                         if (filter === "range") {
                             return d.range === range
                         }
+                        if (filter === "country") {
+                            return d.seller.country === selected
+                        }
                         if (filter === "popular") {
                             return d.bids.length > 5;
                         }
@@ -151,7 +152,7 @@ const Listing = () => {
                     discs: filteredDiscs,
                 };
             });
-            tempDiscs = tempDiscs.filter((disc) => disc.discs.length > 0);
+            tempDiscs = tempDiscs?.filter((disc) => disc.discs.length > 0);
             setData(tempDiscs);
         } else {
             if (searchInput !== '') {
@@ -163,8 +164,14 @@ const Listing = () => {
     };
 
     useEffect(() => {
+        if (listingsData) {
+            applyFilters(appliedFilters);
+        }
+    }, [listingsData, appliedFilters]);
+
+    useEffect(() => {
         applyFilters(appliedFilters);
-    }, [brand, condition, appliedFilters]);
+    }, [brand, condition, appliedFilters, selected]);
 
     const handleBrand = (e) => {
         setBrand(e.target.value)
@@ -251,7 +258,6 @@ const Listing = () => {
 
     const handleCountry = (country) => {
         setSelected(country)
-        // appliedFilters(tempFilters)
     }
 
     return (
@@ -275,20 +281,20 @@ const Listing = () => {
                         searchable={true}
                         alignOptionsToRight={true}
                         onSelect={(code) => { handleCountry(code) }}
-                        className='min-w-[125px] xsm:min-w-[0px] text-text font-sans'
+                        className='min-w-[125px] xsm:min-w-[0px] text-text  font-sans'
                         placeholder=""
                         showSelectedLabel={screenSize.width > 576 ? true : false}
                         showOptionLabel={true}
                     />
                 </div>
-                <select onChange={handleRange} defaultValue='range' className='outline-none w-[74px] text-[#1E1E21] text-center border-[1px] border-[#000000] text-[12px] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
+                <select onChange={handleRange} defaultValue='range' className='outline-none w-[74px] text-[#1E1E21] text-center border-[1px] border-[#000000] text-[.7em] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
                     <option value='range'>Range</option>
                     <option value='Putt & Approach'>Putt & Approach</option>
                     <option value='Midrange'>Midrange</option>
                     <option value='Fairway drivers'>Fairway drivers</option>
                     <option value='Distance Drivers'>Distance Drivers</option>
                 </select>
-                <select onChange={handleBrand} defaultValue='brand' className='outline-none w-[76px]  text-[#1E1E21] text-center border-[1px] border-[#000000] text-[12px] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
+                <select onChange={handleBrand} defaultValue='brand' className='outline-none w-[76px]  text-[#1E1E21] text-center border-[1px] border-[#000000] text-[.7em] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
                     <option value='brand'>Brand</option>
                     <option value='Aerobie'>Aerobie</option>
                     <option value='Alfa Discs'>Alfa Discs</option>
@@ -333,7 +339,7 @@ const Listing = () => {
                     <option value='Wham-O'>Wham-O</option>
                     <option value='Other'>Other</option>
                 </select>
-                <select defaultValue='condition' onChange={handleCondition} className='outline-none w-[92px] text-[#1E1E21] text-center border-[1px] border-[#000000] text-[12px] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
+                <select defaultValue='condition' onChange={handleCondition} className='outline-none w-[92px] text-[#1E1E21] text-center border-[1px] border-[#000000] text-[.7em] leading-[14.63px] h-[27px] rounded-[2px] bg-[white]'>
                     <option value='condition'>Condition</option>
                     <option value='1'>1</option>
                     <option value='2'>2</option>
@@ -349,23 +355,23 @@ const Listing = () => {
                 </select>
             </div>
             <div className='px-[5px] xsm:px-0 flex gap-[10px] xsm:gap-[5px] items-center xsm:justify-start justify-center flex-wrap xsm:w-[320px] w-[405px]  m-auto'>
-                <button className={`w-[57px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('new') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('new')}>New</button>
-                <button className={`w-[66px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('popular') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('popular')}>Popular</button>
-                <button className={`w-[77px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('following') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('following')}>Following</button>
-                <button className={`w-[99px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('shortOnTime') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('shortOnTime')}>Short on time</button>
+                <button className={`w-[57px] h-[27px] rounded-[6px] font-sans text-[0.7em] leading-[15px] text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('new') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('new')}>New</button>
+                <button className={`w-[66px] h-[27px] rounded-[6px] font-sans text-[0.7em] leading-[15px] text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('popular') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('popular')}>Popular</button>
+                <button className={`w-[77px] h-[27px] rounded-[6px] font-sans text-[0.7em] leading-[15px] text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('following') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('following')}>Following</button>
+                <button className={`w-[99px] h-[27px] rounded-[6px] font-sans text-[0.7em] leading-[15px] text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('shortOnTime') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('shortOnTime')}>Short on time</button>
                 {moreFilters && <>
-                    <button className={`w-[74px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('named') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('named')}>Named</button>
-                    <button className={`w-[79px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('unamed') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('unamed')}>Unamed</button>
-                    <button className={`w-[50px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('dyed') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('dyed')}>Dyed</button>
-                    <button className={`w-[87px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('collectible') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('collectible')}>Collectible</button>
-                    <button className={`w-[59px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('blank') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('blank')}>Blank</button>
-                    <button className={`w-[68px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('firstRun') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('firstRun')}>First Run</button>
-                    <button className={`w-[51px] h-[27px] rounded-[6px] font-sans text-[12px] leading-[15px]text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('glow') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('glow')} >Glow</button>
+                    <button className={`w-[74px] h-[27px] rounded-[6px] font-sans text-[0.7em] leading-[15px] text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('named') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('named')}>Named</button>
+                    <button className={`w-[79px] h-[27px] rounded-[6px] font-sans text-[0.7em] leading-[15px] text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('unamed') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('unamed')}>Unamed</button>
+                    <button className={`w-[50px] h-[27px] rounded-[6px] font-sans text-[0.7em] leading-[15px] text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('dyed') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('dyed')}>Dyed</button>
+                    <button className={`w-[87px] h-[27px] rounded-[6px] font-sans text-[0.7em] leading-[15px] text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('collectible') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('collectible')}>Collectible</button>
+                    <button className={`w-[59px] h-[27px] rounded-[6px] font-sans text-[0.7em] leading-[15px] text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('blank') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('blank')}>Blank</button>
+                    <button className={`w-[68px] h-[27px] rounded-[6px] font-sans text-[0.7em] leading-[15px] text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('firstRun') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('firstRun')}>First Run</button>
+                    <button className={`w-[51px] h-[27px] rounded-[6px] font-sans text-[0.7em] leading-[15px] text-[#1E1E21] font-medium hover:text-[black] border-[1px] hover:border-[#81B29A] hover:bg-[#81B29A33] ${appliedFilters.includes('glow') ? "border-[#81B29A] bg-[#81B29A33]" : ""}`} onClick={() => handleFilterClick('glow')} >Glow</button>
                 </>}
             </div>
             <div className='flex justify-start xsm:w-[320px] w-[405px] m-auto'>
                 <div className='flex justify-start'>
-                    <p onClick={() => setMoreFilters((prev) => !prev)} className='text-[0.75em] text-[#595959] mt-[10px] cursor-pointer'>{moreFilters ? 'Close more filters' : 'Show more filters'}</p>
+                    <p onClick={() => setMoreFilters((prev) => !prev)} className='text-[0.75em] text-[#595959] mt-[10px] hover:underline cursor-pointer'>{moreFilters ? 'Close more filters' : 'Show more filters'}</p>
                 </div>
             </div>
             {(isLoadingListings) ? (
@@ -375,12 +381,12 @@ const Listing = () => {
             ) : (
                 <div className='flex flex-col xsm:w-full sm:w-full w-[90%] m-auto overflow-hidden mb-[50px]'>
                     {listingsData?.length === 0 ?
-                        <p className='mt-[20px] text-[1em] font-[500] text-center'>No discs found</p>
+                        <p className='mt-[20px] text-[1em] min-h-[30vh] flex items-center justify-center font-[500] text-center text-[#0000006f]'>No discs found</p>
                         :
                         listingsData?.length > 0 ?
                             (appliedFilters.length > 0 || searchInput !== '') ?
                                 data?.length === 0
-                                    ? <p className='mt-[20px] min-h-[20vh] flex items-center justify-center text-[1em] font-[500] text-center'>No discs found</p>
+                                    ? <p className='mt-[20px] text-[1em] min-h-[30vh] flex items-center justify-center font-[500] text-center text-[#0000006f]'>No discs found</p>
                                     : data?.map((value, index) => {
                                         return (
                                             <React.Fragment key={index}>
@@ -397,7 +403,7 @@ const Listing = () => {
                                     )
                                 })
                             :
-                            <p className='mt-[20px] text-[1em] font-[500] text-center'>No discs found</p>
+                            <p className='mt-[20px] text-[1em] min-h-[30vh] flex items-center justify-center font-[500] text-center text-[#0000006f]'>No discs found</p>
                     }
                 </div>
             )}

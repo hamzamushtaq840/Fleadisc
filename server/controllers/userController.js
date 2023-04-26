@@ -43,7 +43,7 @@ export const signinController = tryCatch(async (req, res) => {
         // check if user exists
         const user = await User.findOne({ email });
         if (!user) { throw new AppError('account_not_found', 'Please create an account', 401) }
-        if (user && user.password === undefined) { throw new AppError('gmail_account', 'Sign in with gmail', 401) }
+        if (user && user.password === undefined) { throw new AppError('gmail_account', 'Sign in with google', 401) }
 
         // match password
         const isPasswordOk = await bcrypt.compare(password, user.password);
@@ -90,7 +90,7 @@ export const signupController = tryCatch(async (req, res) => {
         if (user) {
             throw new AppError('account_exist', 'Email already exists', 401)
         }
-        await User.create({ name: userInfo.data.name, email: userInfo.data.email, profilePicture: userInfo.data.picture, country: 'SE', currency: 'SEK' })
+        await User.create({ name: userInfo.data.name, email: userInfo.data.email, profilePicture: userInfo.data.picture, country: req.body.country, currency: req.body.currency })
         res.status(201).json({ message: 'User registered successfully' });
     }
     else {
@@ -108,7 +108,19 @@ export const signupController = tryCatch(async (req, res) => {
 })
 
 export const checkEmail = tryCatch(async (req, res) => {
-    const user = await User.findOne({ email: req.body.email });
+    let email
+    if (req.body.from === 'google') {
+        const userInfo = await axios.get(
+            'https://www.googleapis.com/oauth2/v3/userinfo',
+            { headers: { Authorization: `Bearer ${req.body.googleAccessToken}` } },
+        );
+        email = userInfo.data.email
+    }
+    else {
+        email = req.body.email;
+    }
+    const user = await User.findOne({ email: email });
+
     if (user) {
         throw new AppError('account_exist', 'Email already exists', 401)
     }

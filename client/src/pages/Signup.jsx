@@ -6,6 +6,7 @@ import back from './../assets/back.svg';
 import google from './../assets/google.svg';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
+import { FaSpinner } from 'react-icons/fa'
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -20,9 +21,9 @@ const Signup = () => {
 
     const handleRegistration = (e) => {
         e.preventDefault()
-        mutate({ email: registrationState.email }, {
-            onSuccess: (res) => {
-                navigate('/signup/country', { state: registrationState })
+        mutate({ email: registrationState.email, from: 'simple' }, {
+            onSuccess: () => {
+                navigate('/signup/country', { state: { registrationState: registrationState, from: 'simple' } })
             },
             onError: (err) => {
                 toast.error(err.response.data.message);
@@ -32,12 +33,21 @@ const Signup = () => {
 
     const register = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
-            axios.post('/user/register', { googleAccessToken: tokenResponse.access_token })
-                .then((res) => {
-                    if (res.status === 201)
-                        navigate('/signup/country')
-                })
-                .catch(e => console.log(e))
+            mutate({ from: 'google', googleAccessToken: tokenResponse.access_token }, {
+                onSuccess: () => {
+                    navigate('/signup/country', { state: { from: 'google', googleAccessToken: tokenResponse.access_token } })
+                },
+                onError: (err) => {
+                    toast.error(err.response.data.message);
+                },
+            });
+            // navigate('/signup/country', { state: { registrationState: registrationState, from: 'google' } })
+            // axios.post('/user/register', { googleAccessToken: tokenResponse.access_token })
+            //     .then((res) => {
+            //         if (res.status === 201)
+            //             navigate('/signup/country', { state: registrationState })
+            //     })
+            //     .catch(e => console.log(e))
         },
         onError: errorResponse => console.log(errorResponse),
     });
@@ -58,7 +68,8 @@ const Signup = () => {
                         <input required type="email" className='p-[0.75em] max-w-[600px] w-full bg-[#F5F5F5] font-sans font-[500] text-[0.875em] border rounded-[4px] border-[#D9D9D9]' placeholder='Email address' value={registrationState.email} name="email" onChange={handleRegistrationChange} />
                         <input required type="password" className='p-[0.75em] max-w-[600px] w-full bg-[#F5F5F5] font-sans font-[500] text-[0.875em] border rounded-[4px] border-[#D9D9D9]' placeholder='Password' value={registrationState.password} name="password" onChange={handleRegistrationChange} />
                         <div className='flex justify-center'>
-                            <button type="submit" className='buttonAnimation w-[7.5em] h-[2.3125em] mt-[9px] text-[0.875em] font-[700] bg-primary text-[#ffff] shadow-2xl rounded-[6px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>{isLoading ? "wait..." : "Sign Up"}</button>
+                            <button type="submit" className='buttonAnimation relative w-[7.5em] h-[2.3125em] mt-[9px] text-[0.875em] font-[700] bg-primary text-[#ffff] shadow-2xl rounded-[6px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>{isLoading ?
+                                <FaSpinner className="animate-spin absolute inset-0 m-auto" style={{ fontSize: "0.875em" }} /> : "Sign Up"}</button>
                         </div>
                     </form>
                 </div>

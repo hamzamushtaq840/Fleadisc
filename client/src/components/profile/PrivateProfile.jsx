@@ -11,12 +11,14 @@ import { toast } from 'react-toastify'
 
 const PrivateProfile = () => {
     const navigate = useNavigate()
-    const { auth } = useAuth()
+    const { auth, setAuth } = useAuth()
 
     const handleFileInputChange = async (event) => {
         const file = event.target.files[0];
         const photo = await handleUpload(file)
         pictureMutation.mutate({ pictureURL: photo, userId: auth.userId })
+        setAuth({ ...auth, profilePicture: photo })
+        console.log(auth);
 
     };
 

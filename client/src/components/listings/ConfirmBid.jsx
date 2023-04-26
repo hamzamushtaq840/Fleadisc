@@ -5,6 +5,7 @@ import useAuth from '../../hooks/useAuth';
 import { toast } from 'react-toastify'
 import { useMutation } from '@tanstack/react-query';
 import { getCountryInfoByISO } from '../../utils/iso-country-currency';
+import { FaSpinner } from 'react-icons/fa';
 
 const ConfirmBid = ({ setModel, price, type, val, currentTime, seller, clearForm }) => {
     const { auth } = useAuth();
@@ -87,7 +88,7 @@ const ConfirmBid = ({ setModel, price, type, val, currentTime, seller, clearForm
                 </div>
                 <div className='w-[95%] my-[15px] py-[0.3px] bg-[#323232]'></div>
                 <div className='flex justify-center mt-[.5em]'>
-                    <button onClick={handleBid} className='button rounded-[4px] py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary'>{(bidMutation.isLoading || buyMutation.isLoading) ? "wait.." : type === 'bid' ? "Confirm Bid" : "Confirm Buy"}</button>
+                    <button disabled={(bidMutation.isLoading || buyMutation.isLoading)} onClick={handleBid} className='relative buttonAnimation button rounded-[4px] h-[2.6625em] text-[.75em] w-[10.813em] text-[#ffffff] bg-primary'>{(bidMutation.isLoading || buyMutation.isLoading) ? <FaSpinner className="animate-spin absolute inset-0 m-auto" style={{ fontSize: "0.75em" }} /> : type === 'bid' ? "Confirm Bid" : "Confirm Buy"}</button>
                 </div>
             </div>
         </>
