@@ -222,7 +222,14 @@ export const cancel = tryCatch(async (req, res) => {
 
 export const getSellingCancel = tryCatch(async (req, res) => {
     const { userId } = req.params;
-    const listing = await CancelDisc.find({ sellerId: userId, cancelFrom: 'buy' }).populate('disc').populate('buyerId')
+    const listing = await CancelDisc.find({ sellerId: userId, cancelFrom: 'buy' }).populate('disc').populate({
+        path: 'disc',
+        populate: {
+            path: 'bids.user', // Populate the 'user' field in 'bids' array of 'disc'
+            model: 'User'
+        }
+    }).populate('buyerId')
+    console.log(listing);
     res.status(200).json(listing);
 });
 
@@ -248,6 +255,39 @@ export const giveRating = tryCatch(async (req, res) => {
     }
     u.rating.push(ratings)
     await u.save()
+    res.status(200).json({ message: 'success' });
+});
+
+export const offerToNextBidder = tryCatch(async (req, res) => {
+    const { sellerId, buyerId, discId, cancelId, buyPrice } = req.body
+    const disc = await Disc.findById(discId);
+
+    disc.buyer = {
+        user: buyerId,
+        buyPrice: buyPrice,
+        createdAt: new Date(),
+    }
+    await disc.save();
+
+    const existingTempDisc = await TempDisc.findOne({ buyer: buyerId, seller: sellerId, paymentSent: false }).lean();
+    if (existingTempDisc) {
+        await TempDisc.updateOne(
+            { _id: existingTempDisc._id },
+            { $push: { disc: { discId: disc._id } } }
+        );
+    }
+    else {
+        await TempDisc.create({
+            buyer: buyerId,
+            seller: sellerId,
+            disc: [{ discId: disc._id }]
+        });
+    }
+    await CancelDisc.findOneAndRemove({ _id: cancelId })
+    let receiver = getUsers(sellerId);
+    let receiver2 = getUsers(buyerId);
+    io.to(receiver.socketId).emit('refetchSelling');
+    io.to(receiver2.socketId).emit('refetchBuying');
     res.status(200).json({ message: 'success' });
 });
 

@@ -1,13 +1,16 @@
 import { Rating } from '@mui/material';
-import React, { useState } from 'react'
-import user from './../../assets/user.svg'
-import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
+import React, { useState } from 'react';
+import { FaSpinner } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import axios from '../../api/axios';
+import user from './../../assets/user.svg';
 
 const CancelSellerConfirm = ({ setModel, val }) => {
     const navigate = useNavigate()
     const [rating, setRating] = useState(0)
+    let secondBiggestBid
 
     const cancelRemove = useMutation((data) => axios.post(`/delivery/removeCancel`, data), {
         onSuccess: () => {
@@ -18,6 +21,15 @@ const CancelSellerConfirm = ({ setModel, val }) => {
     });
 
     const giveRating = useMutation((data) => axios.post(`/delivery/giveRating`, data), {
+        onSuccess: (res) => {
+            toast.success('Rating given')
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+
+    const offerToNextBidder = useMutation((data) => axios.post(`/delivery/offerToNextBidder`, data), {
         onSuccess: (res) => {
             console.log('done rating');
         },
@@ -41,6 +53,20 @@ const CancelSellerConfirm = ({ setModel, val }) => {
             giveRating.mutate({ userId: val.buyerId._id, rating: rating })
         }
     }
+
+    const handleOfferToNextBidder = () => {
+        offerToNextBidder.mutate({ sellerId: val.disc.seller, discId: val.disc._id, cancelId: val._id, buyerId: secondBiggestBid.user._id, buyPrice: secondBiggestBid.bidPrice, time: secondBiggestBid.createdAt })
+        if (rating !== 0) {
+            giveRating.mutate({ userId: val.buyerId._id, rating: rating })
+        }
+    }
+
+    if (val.disc.bids.length > 1) {
+        let bids = val.disc.bids.sort((a, b) => b.bidPrice - a.bidPrice);
+        const secondBiggestBidPrice = bids[1]?.bidPrice;
+        secondBiggestBid = bids.find(bid => bid.bidPrice === secondBiggestBidPrice);
+    }
+
     return (
         <>
             <div className='modalBackground' onClick={() => setModel(false)}></div>
@@ -53,23 +79,33 @@ const CancelSellerConfirm = ({ setModel, val }) => {
                         setRating(newValue);
                     }} precision={0.5} />
                 {val.disc.priceType === 'auction' && <div className='flex flex-col gap-[0.625em] items-center '>
-                    <button onClick={() => navigate('/create/relist', { state: disc })} className='py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary button rounded-[2px]'>Offer to next bidder</button>
-                    <div className='flex gap-[20px]  mb-[20px] items-center'>
-                        <div className='flex gap-[0.563em]  '>
-                            <img onClick={() => navigate('/profile/public')} src={user} className="cursor-pointer mt-[3px] xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] " alt="user" />
-                            <div className='flex flex-col justify-start'>
-                                <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate('/profile/public')} >{"Fred"}</h1>
-                                <div className='ml-[-0.2em] flex gap-[5px] mb-[6px]'>
-                                    <Rating size='small' name="half-rating-read" onChange={(e) => setRating(e.target.value)} defaultValue={rating} precision={0.5} readOnly />
-                                    <p className='text-[0.7em] font-[500]'>(23)</p>
+                    {val.disc.bids.length > 1 && <>
+                        <button onClick={handleOfferToNextBidder} className='relative min-h-[2.6625em] min-w-[15.5625em] py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary button rounded-[2px] mb-[0.3125em]'>
+                            {offerToNextBidder.isLoading && (
+                                <FaSpinner
+                                    className="animate-spin absolute inset-0 m-auto"
+                                    style={{ fontSize: "0.75em" }}
+                                />
+                            )}
+                            {!offerToNextBidder.isLoading && 'Offer to next bidder'}
+                        </button>
+                        <div className='flex gap-[20px]  mb-[20px] items-center'>
+                            <div className='flex gap-[0.563em]  '>
+                                <img onClick={() => navigate('/profile/public')} src={secondBiggestBid.user.profilePicture !== null ? secondBiggestBid.user.profilePicture : user} className="cursor-pointer mt-[3px] xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] rounded-full" alt="user" />
+                                <div className='flex flex-col justify-start'>
+                                    <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate(`/profile/public/${secondBiggestBid.user._id}`)} >{secondBiggestBid.user.name}</h1>
+                                    <div className='ml-[-0.2em] flex gap-[5px] mb-[6px]'>
+                                        <Rating size='small' name="half-rating-read" onChange={(e) => setRating(e.target.value)} defaultValue={rating} precision={0.5} readOnly />
+                                        <p className='text-[0.7em] font-[500]'>({secondBiggestBid.user.rating.length})</p>
+                                    </div>
                                 </div>
                             </div>
+                            <div className='flex flex-col'>
+                                <p className='text-[0.75em] font-[600]'>{secondBiggestBid.bidPrice} sek</p>
+                                <p className='text-[0.5em] mt-[-2px] font-[500]'>Next highest</p>
+                            </div>
                         </div>
-                        <div className='flex flex-col'>
-                            <p className='text-[0.75em] font-[600]'>120sek</p>
-                            <p className='text-[0.5em] mt-[-2px] font-[500]'>Next highest</p>
-                        </div>
-                    </div>
+                    </>}
                 </div>}
                 <div className='flex flex-col gap-[11px] mb-[1em] mt-[.5em]'>
                     <button onClick={handleRelist} className='py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary button rounded-[2px]'>Re-list</button>

@@ -2,12 +2,14 @@ import { Rating } from '@mui/material'
 import { useMutation } from '@tanstack/react-query';
 import React, { useState } from 'react'
 import axios from '../../api/axios';
+import { toast } from 'react-toastify';
 
 const CancelBuyerConfirm = ({ setModel, val }) => {
     const [rating, setRating] = useState(0)
 
     const cancelRemove = useMutation((data) => axios.post(`/delivery/removeCancel`, data), {
         onSuccess: () => {
+            toast.success('Rating given')
         },
         onError: (error) => {
             console.log(error);

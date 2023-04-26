@@ -246,8 +246,8 @@ const SingleChat = () => {
         <>
             <div className='flex text-[1.3rem] sm:text-[1rem] xsm:text-[1rem] items-center bg-[#cccccc21] h-[2.5em] '>
                 <img src={chatbackarrow} className="w-[0.625em] h-[0.9375em] cursor-pointer ml-[0.625em] mr-[0.9375em]" onClick={() => navigate(-1)} alt="back button" />
-                <img src={location.state.userImage !== null ? location.state.userImage : user} onClick={() => navigate(`/profile/public/${location.state.user2}/listings`)} className="h-[1.5em] rounded-full cursor-pointer" alt="user" />
-                <h1 onClick={() => navigate(`/profile/public/${location.state.user2}/listings`)} className='text-[0.75em] cursor-pointer text-[#595959] font-[700] ml-[0.75em]'>{location.state.userName}</h1>
+                <img src={location.state.userImage !== null ? location.state.userImage : user} onClick={() => navigate(`/profile/public/${location.state.user2}`)} className="h-[1.5em] rounded-full cursor-pointer" alt="user" />
+                <h1 onClick={() => navigate(`/profile/public/${location.state.user2}`)} className='text-[0.75em] cursor-pointer text-[#595959] font-[700] ml-[0.75em]'>{location.state.userName}</h1>
             </div>
             {!chats.isLoading ?
                 <div className=' flex flex-col ' style={{ height: "calc(100vh - 121px)", scrollBehavior: "smooth" }}>
@@ -278,7 +278,7 @@ const SingleChat = () => {
                                             </div>
                                         ) : (
                                             <div className='flex px-[0.8125em] justify-center mr-auto items-start' key={index}>
-                                                <img src={location.state.userImage !== null ? location.state.userImage : user} onClick={() => navigate(`/profile/public/${location.state.user2}/listings`)} className="mr-[0.5em] mt-[2px] h-[1.875em] cursor-pointer" alt="user" />
+                                                <img src={location.state.userImage !== null ? location.state.userImage : user} onClick={() => navigate(`/profile/public/${location.state.user2}`)} className="mr-[0.5em] mt-[2px] h-[1.875em] cursor-pointer rounded-full" alt="user" />
                                                 <div className='flex flex-col gap-[5px]'>
                                                     <p className='text-[0.65em] font-[300]'>{value.time}</p>
                                                     <div className='flex justify-center items-center py-[0.675em] px-[1em] rounded-[4px] bg-primary'>
@@ -305,11 +305,10 @@ const SingleChat = () => {
                                                     <p className='text-[0.65em] font-[300]'>Read</p>
                                                 </div>}
                                             </div>
-                                            {/* <img src={user} onClick={() => navigate('/profile/private')} className="ml-[0.5em] cursor-pointer h-[1.875em]" alt="user" /> */}
                                         </div>
                                     ) : (
                                         <div className='flex px-[0.8125em] justify-center mr-auto items-start' key={index}>
-                                            <img src={location.state.userImage !== null ? location.state.userImage : user} onClick={() => navigate(`/profile/public/${location.state.user2}/listings`)} className="mr-[0.5em] mt-[2px] h-[1.875em] cursor-pointer" alt="user" />
+                                            <img src={location.state.userImage !== null ? location.state.userImage : user} onClick={() => navigate(`/profile/public/${location.state.user2}`)} className="mr-[0.5em] mt-[2px] h-[1.875em] cursor-pointer rounded-full" alt="user" />
                                             <div className='flex flex-col gap-[5px]'>
                                                 <p className='text-[0.65em] font-[300]'>{value.time}</p>
                                                 <div className='flex justify-center items-center py-[0.675em] px-[1em] rounded-[4px] bg-primary'>

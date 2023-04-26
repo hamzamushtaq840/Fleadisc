@@ -90,7 +90,7 @@ const PrivateListings = () => {
         if (disc.buyer === null) {
             finishedCost += parseInt(disc.startingPrice, 10); // Convert string to number with base 10 and then add
         } else {
-            finishedCost += parseInt(disc.buyer.buyPrice, 10); // Convert string to number with base 10 and then add
+            finishedCost += parseInt(disc?.buyer?.buyPrice, 10); // Convert string to number with base 10 and then add
         }
     });
 

@@ -26,8 +26,7 @@ const CancelSeller = ({ setModel, disc, val }) => {
 
 
     const giveRating = useMutation((data) => axios.post(`/delivery/giveRating`, data), {
-        onSuccess: (res) => {
-            console.log('done rating');
+        onSuccess: () => {
         },
         onError: (error) => {
             console.log(error);

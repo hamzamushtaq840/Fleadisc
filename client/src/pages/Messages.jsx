@@ -34,7 +34,7 @@ const Messages = () => {
         <div className='flex justify-center '>
             <div className='px-[1.25em] xsm:w-full sm:w-full w-[98%] sm:text-[1rem] xsm:text-[1rem] text-[1.2rem] min-h-[90vh]'>
                 <h1 className='xsm:mt-[0.438em] sm:mt-[0.438em] mt-[1.5em] text-[1.25em] font-[700] xsm:mb-[0.875em] sm:mb-[0.875em] mb-[1.4em]'>Messages</h1>
-                <div className='flex flex-col'>
+                <div className='flex flex-col gap-[0.825em]'>
                     {chats?.data?.data.length === 0 ? (
                         <div className='flex min-h-[50vh] justify-center items-center flex-col gap-[0.825rem]'>
                             <img src={message} className='h-[1.9em] opacity-[0.3]' alt="" />

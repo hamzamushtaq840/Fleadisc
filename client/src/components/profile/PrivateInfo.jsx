@@ -30,8 +30,8 @@ const PrivateInfo = () => {
                     <div className='flex gap-[20px] flex-col'>
                         <div className='flex flex-col'>
                             <div>
-                                <h1 className='text-[0.75em] font-[700] text-[#595959]' >{userInfoQuery?.data?.data?.name}</h1>
-                                <h1 className='text-[0.5em] font-[500] text-[#595959bf]' >Joined {userInfoQuery?.data?.data?.createdAt.substring(0, 4)}</h1>
+                                <h1 className='text-[0.75em] font-[700] text-[#595959]'>{userInfoQuery?.data?.data?.name}</h1>
+                                <h1 className='text-[0.5em] font-[500] text-[#595959bf] mb-[0.3125em]'>Joined {userInfoQuery?.data?.data?.createdAt.substring(0, 4)}</h1>
                             </div>
                             <div className='flex items-center gap-[3px]'>
                                 <p className='text-[0.75em] font-[700]'>

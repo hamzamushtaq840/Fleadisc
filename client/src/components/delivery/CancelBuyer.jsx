@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react'
 import axios from '../../api/axios';
 import { FaSpinner } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 const CancelBuyer = ({ setModel, temp, disc }) => {
     const queryClient = useQueryClient()
@@ -20,7 +21,6 @@ const CancelBuyer = ({ setModel, temp, disc }) => {
 
     const giveRating = useMutation((data) => axios.post(`/delivery/giveRating`, data), {
         onSuccess: (res) => {
-            console.log('done rating');
         },
         onError: (error) => {
             console.log(error);

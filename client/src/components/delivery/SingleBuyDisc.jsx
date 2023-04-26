@@ -78,7 +78,7 @@ const SingleBuyDisc = ({ value, temp }) => {
                             <div className='flex flex-col h-full justify-end items-end'>
                                 <div className='flex flex-col items-end'>
                                     {value.discId.priceType === 'fixedPrice' && <span className='text-[0.65em] mb-[-3px] text-end flex items-end  font-[600]'>{value.discId.startingPrice} {userCurrency}</span>}
-                                    {value.discId.priceType === 'auction' && <span className='text-[0.65em] mb-[-3px] text-end flex items-end  font-[600]'>{value.discId.buyer.buyPrice} {userCurrency}</span>}
+                                    {value.discId.priceType === 'auction' && <span className='text-[0.65em] mb-[-3px] text-end flex items-end  font-[600]'>{value?.discId?.buyer?.buyPrice} {userCurrency}</span>}
                                     {value.discId.priceType === 'fixedPrice' && <span className='text-[0.6em] min-w-[57px] text-end font-[500] text-[#595959bf]'>Fixed price</span>}
                                     {(value.discId.priceType !== 'fixedPrice') &&
                                         <div className='flex items-center  text-[1em]'>

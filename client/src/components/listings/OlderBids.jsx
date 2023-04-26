@@ -30,13 +30,13 @@ const OlderBids = ({ setModel, discId }) => {
                                         <div className='flex flex-col xsm:min-w-[100px] sm:min-w-[100px] xsm:max-w-[100px] sm:max-w-[100px] min-w-[200px] gap-[8px]'>
                                             <h1 className='text-[0.9375em] font-[500]'>Bidder</h1>
                                             <div className='flex gap-[6px] items-center'>
-                                                <img src={bid.user.profilePicture !== null ? bid.user.profilePicture : user} className="h-[25px]" alt="" />
+                                                <img src={bid.user.profilePicture !== null ? bid.user.profilePicture : user} className="h-[25px] rounded-full" alt="" />
                                                 <p className='text-[0.75em] font-[400]'>{bid.user.name}</p>
                                             </div>
                                         </div>
                                         <div className='flex flex-col gap-[8px] max-w-[80px] min-w-[80px] items-center'>
                                             <h1 className='text-[0.9375em] font-[500]'>Price</h1>
-                                            <div className='flex  min-h-[25px] items-center'>
+                                            <div className='flex min-h-[25px] items-center'>
                                                 <p className='text-[0.75em] font-[400] text-center'>{bid.bidPrice.toFixed(0)} {userCurrency}</p>
                                             </div>
                                         </div>

@@ -58,7 +58,7 @@ const SingleSellItem = ({ value }) => {
     });
 
     const totalCost = value.disc.reduce((acc, curr) => {
-        return acc + curr.discId.buyer.buyPrice
+        return acc + curr.discId?.buyer?.buyPrice
     }, 0)
 
     return (
@@ -84,7 +84,7 @@ const SingleSellItem = ({ value }) => {
                         </div>
                         <div className='flex'><button className='text-[#ffffff]  button rounded-[4px] text-[.75em] py-[0.5em] px-[1.125em] bg-primary' onClick={() => navigate("/messages/chat", { state: { user2: value.buyer._id, userName: value.buyer.name, userImage: value.buyer.profilePicture !== null ? value.buyer.profilePicture : null, from: 'delivery' } })}>Message buyer</button></div>
                     </div>
-                    <div className='flex gap-[20px] '>
+                    <div className='flex gap-[20px] flex-wrap '>
                         {value.disc.map((v, index) => {
                             return (
                                 <React.Fragment key={index}>

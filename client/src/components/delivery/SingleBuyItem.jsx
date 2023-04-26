@@ -15,25 +15,29 @@ const SingleBuyItem = ({ value }) => {
     const [ratings, setRating] = useState(0)
     const [addresses, setAddresses] = useState('');
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
-    const addressValues = [value.buyer.deliveryAddress.city, value.buyer.deliveryAddress.country, value.buyer.deliveryAddress.line1, value.buyer.deliveryAddress.line2, value.buyer.deliveryAddress.postalCode, value.buyer.deliveryAddress.state];
+    const addressValues = [value?.buyer?.deliveryAddress?.city, value?.buyer?.deliveryAddress?.country, value?.buyer?.deliveryAddress?.line1, value?.buyer?.deliveryAddress?.line2, value?.buyer?.deliveryAddress?.postalCode, value?.buyer?.deliveryAddress?.state];
     const filteredAddressValues = addressValues.filter(val => val !== "");
     const userCurrency = 'SEK'
-
     useEffect(() => {
         if (value.addressSent === true)
             setAddresses(value.address);
         else {
-            const concatenatedAddresses = filteredAddressValues.map((val, index) => {
-                if (index === filteredAddressValues.length - 1) {
-                    return val;
-                } else {
-                    return val + ', ';
-                }
-            }).join('');
+            console.log(filteredAddressValues);
+            const concatenatedAddresses = (filteredAddressValues ?? []).filter(val => val !== undefined) // Add nullish coalescing operator check for filteredAddressValues
+                .map((val, index) => {
+                    if (index === filteredAddressValues.length - 1) {
+                        return val;
+                    } else {
+                        return val + ', ';
+                    }
+                })
+                .join('');
             if (concatenatedAddresses === '')
                 setAddresses('No address found');
-            else
-                setAddresses(concatenatedAddresses);
+            else {
+                console.log(concatenatedAddresses);
+                setAddresses(concatenatedAddresses || '');
+            }
         }
     }, []);
 
@@ -86,7 +90,7 @@ const SingleBuyItem = ({ value }) => {
     });
 
     const totalCost = value.disc.reduce((acc, curr) => {
-        return acc + curr.discId.buyer.buyPrice
+        return acc + curr.discId?.buyer?.buyPrice
     }, 0)
 
     const handleRating = (e) => {
