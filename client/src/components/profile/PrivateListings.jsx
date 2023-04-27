@@ -24,8 +24,12 @@ const PrivateListings = () => {
     });
     const [oldModal, setOldModal] = useState(false)
     const [discId, setDiscId] = useState("")
-    const oldModalComponent = useMemo(() => <OlderBids setModel={setOldModal} discId={discId} />, [setOldModal]);
+    const [latestDiscId, setLatestDiscId] = useState("");
+    const oldModalComponent = useMemo(() => <OlderBids setModel={setOldModal} discId={latestDiscId} />, [setOldModal, latestDiscId]);
 
+    useEffect(() => {
+        setLatestDiscId(discId);
+    }, [discId]);
 
     function getMonthAndDate(dateString) {
         const date = moment(dateString);
@@ -83,8 +87,8 @@ const PrivateListings = () => {
         }
     });
 
-    let finishedCost = 0;
     let activeCost = 0;
+    let finishedCost = 0;
 
     finishedDiscsQuery?.data?.data?.forEach(disc => {
         if (disc.buyer === null) {
@@ -220,13 +224,13 @@ const PrivateListings = () => {
 
                                                 <div className='flex flex-col  justify-end items-end'>
                                                     <div className='flex flex-col items-end'>
-                                                        <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{value.startingPrice} {userCurrency}</span>
+                                                        {value?.priceType === 'fixedPrice' && <span className='text-[0.65em] mb-[-3px] text-end flex items-end  font-[600]'>{value.startingPrice} {userCurrency}</span>}
+                                                        {value?.priceType === 'auction' && <span className='text-[0.65em] mb-[-3px] text-end flex items-end  font-[600]'>{value?.buyer?.buyPrice} {userCurrency}</span>}
                                                         {value.priceType === 'fixedPrice' && <span className='text-[0.6em] font-[500] text-[#595959bf]'>Fixed price</span>}
                                                         {(value.priceType !== 'fixedPrice') &&
                                                             <div className='flex items-center  text-[1em]'>
                                                                 <p onClick={(e) => {
                                                                     setDiscId(value._id)
-                                                                    console.log(value._);
                                                                     if (value.bids.length === 0)
                                                                         return
                                                                     setOldModal(true); e.stopPropagation();

@@ -9,7 +9,7 @@ import CancelSeller from './CancelSeller';
 const SingleSellDisc = ({ value, seller, val }) => {
     const [model, setModel] = useState(false)
     const [oldModal, setOldModal] = useState(false)
-    const oldModalComponent = useMemo(() => <OlderBids setModel={setOldModal} discId={value._id} />, [setOldModal]);
+    const oldModalComponent = useMemo(() => <OlderBids setModel={setOldModal} discId={value.discId._id} />, [setOldModal]);
     const userCurrency = "SEK";
 
     function getMonthAndDate(dateString) {
@@ -80,9 +80,10 @@ const SingleSellDisc = ({ value, seller, val }) => {
                                 </div>
                             </div>
                             <div className='flex flex-col h-full justify-end items-end'>
-                                <div className='flex flex-col items-end'>
-                                    <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{value.discId.startingPrice} {userCurrency}</span>
-                                    {value.discId.priceType === 'fixedPrice' && <span className='text-[0.6em] font-[500] min-w-[57px] text-end text-[#595959bf]'>Fixed price</span>}
+                            <div className='flex flex-col items-end'>
+                                    {value.discId.priceType === 'fixedPrice' && <span className='text-[0.65em] mb-[-3px] text-end flex items-end  font-[600]'>{value.discId.startingPrice} {userCurrency}</span>}
+                                    {value.discId.priceType === 'auction' && <span className='text-[0.65em] mb-[-3px] text-end flex items-end  font-[600]'>{value?.discId?.buyer?.buyPrice} {userCurrency}</span>}
+                                    {value.discId.priceType === 'fixedPrice' && <span className='text-[0.6em] min-w-[57px] text-end font-[500] text-[#595959bf]'>Fixed price</span>}
                                     {(value.discId.priceType !== 'fixedPrice') &&
                                         <div className='flex items-center  text-[1em]'>
                                             <p onClick={(e) => {
@@ -100,7 +101,7 @@ const SingleSellDisc = ({ value, seller, val }) => {
                 <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }} className='bg-[#F21111] font-[600] text-[0.75em] text-[white] rounded-[4px] py-[0.45em] px-[1em]' onClick={handleCancel}>Cancel Sale</button>
             </div>
             {model && <CancelSeller setModel={setModel} val={val} disc={value.discId} seller={seller} />}
-
+            {oldModal && oldModalComponent}
         </>
     )
 }

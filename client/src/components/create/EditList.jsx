@@ -14,6 +14,7 @@ import { Storage } from './../../utils/firebase'
 import RemoveModel from './RemoveModel'
 import { useMutation } from '@tanstack/react-query'
 import axios from '../../api/axios'
+import { FaSpinner } from 'react-icons/fa'
 
 const options = [
     { value: 'Aerobie', label: 'Aerobie' },
@@ -157,7 +158,6 @@ const Edit = () => {
                     () => {
                         getDownloadURL(uploadTask.snapshot.ref)
                             .then((url) => {
-                                console.log(url);
                                 resolve(url);
                             })
                             .catch((error) => {
@@ -427,8 +427,13 @@ const Edit = () => {
                     </div>
                 </div>
                 <div className='flex justify-center mb-[20px] gap-[8px]'>
-                    <button onClick={handlePublish} className='w-[7.5em] h-[2.3125em] mt-[18px] text-[0.875rem] font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>{editDisc.isLoading ? "wait" : "Update"}</button>
-                    <button onClick={() => setModel(true)} className='w-[7.5em] h-[2.3125em] mt-[18px] text-[0.875rem] font-[600] bg-[#F21111] text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Remove</button>
+                    <button onClick={handlePublish} className='buttonAnimation relative w-[7.5em] h-[2.3125em] mt-[18px] text-[0.875rem] font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>{editDisc.isLoading ?
+                        <FaSpinner
+                            className="animate-spin absolute inset-0 m-auto"
+                            style={{ width: "1em", height: "1em", fontSize: '0.875em' }}
+                        />
+                        : "Update"}</button>
+                    <button onClick={() => setModel(true)} className='buttonAnimation w-[7.5em] h-[2.3125em] mt-[18px] text-[0.875rem] font-[600] bg-[#F21111] text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Remove</button>
                 </div>
             </div >
             {openCrop && <CropEasy photoURL={photoURL} setOpenCrop={setOpenCrop} dontCrop={dontCrop} onFinish={handleCropped} />}

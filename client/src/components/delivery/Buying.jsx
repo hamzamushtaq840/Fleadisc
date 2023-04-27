@@ -260,6 +260,7 @@ const Buying = () => {
         if (socket) {
             socket.on('refetchBuying', () => {
                 buyingQuery.refetch()
+                cancelQuery.refetch()
                 toast.success('You have a new notification', { position: toast.POSITION.TOP_RIGHT, });
             })
         }

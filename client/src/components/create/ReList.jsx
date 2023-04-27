@@ -15,6 +15,7 @@ import moment from 'moment'
 import { useMutation } from '@tanstack/react-query'
 import axios from '../../api/axios'
 import useAuth from '../../hooks/useAuth'
+import { FaSpinner } from 'react-icons/fa'
 
 const options = [
     { value: 'Aerobie', label: 'Aerobie' },
@@ -194,7 +195,6 @@ const ReList = () => {
 
     const handlePublish = async (e) => {
         e.preventDefault()
-        console.log(inputValues);
         if (inputValues.quantity === '') {
             toast.error('Quantity is required')
             return
@@ -440,8 +440,13 @@ const ReList = () => {
                             onChange={handleOptionalChange} className='min-w-[80px]  ml-2 text-[#595959bf] rounded-[2px] border-[1px] border-[#000000]' type="time" id="time" /></label>
                     </div>
                 </div>
-                <div className='flex justify-center xsm:pt-[0em] sm:pt-[0em] pt-[1.2em] pb-[1.25em]'><button onClick={handlePublish} className='w-[7.5em] h-[2.4125em] mt-[1.125em] text-[0.875em] button font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[4px]' style={{ boxShadow: "0 4px 0.375em -1px rgba(0, 0, 0, 0.1), 0 0.375em 4px -1px rgba(0, 0, 0, 0.06)" }}>{relistDisc.isLoading ? "wait" : "Re-list"}</button></div>
-
+                <div className='flex justify-center xsm:pt-[0em] sm:pt-[0em] pt-[1.2em] pb-[1.25em]'><button onClick={handlePublish} className='buttonAnimation relative w-[7.5em] h-[2.4125em] mt-[1.125em] text-[0.875em] button font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[4px]' style={{ boxShadow: "0 4px 0.375em -1px rgba(0, 0, 0, 0.1), 0 0.375em 4px -1px rgba(0, 0, 0, 0.06)" }}>
+                    {relistDisc.isLoading ?
+                        <FaSpinner
+                            className="animate-spin absolute inset-0 m-auto"
+                            style={{ width: "1em", height: "1em", fontSize: '0.875em' }}
+                        />
+                        : "Re-list"}</button></div>
             </div>
             {openCrop && <CropEasy photoURL={photoURL} setOpenCrop={setOpenCrop} dontCrop={dontCrop} onFinish={handleCropped} />}
         </div >

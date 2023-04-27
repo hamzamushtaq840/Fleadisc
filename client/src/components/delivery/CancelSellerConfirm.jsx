@@ -43,7 +43,7 @@ const CancelSellerConfirm = ({ setModel, val }) => {
         cancelRemove.mutate({ removeId: val._id })
         if (rating !== 0) {
             console.log('i ran');
-            giveRating.mutate({ userId: val.buyerId._id, rating: rating })
+            giveRating.mutate({ userId: val.buyerId, rating: rating })
         }
     }
 

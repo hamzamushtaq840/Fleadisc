@@ -15,6 +15,7 @@ const ConfirmBid = ({ setModel, price, type, val, currentTime, seller, clearForm
         onSuccess: () => {
             clearForm()
             setModel(false);
+            toast.success("You have successfully bid on the disc")
         },
         onError: (error) => {
             console.log(error);
@@ -25,6 +26,7 @@ const ConfirmBid = ({ setModel, price, type, val, currentTime, seller, clearForm
         onSuccess: () => {
             clearForm()
             setModel(false);
+            toast.success("You have successfully bought the disc")
         },
         onError: (error) => {
             console.log(error);
@@ -60,7 +62,6 @@ const ConfirmBid = ({ setModel, price, type, val, currentTime, seller, clearForm
             bidMutation.mutate(data)
         }
     }
-    console.log(auth);
 
     return (
         <>

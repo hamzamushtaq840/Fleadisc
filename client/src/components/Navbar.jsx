@@ -95,8 +95,9 @@ const Navbar = () => {
 
     useEffect(() => {
         if (isSocketReady && socket) { // Check if socket is ready before using it
-            socket.on('refetchNotification', (data) => {
-                if (location.pathname === '/delivery') {
+            socket.on('refetchNotification', () => {
+                console.log(' i ran refetch noti');
+                if (location.pathname === '/delivery' || location.pathname === 'delivery/selling') {
                     setRead.mutate({ userId: auth.userId })
                 }
                 else {

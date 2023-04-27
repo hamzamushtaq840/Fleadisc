@@ -57,9 +57,27 @@ const SingleSellItem = ({ value }) => {
         }
     });
 
-    const totalCost = value.disc.reduce((acc, curr) => {
-        return acc + curr.discId?.buyer?.buyPrice
-    }, 0)
+    const rating = useMutation((data) => axios.post(`/delivery/rating`, data), {
+        onSuccess: (res) => {
+            queryClient.invalidateQueries('sellingDiscs')
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+
+    let totalCost = 0;
+    value?.disc?.forEach(disc => {
+        if (disc.discId.buyer === null) {
+            totalCost += parseInt(disc?.discId?.startingPrice, 10); // Convert string to number with base 10 and then add
+        } else {
+            totalCost += parseInt(disc?.discId?.buyer?.buyPrice, 10); // Convert string to number with base 10 and then add
+        }
+    });
+
+    const handleRating = (e) => {
+        rating.mutate({ id: value._id, sellerId: value.seller._id, buyerId: value.buyer._id, rating: e.target.value, from: 'sell' })
+    }
 
     return (
         <>
@@ -268,8 +286,19 @@ const SingleSellItem = ({ value }) => {
                         </div>
                     </div>
                     {value.parcelReceived === true && <div className='flex flex-col justify-center items-center'>
-                        <p className='text-[0.75em] mb-[6px]'>Leave a rating of<span className='text-[#000000] font-[700]'> buyer</span></p>
-                        <Rating size="large" className='mb-[10px]' name="half-rating-read" onChange={(e) => console.log(e.target.value)} precision={0.5} />
+                        {rating.isLoading && (
+                            <div className='bg-primary absolute min-h-[2em]'>
+                                <FaSpinner
+                                    className="animate-spin absolute inset-0 m-auto"
+                                    style={{ width: "1em", height: "1em" }}
+                                />
+                            </div>
+                        )}
+                        {!rating.isLoading &&
+                            <>
+                                <p className='text-[0.75em] mb-[6px]'>Leave a rating of<span className='text-[#000000] font-[700]'> buyer</span></p>
+                                <Rating size='large' className='mb-[10px]' name="half-rating-read" onChange={handleRating} precision={0.5} />
+                            </>}
                     </div>}
                 </div>
                 {model && <CancelSeller setModel={setModel} />}

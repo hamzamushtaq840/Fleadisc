@@ -7,6 +7,7 @@ import useAuth from '../../hooks/useAuth';
 import axios from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { FaSpinner } from 'react-icons/fa';
 
 const PrivateInfoEdit = () => {
     const { auth } = useAuth()
@@ -261,7 +262,12 @@ const PrivateInfoEdit = () => {
                 </div>
 
                 <div className='flex justify-center my-[0.625em] gap-[0.625em]'>
-                    <button onClick={handlePost} className='text-[#ffffff] mt-[0.45em] mb-[0.625em] button rounded-[2px] text-[.75em] font-[600] py-[0.625em] px-[2.1875em] bg-primary'>{userEditMutation.isLoading ? "wait" : 'Save'}</button>
+                    <button onClick={handlePost} className='buttonAnimation relative text-[#ffffff] mt-[0.45em] mb-[0.625em] button rounded-[2px] text-[.75em] font-[600] py-[0.625em] px-[2.1875em] bg-primary'>{userEditMutation.isLoading ?
+                        <FaSpinner
+                            className="animate-spin absolute inset-0 m-auto"
+                            style={{ width: "1em", height: "1em", fontSize: '0.75em' }}
+                        />
+                        : 'Save'}</button>
                     <button onClick={() => navigate('/profile/private')} className='text-[#ffffff] mt-[0.45em] mb-[0.625em] button rounded-[2px] text-[.75em] font-[600] py-[0.625em] px-[2.1875em] bg-[#F21111]'>Discard</button>
 
                 </div>

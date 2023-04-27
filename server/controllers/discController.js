@@ -5,6 +5,7 @@ import { groupBy } from 'lodash-es';
 import { getUsers, io } from '../index.js';
 import { TempDisc } from '../models/tempDisc.js';
 import { Notification } from '../models/notification.js';
+import { CancelDisc } from '../models/cancelDiscs.js';
 
 export const postDisc = tryCatch(async (req, res) => {
     const { seller, pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime } = req.body;
@@ -175,6 +176,29 @@ export const buyDisc = tryCatch(async (req, res) => {
             disc: [{ discId: listingId }]
         });
     }
+    await Notification.create({
+        user: userId,
+        type: 'Disc'
+    });
+    await Notification.create({
+        user: sellerId,
+        type: 'Disc'
+    });
+    let receiver = getUsers(sellerId.toString());
+    let receiver2 = getUsers(userId);
+    console.log(userId);
+    console.log('--------------');
+    console.log(sellerId.toString());
+    console.log('--------------');
+    console.log(receiver);
+    console.log('--------------');
+    console.log(receiver2);
+    if (receiver && receiver.socketId) {
+        io.to(receiver.socketId).emit('refetchNotification');
+    }
+    if (receiver2 && receiver2.socketId) {
+        io.to(receiver2.socketId).emit('refetchNotification');
+    }
 
     io.emit("bid_added");
     res.status(200).json({ success: true, data: disc });
@@ -224,14 +248,15 @@ export const checkDiscTime = async () => {
                             user: sellerId,
                             type: 'Disc'
                         });
-                        let receiver = getUsers(sellerId);
-                        let receiver2 = getUsers(highestBid.user);
+                        let receiver = getUsers(sellerId.toString());
+                        let receiver2 = getUsers(highestBid.user.toString());
                         if (receiver && receiver.socketId) {
-
                             io.to(receiver.socketId).emit('refetchNotification');
+                            console.log('i ran');
                         }
                         if (receiver2 && receiver2.socketId) {
                             io.to(receiver2.socketId).emit('refetchNotification');
+                            console.log('i ran 2');
                         }
                         io.emit("bid_added");
                     } else {
@@ -431,6 +456,10 @@ export const reListDisc = tryCatch(async (req, res) => {
     const { discId } = req.params;
     // Delete the disc in FinishedListing
     const { seller, pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime } = req.body;
+    let cancel = await CancelDisc.findOne({ disc: discId })
+    if (cancel) {
+        await CancelDisc.findByIdAndDelete(cancel._id);
+    }
     await Disc.findByIdAndUpdate(discId, { isActive: true, isFinished: false, seller, pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime });
     io.emit("bid_added");
     res.send('Disc relisted successfully');

@@ -65,8 +65,8 @@ const PrivatePurchases = () => {
 
     function remainingTime(endDay, endTime) {
         const endDateTime = moment(`${endDay} ${endTime}`);
-        const now = moment();
-        const diff = endDateTime.diff(now);
+        const start = moment();
+        const diff = start.diff(endDateTime);
         const duration = moment.duration(diff);
         const years = duration.years();
         const months = duration.months();
@@ -75,25 +75,25 @@ const PrivatePurchases = () => {
         const minutes = duration.minutes();
         const seconds = duration.seconds();
 
-        let remainingTime;
+        let passedTime;
         if (years > 0) {
-            remainingTime = `${years} ${years === 1 ? 'year' : 'years'}`;
+            passedTime = `${years} ${years === 1 ? 'y' : 'y'}`;
         } else if (months > 0) {
-            remainingTime = `${months} ${months === 1 ? 'month' : 'months'}`;
+            passedTime = `${months} ${months === 1 ? 'm' : 'm'}`;
         } else if (days > 0) {
-            remainingTime = `${days} ${days === 1 ? 'day' : 'days'} ${hours}h`;
+            passedTime = `${days} ${days === 1 ? 'd' : 'd'} ${hours}h`;
         } else if (hours > 0) {
-            remainingTime = `${hours}h ${minutes} ${minutes === 1 ? 'min' : 'mins'}`;
+            passedTime = `${hours}h ${minutes}${minutes === 1 ? 'm' : 'm'}`;
         } else if (minutes > 0) {
-            remainingTime = `${minutes} ${minutes === 1 ? 'min' : 'mins'}`;
+            passedTime = `${minutes}${minutes === 1 ? 'm' : 'm'}`;
             if (seconds > 0) {
-                remainingTime += ` ${seconds} s`;
+                passedTime += ` ${seconds}s`;
             }
         } else {
-            remainingTime = `${seconds} s`;
+            passedTime = `${seconds} s`;
         }
 
-        return remainingTime;
+        return passedTime;
     }
 
     const boughtDiscQuery = useQuery(['boughtDiscs', auth.userId], () => axios.get(`/disc/boughtListing/${auth.userId}`), {
@@ -133,6 +133,8 @@ const PrivatePurchases = () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+
+    console.log(boughtDiscQuery.data);
 
     if (boughtDiscQuery.isLoading && !boughtDiscQuery.data) {
         return (
@@ -175,12 +177,17 @@ const PrivatePurchases = () => {
                                                 </div>
                                             </div>
 
-                                            <div className='flex flex-col justify-end items-end'>
-                                                <div className='flex flex-col'>
-                                                    <span className='text-[0.75em] font-[600]'>{value.startingPrice} kr</span>
-                                                    <span className='text-[0.6em] font-[500] text-[#595959bf]'>15 bids</span>
+                                            <div className='flex flex-col  justify-end items-end'>
+                                                <div className='flex flex-col items-end'>
+                                                    <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{value.startingPrice} SEK</span>
+                                                    {value.priceType === 'fixedPrice' && <span className='text-[0.6em] font-[500] text-[#595959bf]'>Fixed price</span>}
+                                                    {(value.priceType !== 'fixedPrice') &&
+                                                        <div className='flex items-center  text-[1em]'>
+                                                            <p className='text-[0.6em] cursor-pointer hover:underline hover:text-text font-[500] text-[#595959BF] '>{value.bids.length} Bids</p>
+                                                        </div>}
                                                 </div>
                                             </div>
+
 
                                         </div>
                                     </div>

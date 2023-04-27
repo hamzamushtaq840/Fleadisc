@@ -1,10 +1,7 @@
 import React from 'react'
 import user from '../../assets/signin.svg'
-import useAuth from '../../hooks/useAuth';
-import { getCountryInfoByISO } from '../../utils/iso-country-currency';
 import { useQuery } from '@tanstack/react-query';
 import axios from '../../api/axios';
-import { ColorRing } from 'react-loader-spinner';
 import Loader from '../Loader';
 
 const OlderBids = ({ setModel, discId }) => {
@@ -23,7 +20,7 @@ const OlderBids = ({ setModel, discId }) => {
                     <Loader />
                 ) : (
                     <div className='flex flex-col w-[92%] px-[5px] overflow-y-auto max-h-[250px]'>
-                        {data?.map((bid) => {
+                        {data?.reverse().map((bid) => {
                             return (
                                 <div key={bid._id}>
                                     <div className='flex w-full justify-between gap-[15px]'>

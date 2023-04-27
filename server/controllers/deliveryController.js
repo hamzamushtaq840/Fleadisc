@@ -210,12 +210,15 @@ export const cancel = tryCatch(async (req, res) => {
     await cancelDisc.save();
 
     let receiver
-    if (from === 'buy')
-        receiver = getUsers(sellerId);
-    else
+    if (from === 'buy') { receiver = getUsers(sellerId) }
+    else {
         receiver = getUsers(buyerId);
+    }
     if (receiver && receiver.socketId) {
-        io.to(receiver.socketId).emit('refetchSelling');
+        if (from === 'buy')
+            io.to(receiver.socketId).emit('refetchSelling');
+        else
+            io.to(receiver.socketId).emit('refetchBuying');
     }
     res.status(200).json('success');
 });
@@ -247,6 +250,8 @@ export const removeCancel = tryCatch(async (req, res) => {
 export const giveRating = tryCatch(async (req, res) => {
     const { userId, rating } = req.body
     console.log('i ran');
+    console.log(rating);
+
     const u = await User.findOne({ _id: userId })
     let ratings = {
         user: userId,

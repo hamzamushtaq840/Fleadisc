@@ -3,6 +3,7 @@ import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { Storage } from './../../utils/firebase'
 import { toast } from 'react-toastify';
 import axios from './../../api/axios';
+import { FaSpinner } from 'react-icons/fa';
 
 const NumofListing = ({ setModel, discs, clearForm }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +26,6 @@ const NumofListing = ({ setModel, discs, clearForm }) => {
                     () => {
                         getDownloadURL(uploadTask.snapshot.ref)
                             .then((url) => {
-                                console.log(url);
                                 resolve(url);
                             })
                             .catch((error) => {
@@ -92,8 +92,12 @@ const NumofListing = ({ setModel, discs, clearForm }) => {
                     No of Listing : &nbsp;
                     <h1 className='text-[.95em] mt-[1px] font-[800]'>{discs.length}</h1>
                 </span>
-                <div className='flex justify-center'><button className='w-[10em] h-[2.3125em] mt-[10px] text-[0.750em] font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }} onClick={handlePublish}>{isLoading ? "wait" : "Confirm Listing"}</button></div>
-
+                <div className='flex justify-center'><button className='buttonAnimation relative w-[10em] h-[2.3125em] mt-[10px] text-[0.750em] font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }} onClick={handlePublish}>{isLoading ?
+                    <FaSpinner
+                        className="animate-spin absolute inset-0 m-auto"
+                        style={{ width: "1em", height: "1em", fontSize: '0.750em' }}
+                    />
+                    : "Confirm Listing"}</button></div>
             </div>
         </>
     )

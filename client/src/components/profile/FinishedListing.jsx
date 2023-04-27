@@ -69,7 +69,9 @@ const FinishedListing = ({ value, userCurrency }) => {
                 </div>
                 <div className='flex flex-col  justify-end items-end'>
                     <div className='flex flex-col items-end'>
-                        <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{value.startingPrice} {userCurrency}</span>
+                        {value.priceType === 'fixedPrice' && <span className='text-[0.65em] mb-[-3px] text-end flex items-end  font-[600]'>{value.startingPrice} {userCurrency}</span>}
+                        {(value.priceType === 'auction' && value.buyer === null) && <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{value?.startingPrice} {userCurrency}</span>}
+                        {(value.priceType === 'auction' && value.buyer !== null) && <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{value?.buyer?.buyPrice} {userCurrency}</span>}
                         {value.priceType === 'fixedPrice' && <span className='text-[0.6em] font-[500] text-[#595959bf]'>Fixed price</span>}
                         {(value.priceType !== 'fixedPrice') &&
                             <div className='flex items-center  text-[1em]'>
