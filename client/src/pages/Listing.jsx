@@ -15,7 +15,7 @@ import Loader from '../components/Loader';
 
 const Listing = () => {
     const navigate = useNavigate()
-    const [selected, setSelected] = useState('PK');
+    const [selected, setSelected] = useState('SE');
     const [appliedFilters, setAppliedFilters] = useState(['country']);
     const [searchInput, setSearchInput] = useState('');
     const [moreFilters, setMoreFilters] = useState(false)
