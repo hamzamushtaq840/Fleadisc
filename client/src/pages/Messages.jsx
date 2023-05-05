@@ -45,7 +45,7 @@ const Messages = () => {
                     <div className='flex flex-col gap-[0.825em]'>
                         {chats?.data?.data.length === 0 ? (
                             <div className='flex min-h-[50vh] justify-center items-center flex-col gap-[0.825rem]'>
-                                <img src={message} className='h-[1.9em] opacity-[0.3]' alt="" />
+                                <img src={message} className='h-[1.9em] w-[1.9em] opacity-[0.3]' alt="" />
                                 <p className='flex text-[.9em] font-[400] justify-center items-center text-[#00000080]'>You don't have any conversations</p>
                             </div>
                         ) : (

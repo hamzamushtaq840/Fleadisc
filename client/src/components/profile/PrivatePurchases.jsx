@@ -134,8 +134,6 @@ const PrivatePurchases = () => {
         };
     }, []);
 
-    console.log(boughtDiscQuery.data);
-
     if (boughtDiscQuery.isLoading && !boughtDiscQuery.data) {
         return (
             <Loader />

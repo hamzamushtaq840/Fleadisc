@@ -101,7 +101,7 @@ const SingleList = ({ value, index, discs }) => {
                             }
                             navigate(`/profile/public/${value.seller._id}`)
                         }
-                        } className="cursor-pointer rounded-full mt-1 xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em]" alt="user" />
+                        } className="cursor-pointer rounded-full mt-1 xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] xsm:w-[1.563em] sm:w-[1.563em] md:w-[1.9em] lg:w-[2em] xl:w-[2em] 2xl:w-[2em]" alt="user" />
                     <div className='flex flex-col justify-start'>
                         <h1 className='text-[0.75em] font-[500] cursor-pointer ' onClick={() => {
                             if (auth?.userId === value.seller._id) {
@@ -122,11 +122,18 @@ const SingleList = ({ value, index, discs }) => {
                     {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 left-0 top-[50%] translate-y-[-50%]  flex justify-center items-center h-[80%] w-[20px] select-none ' onClick={handleScrollLeft}><BsFillCaretLeftFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}
                     <div ref={scrollableDivRef} className={`flex pr-[4px] pl-[4px] ${screenSize.width > 768 ? "overflow-hidden" : "overflow-auto"}  pb-[5px] gap-[10px] mt-[11px] `}>
                         {discs.map((val, index) => {
-                            const combinedDate = moment(`${val.endDay} ${val.endTime}`, "YYYY-MM-DD HH:mm");
-                            const isExpired = combinedDate.isBefore(currentTime);
-                            return isExpired ? null : (
-                                <SingleListCard key={index} seller={value.seller} val={val} index={index} />
-                            );
+                            let combinedDate
+                            let isExpired
+                            if (val.priceType === 'fixedPrice') {
+                                combinedDate = moment(`${val.endDay} ${val.endTime}`, "YYYY-MM-DD HH:mm");
+                                isExpired = combinedDate.isBefore(currentTime);
+                            }
+                            if (isExpired && val.priceType === 'auction')
+                                return (null)
+                            else if (!isExpired && val.priceType === 'auction')
+                                return (<SingleListCard key={index} seller={value.seller} val={val} index={index} />);
+                            else
+                                return (<SingleListCard key={index} seller={value.seller} val={val} index={index} />);
                         })}
                     </div>
                     {screenSize.width > 768 && <h1 className='absolute transition-opacity duration-300 right-[0px] top-[50%] translate-y-[-50%] flex justify-center items-center h-[80%] w-[20px] select-none ' onClick={handleScrollRight}><BsFillCaretRightFill className='cursor-pointer text-[#a9a8a8] hover:text-text' /></h1>}

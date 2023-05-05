@@ -88,7 +88,7 @@ const SingleSellItem = ({ value }) => {
                             <img onClick={() => {
                                 navigate(`/profile/public/${value.buyer._id}`)
                             }
-                            } src={value.buyer.profilePicture !== null ? value.buyer.profilePicture : signin} className="cursor-pointer mt-[3px] xsm:h-[1.563em] rounded-full sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] " alt="user" />
+                            } src={value.buyer.profilePicture !== null ? value.buyer.profilePicture : signin} className="cursor-pointer mt-[3px] xsm:h-[1.563em] xsm:w-[1.563em] rounded-full sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] sm:w-[1.563em] md:w-[1.9em] lg:w-[2em] xl:w-[2em] 2xl:w-[2em]" alt="user" />
                             <div className='flex flex-col justify-start'>
                                 <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => {
                                     navigate(`/profile/public/${value.buyer._id}`)

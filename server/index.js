@@ -70,7 +70,7 @@ app.use('/chat', chatRoutes)
 app.use('/delivery', deliveryRoutes)
 
 cron.schedule('*/30 * * * * *', () => {
-    checkDiscTime()
+    // checkDiscTime()
 });
 
 const PORT = process.env.PORT || 5000
@@ -89,24 +89,3 @@ server.listen(5001, () => {
 });
 
 app.use(errorHandler)
-
-
-
-// const corsOptions2 = {
-//     origin: 'http://localhost:5173',
-//     credentials: true,            //access-control-allow-credentials:true
-//     // exposedHeaders: ['set-cookie'],
-//     optionSuccessStatus: 200
-// }
-
-// app.get('/setcookie', (req, res) => {
-//     res.cookie(`Cookie token name`, `encrypted cookie string Value`, {
-//         maxAge: 5000,
-//         // expires works the same as the maxAge
-//         expires: new Date('01 12 2021'),
-//         secure: true,
-//         httpOnly: true,
-//         sameSite: 'lax'
-//     });
-//     res.send('Cookie have been saved successfully');
-// });

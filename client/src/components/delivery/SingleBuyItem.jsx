@@ -22,7 +22,6 @@ const SingleBuyItem = ({ value }) => {
         if (value.addressSent === true)
             setAddresses(value.address);
         else {
-            console.log(filteredAddressValues);
             const concatenatedAddresses = (filteredAddressValues ?? []).filter(val => val !== undefined) // Add nullish coalescing operator check for filteredAddressValues
                 .map((val, index) => {
                     if (index === filteredAddressValues.length - 1) {
@@ -35,7 +34,6 @@ const SingleBuyItem = ({ value }) => {
             if (concatenatedAddresses === '')
                 setAddresses('No address found');
             else {
-                console.log(concatenatedAddresses);
                 setAddresses(concatenatedAddresses || '');
             }
         }
@@ -103,7 +101,7 @@ const SingleBuyItem = ({ value }) => {
             <div className='flex flex-col w-full justify-start mt-[20px] gap-[1em] xsm:gap-[1.275em] sm:gap-[1.575em]'>
                 <div className='flex gap-[20px] items-center'>
                     <div className='flex gap-[0.563em] '>
-                        <img onClick={() => navigate('/profile/public')} src={value.seller.profilePicture === null ? user : value.seller.profilePicture} className="cursor-pointer rounded-full mt-[3px] xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] " alt="user" />
+                        <img onClick={() => navigate('/profile/public')} src={value.seller.profilePicture === null ? user : value.seller.profilePicture} className="cursor-pointer rounded-full mt-[3px] xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] xsm:w-[1.563em] sm:w-[1.563em] md:w-[1.9em] lg:w-[2em] xl:w-[2em] 2xl:w-[2em]" alt="user" />
                         <div className='flex flex-col justify-start'>
                             <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate('/profile/public')} >{value.seller.name}</h1>
                             <div className='ml-[-0.2em] flex gap-[5px] mb-[6px]'>

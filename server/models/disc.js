@@ -30,8 +30,8 @@ const discSchema = mongoose.Schema({
     priceType: { type: String, required: true },
     startingPrice: { type: String, required: true },
     minPrice: { type: String, required: false },
-    endDay: { type: String, required: true },
-    endTime: { type: String, required: true },
+    endDay: { type: String, default: null, required: false },
+    endTime: { type: String, default: null, required: false },
     createdAt: { type: Date, default: Date.now, required: true },
     bids: {
         type: [bidSchema],
@@ -47,6 +47,5 @@ const discSchema = mongoose.Schema({
     isBought: { type: Boolean, default: false, required: false },
     isFinished: { type: Boolean, default: false, required: false },
 });
-
 
 export const Disc = mongoose.model("Disc", discSchema);

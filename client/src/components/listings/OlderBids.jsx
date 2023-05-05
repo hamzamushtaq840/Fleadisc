@@ -27,7 +27,7 @@ const OlderBids = ({ setModel, discId }) => {
                                         <div className='flex flex-col xsm:min-w-[100px] sm:min-w-[100px] xsm:max-w-[100px] sm:max-w-[100px] min-w-[200px] gap-[8px]'>
                                             <h1 className='text-[0.9375em] font-[500]'>Bidder</h1>
                                             <div className='flex gap-[6px] items-center'>
-                                                <img src={bid.user.profilePicture !== null ? bid.user.profilePicture : user} className="h-[25px] rounded-full" alt="" />
+                                                <img src={bid.user.profilePicture !== null ? bid.user.profilePicture : user} className="h-[25px] w-[25px] rounded-full" alt="" />
                                                 <p className='text-[0.75em] font-[400]'>{bid.user.name}</p>
                                             </div>
                                         </div>
@@ -43,7 +43,6 @@ const OlderBids = ({ setModel, discId }) => {
                                                 <p className='text-[0.75em] font-[400] text-center'>{bid.createdAt}</p>
                                             </div>
                                         </div>
-
                                     </div>
                                     <div className='w-[100%] my-[15px] py-[0.3px] bg-[#323232]'></div>
                                 </div>

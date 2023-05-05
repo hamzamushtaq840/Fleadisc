@@ -16,6 +16,8 @@ const Navbar = () => {
     const [isSocketReady, setIsSocketReady] = useState(false);
     const queryClient = useQueryClient();
     let userInfoQuery
+    let userMessageQuery
+
     if (auth.userId) {
         userInfoQuery = useQuery(['userNotification', auth.userId], () => axios.get(`/user/getNotification/${auth.userId}`), {
             onSuccess: () => {
@@ -25,9 +27,18 @@ const Navbar = () => {
             }
         });
     }
+    if (auth.userId) {
+        userMessageQuery = useQuery(['userMessagess', auth.userId], () => axios.get(`/chat/getUserUnreadChats/${auth.userId}`), {
+            onSuccess: (res) => {
+            },
+            onError: (error) => {
+                console.log(error);
+            }
+        });
+    }
 
     const setRead = useMutation((data) => axios.post(`/user/setReadNotifications`, data), {
-        onSuccess: (res) => {
+        onSuccess: () => {
             queryClient.invalidateQueries('userNotification')
         },
         onError: (error) => {
@@ -82,27 +93,19 @@ const Navbar = () => {
         };
     }, [auth.userId]);
 
-    // useEffect(() => {
-    //     if (isSocketReady && socket) { // Check if socket is ready before using it
-    //         socket.on('refetchChat', (data) => {
-    //             if (location.pathname === '/delivery');
-    //             {
-    //                 console.log('ok');
-    //             }
-    //         })
-    //     }
-    // }, [isSocketReady, socket]);
-
     useEffect(() => {
         if (isSocketReady && socket) { // Check if socket is ready before using it
             socket.on('refetchNotification', () => {
-                console.log(' i ran refetch noti');
                 if (location.pathname === '/delivery' || location.pathname === 'delivery/selling') {
                     setRead.mutate({ userId: auth.userId })
                 }
                 else {
                     queryClient.invalidateQueries('userNotification')
                 }
+            })
+            socket.on('refetchMessageRead', () => {
+                console.log('i hhhhhhhhhhhh');
+                queryClient.invalidateQueries('userMessagess')
             })
         }
     }, [isSocketReady, socket]);
@@ -139,17 +142,20 @@ const Navbar = () => {
                         <h1 className='text-[.75em] leading-[14.63px]'>Create</h1>
                     </NavLink>
                     <NavLink to="/messages" className="nav-link flex flex-col gap-[3px] min-w-[60px] items-center text-[#00000]" activeclassname="active">
-                        <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M18 0H2C0.9 0 0 0.9 0 2V20L4 16H18C19.1 16 20 15.1 20 14V2C20 0.9 19.1 0 18 0ZM18 14H3.2L2 15.2V2H18V14Z" />
-                        </svg>
-                        <h1 className='text-[.75em] mt-[-2px]'>Messages</h1>
+                        <div className='mt-[-2px] relative'>
+                            <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18 0H2C0.9 0 0 0.9 0 2V20L4 16H18C19.1 16 20 15.1 20 14V2C20 0.9 19.1 0 18 0ZM18 14H3.2L2 15.2V2H18V14Z" />
+                            </svg>
+                            {auth?.userId && (!userMessageQuery?.isLoading && userMessageQuery?.data?.data?.unReadMessages !== 0) && <span className='absolute bg-[#f71c1cd2] right-[-20px] text-[#ffff] flex justify-center items-center rounded-full top-0 w-[18px] h-[18px] text-[9px]'>{userMessageQuery?.data?.data?.unReadMessages}</span>}
+                        </div>
+                        <h1 className='text-[.75em]'>Messages</h1>
                     </NavLink>
                     {Object.keys(auth).length === 0 ? <NavLink to="/signin" className="flex flex-col gap-[3px] min-w-[50px] items-center">
-                        <img src={signin} className="h-[22px]" alt='delivery' />
+                        <img src={signin} className="h-[22px] w-[22px]" alt='delivery' />
                         <h1 className='text-[.75em] mt-[-2px]'>Sign In</h1>
                     </NavLink> :
                         <div onClick={handleOpenUserMenu} className='cursor-pointer flex flex-col gap-[3px] min-w-[50px] items-center'>
-                            <img src={auth.profilePicture === null ? signin : auth.profilePicture} className={`h-[23px] rounded-full cursor-pointer`} alt='profile' />
+                            <img src={auth.profilePicture === null ? signin : auth.profilePicture} className={`h-[23px] w-[23px] rounded-full cursor-pointer`} alt='profile' />
                             <Menu sx={{ mt: '45px' }} id="menu-appbar" anchorEl={anchorElUser} anchorOrigin={{ vertical: 'top', horizontal: 'right', }} keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right', }} open={Boolean(anchorElUser)} onClose={handleCloseUserMenu}>
                                 <MenuItem onClick={(e) => { handleCloseUserMenu(e); navigate('/profile/private') }}>
                                     <h1 className=" flex flex-col font-sans text-[.8em] gap-[3px] min-w-[80px] items-center" activeclassname="active">

@@ -111,10 +111,11 @@ const ChoosePayment = ({ seller, setModel, paymentMethod }) => {
                                 onChange={() => handleCheckboxChange("add")}
                             />
                             <div className='flex w-full flex-col gap-[0.75em]'>
-                                <input
+                                <textarea
                                     name="name"
-                                    className="text-[0.75em] pl-[5px] ml-[0.625em] w-[70%] placeholder:font-[500]  border-[1px] border-[#595959]  xsm:h-[27px] sm:h-[27px] h-[2.938em] rounded-[2px]"
-                                    placeholder="Name of method"
+                                    rows={4}
+                                    className="text-[0.75em] resize-none p-[5px] ml-[0.625em] w-[70%] placeholder:font-[500]  border-[1px] border-[#595959] rounded-[2px]"
+                                    placeholder="Add a description to your payment method, like phone number, account number or other relevant information"
                                     onChange={handleInputChange}
                                 />
                                 <input

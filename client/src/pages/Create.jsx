@@ -6,9 +6,10 @@ import plastic from '../assets/plastic.svg'
 import upload from '../assets/upload.svg'
 import NumofListing from '../components/create/NumofListing'
 import Select from 'react-select'
+import CreatableSelect from 'react-select/creatable';
 import CropEasy from '../components/create/cropEasy'
 import { toast } from 'react-toastify'
-
+import heic2any from 'heic2any';
 import useAuth from '../hooks/useAuth'
 import { getCountryInfoByISO } from '../utils/iso-country-currency'
 
@@ -116,11 +117,30 @@ const Create = () => {
     const [added, setAdded] = useState(false)
     const [files, setFile] = useState(null)
 
-    const handleFileUpload = (event) => {
-        setFile(event.target.files[0])
-        setPhotoURL(URL.createObjectURL(event.target.files[0]))
-        setOpenCrop(true)
+    async function convertHeicToJpeg(heicBlob) {
+        const jpegBlob = await heic2any({
+            blob: heicBlob,
+            toType: 'image/jpeg',
+            quality: 0.92 // Optional: set the JPEG quality (default is 0.92)
+        });
+
+        return jpegBlob;
     }
+
+    const handleFileUpload = async (event) => {
+        const file = event.target.files[0];
+
+        if (file.type === 'image/heic') {
+            const jpegBlob = await convertHeicToJpeg(file);
+            setFile(jpegBlob);
+            setPhotoURL(URL.createObjectURL(jpegBlob));
+        } else {
+            setFile(file);
+            setPhotoURL(URL.createObjectURL(file));
+        }
+
+        setOpenCrop(true);
+    };
 
     const handleOptionalChange = (event) => {
         if (event.target.name === 'priceType') {
@@ -158,17 +178,30 @@ const Create = () => {
             inputValues.discName === '' ||
             inputValues.brand === '' ||
             inputValues.range === '' ||
+            inputValues.condition === null ||
             (inputValues.priceType === 'auction' && inputValues.startingPrice === '') ||
             (inputValues.priceType === 'fixedPrice' && inputValues.startingPrice === '') ||
-            inputValues.endDay === '' ||
-            inputValues.endTime === '' ||
+            (inputValues.priceType === 'auction' && inputValues.endDay === '') ||
+            (inputValues.priceType === 'auction' && inputValues.endTime === '') ||
             inputValues.pictureURL === null
         ) {
             toast.error('Fill this disc detail first');
             return;
         }
+        if (inputValues.priceType === 'fixedPrice') {
+            setInputValues((prevInputValues) => ({
+                ...prevInputValues,
+                endDay: '',
+                endTime: ''
+            }))
+        }
         if (inputValues.priceType === 'auction' && inputValues.minPrice === '') {
-            inputValues.minPrice = 1
+            setInputValues((prev) => {
+                return {
+                    ...prev,
+                    minPrice: 1
+                }
+            })
         }
         setAdded(false)
         if (multipleDiscs.length === 0) {
@@ -218,8 +251,12 @@ const Create = () => {
             toast.error('Brand is required')
             return
         }
-        if (inputValues.range === '') {
+        if (inputValues.range === '' || inputValues.range === null || inputValues.range === undefined || inputValues.range === 'range') {
             toast.error('Range is required')
+            return
+        }
+        if (inputValues.condition === '' || inputValues.condition === null || inputValues.condition === undefined) {
+            toast.error('Condition is required')
             return
         }
         if (inputValues.priceType === 'auction' && inputValues.startingPrice === '') {
@@ -230,11 +267,11 @@ const Create = () => {
             toast.error('Price is required')
             return
         }
-        if (inputValues.endDay === '') {
+        if (inputValues.priceType === 'auction' && inputValues.endDay === '') {
             toast.error('End day is required')
             return
         }
-        if (inputValues.endTime === '') {
+        if (inputValues.priceType === 'auction' && inputValues.endTime === '') {
             toast.error('End time is required')
             return
         }
@@ -243,9 +280,20 @@ const Create = () => {
             return
         }
         if (inputValues.priceType === 'auction' && inputValues.minPrice === '') {
-            inputValues.minPrice = 1
+            setInputValues((prev) => {
+                return {
+                    ...prev,
+                    minPrice: 1
+                }
+            })
         }
-
+        if (inputValues.priceType === 'fixedPrice') {
+            setInputValues((prevInputValues) => ({
+                ...prevInputValues,
+                endDay: '',
+                endTime: ''
+            }))
+        }
         if (multipleDiscs.length > 0 && added === true) {
             const updatedDiscs = [...multipleDiscs];
             updatedDiscs.pop();
@@ -336,19 +384,35 @@ const Create = () => {
                             <input name='discName'
                                 value={inputValues.discName}
                                 onChange={handleOptionalChange} type="text" className='text-[0.75em] placeholder:font-[500] pl-[7px] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[1.938em] rounded-[2px]' placeholder='Disc Name *' />
-                            <Select value={options.find((option) => option.value === inputValues.brand) || null} className="select2 w-full text-[0.75em] font-[500] text-[#AAAAAA] rounded-[2px] outline-none  leading-[14.63px] bg-[white]" closeMenuOnScroll={true} placeholder="Brand" options={options} onChange={(selectedOption) => {
-                                setInputValues((prevInputValues) => ({
-                                    ...prevInputValues,
-                                    brand: selectedOption ? selectedOption.value : '', // use '' if no option is selected
-                                }));
-                            }} />
-                            <input
-                                name='range'
-                                value={inputValues.range}
-                                onChange={handleOptionalChange}
-                                className="w-full text-[0.75em] bg-white border-[1px] border-[#595959] placeholder:font-[500] pl-[7px] rounded-[2px] xsm:h-[23px] sm:h-[23px] h-[1.938em]"
-                                placeholder="Range *"
+                            <CreatableSelect
+                                isClearable
+                                value={options.find((option) => option.value === inputValues.brand) || null}
+                                className="select2 w-full text-[0.75em] font-[500] text-[#AAAAAA] rounded-[2px] outline-none leading-[14.63px] bg-[white]"
+                                closeMenuOnScroll={true}
+                                placeholder="Brand"
+                                options={options}
+                                onChange={(selectedOption) => {
+                                    setInputValues((prevInputValues) => ({
+                                        ...prevInputValues,
+                                        brand: selectedOption ? selectedOption.value : '',
+                                    }));
+                                }}
+                                onCreateOption={(inputValue) => {
+                                    const newOption = { value: inputValue, label: inputValue };
+                                    options.push(newOption);
+                                    setInputValues((prevInputValues) => ({
+                                        ...prevInputValues,
+                                        brand: newOption.value,
+                                    }));
+                                }}
                             />
+                            <select name='range' value={inputValues.range} onChange={handleOptionalChange} className="w-full text-[0.75em] bg-white border-[1px] border-[#595959] placeholder:font-[500] px-[1px] rounded-[2px] xsm:h-[23px] sm:h-[23px] h-[1.938em]" placeholder="Range *">
+                                <option selected value='range'>Range</option>
+                                <option value='Putt & Approach'>Putt & Approach</option>
+                                <option value='Midrange'>Midrange</option>
+                                <option value='Fairway drivers'>Fairway drivers</option>
+                                <option value='Distance Drivers'>Distance Drivers</option>
+                            </select>
                         </div>
                         <div className="w-[50%] grid grid-cols-4 xsm:gap-x-2 sm:gap-x-2 gap-x-10 xsm:gap-y-[0.375em] sm:gap-y-[0.375em] gap-y-[0.675em]">
                             {ranges.map((value, index) => (
@@ -457,7 +521,7 @@ const Create = () => {
                             {inputValues.minPrice === '' && <p className={`font-[400] text-[.6em] mt-[.2em] text-[#AAAAAA] text-left ${inputValues.priceType !== 'auction' ? 'hidden' : ''}`}> 1 {`${userCountry} default`}</p>}
                         </div>
                     </div>
-                    <div className='flex flex-wrap mx-[0.8em] mt-[0.625em] gap-[0.625em] w-full'>
+                    {inputValues.priceType === 'auction' && <div className='flex flex-wrap mx-[0.8em] mt-[0.625em] gap-[0.625em] w-full'>
                         <div className='flex items-center font-[500]'>
                             <span className='mr-[0.3125em] text-[.75em]'>End time :</span>
                             <input name='endDay'
@@ -467,7 +531,7 @@ const Create = () => {
                         <label htmlFor="time" className='text-[.75em] xsm:h-[1.25em] sm:h-[1.25em] h-[1.75em] font-[500]'>at<input name='endTime'
                             value={inputValues.endTime}
                             onChange={handleOptionalChange} className='min-w-[80px] ml-2 text-[#595959bf] rounded-[2px] border-[1px] border-[#000000]' type="time" id="time" /></label>
-                    </div>
+                    </div>}
                 </div>
                 <div className='flex justify-center xsm:pt-[0em] sm:pt-[0em] pt-[1.2em] pb-[1.25em]'><button onClick={handlePublish} className='w-[7.5em] h-[2.4125em] mt-[1.125em] text-[0.875em] button font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[4px]' style={{ boxShadow: "0 4px 0.375em -1px rgba(0, 0, 0, 0.1), 0 0.375em 4px -1px rgba(0, 0, 0, 0.06)" }}>Publish</button></div>
             </div>

@@ -5,7 +5,6 @@ import useAuth from '../../hooks/useAuth'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from '../../api/axios'
 
-
 const Chats = ({ value, index, chats }) => {
     const navigate = useNavigate()
     const client = useQueryClient()
@@ -21,6 +20,7 @@ const Chats = ({ value, index, chats }) => {
 
     const handleSingleChat = (id) => {
         messageRead.mutate({ chatId: id, userId: auth.userId })
+        client.invalidateQueries('userMessagess')
         navigate("/messages/chat", {
             state: {
                 chatId: id, user2: value.role === 'sender' ? value.receiver._id : value.sender._id, from: 'messages', userName: value.role === 'receiver' ? value.sender.name : value.receiver.name, userImage: value.role === 'sender'
@@ -36,8 +36,7 @@ const Chats = ({ value, index, chats }) => {
                 <img src={
                     value.role === 'sender'
                         ? (value.receiver.profilePicture !== null ? value.receiver.profilePicture : user)
-                        : (value.sender.profilePicture !== null ? value.sender.profilePicture : user)
-                }
+                        : (value.sender.profilePicture !== null ? value.sender.profilePicture : user)}
                     className='h-[3.125em] rounded-full w-[3.125em]' alt="userImage" />
             </div>
             <div className='flex flex-col flex-1'>

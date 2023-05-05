@@ -48,7 +48,6 @@ const SingleListCard = ({ val, seller }) => {
             () => ['following', { userId: auth.userId }],
             [auth.userId]
         );
-
         ({
             isFetching: isRefetchingFollowing,
             data: followingData,
@@ -84,6 +83,8 @@ const SingleListCard = ({ val, seller }) => {
         }
     );
 
+    console.log('val', val);
+    console.log('seller', seller);
     const handleFollowClick = (e) => {
         e.stopPropagation()
         if (Object.keys(auth).length === 0) {
@@ -193,12 +194,12 @@ const SingleListCard = ({ val, seller }) => {
                         </div>
                         <h1 className='text-[0.55em] font-[500] min-h-[20.81px] inline leading-[11px] text-[##595959]'>{val.brand}</h1>
                     </div>
-                    <div className='flex mt-[2px] flex-col text-[#595959]'>
+                    {val.priceType === 'auction' && <div className='flex mt-[2px] flex-col text-[#595959]'>
                         <span className='font-[600] text-[0.6em]'>{getMonthAndDate(val.endDay)} - {val.endTime} </span>
                         <span className='font-[500] text-[#595959BF] text-[0.55em]'>{remainingTime}</span>
-                    </div>
+                    </div>}
                 </div>
-                <div className='flex flex-col justify-between items-end'>
+                <div className='flex flex-col justify-between items-end  gap-[21px]'>
                     <button disabled={isFollowLoading || isUnfollowLoading || isRefetchingFollowing} onClick={handleFollowClick} className={`text-[0.60em] relative xsm:min-h-[20px] sm:min-h-[20px] min-h-[22px] xsm:w-[50px] sm:w-[50px] w-[80px] px-[0.4375em] py-[0.125em] border-[#595959] border-[1px] rounded-[6px] mr-[-3px] mt-[1px] ${followingData?.some((item) => item.disc === val._id) ? "bg-[#81B29A33] border-[#81B29A] xsm:w-[60px] sm:w-[60x] w-[90px] px-[0em]" : ""}`}>
                         {(isFollowLoading || isUnfollowLoading || isRefetchingFollowing && currentId === val._id) ?
                             <FaSpinner
@@ -208,8 +209,10 @@ const SingleListCard = ({ val, seller }) => {
                             : (followingData?.some((item) => item.disc === val._id) ? "Following" : "Follow")}
                     </button>
 
-                    <div className='flex flex-col items-end'>
-                        <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{val.startingPrice.toFixed(0)} {userCurrency}</span>
+                    <div className='flex flex-col items-end '>
+                        {(val?.priceType === 'auction' && val.bids.length > 0) && <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{val.bids[val.bids.length - 1].bidPrice} {userCurrency}</span>}
+                        {(val?.priceType === 'auction' && val.bids.length === 0) && <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{val.startingPrice} {userCurrency}</span>}
+                        {val?.priceType === 'fixedPrice' && <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{val.startingPrice} {userCurrency}</span>}
                         {val.priceType === 'fixedPrice' && <span className='text-[0.6em] font-[500] min-w-[70px] text-end text-[#595959bf]'>Fixed price</span>}
                         {(val.priceType !== 'fixedPrice') &&
                             <div className='flex items-center text-[1em]'>
@@ -220,7 +223,6 @@ const SingleListCard = ({ val, seller }) => {
                                     }
                                     setOldModal(true); e.stopPropagation();
                                 }} className='text-[0.6em] cursor-pointer hover:underline hover:text-text font-[500] text-[#595959BF] '>{val.bids.length} Bids</p>
-
                             </div>}
                     </div>
                 </div>

@@ -50,94 +50,6 @@ const SingleChat = () => {
         }
     }, [socket, id, chats.refetch]);
 
-    const chat = [
-        {
-            "_id": "61f165a64e8a1b9e421f378a",
-            "senderId": "2",
-            "recipientId": "1",
-            "timestamp": "2022-03-15T14:23:00Z",
-            "text": "I was wondering where to send the parcel. The address you gave is wrong."
-        },
-        {
-            "_id": "61f165a64e8a1b9e421f378b",
-            "senderId": "1",
-            "recipientId": "2",
-            "timestamp": "2022-03-15T14:25:00Z",
-            "text": "Yeah yeah, whatever. Here is the right address."
-        },
-        {
-            "_id": "61f165a64e8a1b9e421f378c",
-            "senderId": "2",
-            "recipientId": "1",
-            "timestamp": "2022-03-15T14:27:00Z",
-            "text": "I’ve sent the parcel."
-        },
-        {
-            "_id": "61f165a64e8a1b9e421f378c",
-            "senderId": "2",
-            "recipientId": "1",
-            "timestamp": "2022-03-15T14:27:00Z",
-            "text": "I’ve sent the parcel."
-        },
-        {
-            "_id": "61f165a64e8a1b9e421f378b",
-            "senderId": "1",
-            "recipientId": "2",
-            "timestamp": "2022-03-15T14:25:00Z",
-            "text": "Yeah yeah, whatever. Here is the right address."
-        },
-        {
-            "_id": "61f165a64e8a1b9e421f378a",
-            "senderId": "2",
-            "recipientId": "1",
-            "timestamp": "2022-03-15T14:23:00Z",
-            "text": "I was wondering where to send the parcel. The address you gave is wrong."
-        },
-        {
-            "_id": "61f165a64e8a1b9e421f378c",
-            "senderId": "2",
-            "recipientId": "1",
-            "timestamp": "2022-03-15T14:27:00Z",
-            "text": "I’ve sent the parcel."
-        },
-        {
-            "_id": "61f165a64e8a1b9e421f378c",
-            "senderId": "2",
-            "recipientId": "1",
-            "timestamp": "2022-03-15T14:27:00Z",
-            "text": "I’ve sent the parcel."
-        },
-        {
-            "_id": "61f165a64e8a1b9e421f378c",
-            "senderId": "2",
-            "recipientId": "1",
-            "timestamp": "2022-03-15T14:27:00Z",
-            "text": "I’ve sent the parcel."
-        },
-        {
-            "_id": "61f165a64e8a1b9e421f378c",
-            "senderId": "2",
-            "recipientId": "1",
-            "timestamp": "2022-03-15T14:27:00Z",
-            "text": "I’ve sent the parcel."
-        },
-        {
-            "_id": "61f165a64e8a1b9e421f378c",
-            "senderId": "2",
-            "recipientId": "1",
-            "timestamp": "2022-03-15T14:27:00Z",
-            "text": "I’ve sent the parcel."
-        },
-        {
-            "_id": "61f165a64e8a1b9e421f378c",
-            "senderId": "2",
-            "recipientId": "1",
-            "timestamp": "2022-03-15T14:27:00Z",
-            "text": "I’ve sent the parcel."
-        },
-
-    ]
-
     useEffect(() => {
         if (containerRef.current) {
             containerRef.current.scrollTop = containerRef.current.scrollHeight;
@@ -246,7 +158,7 @@ const SingleChat = () => {
         <>
             <div className='flex text-[1.3rem] sm:text-[1rem] xsm:text-[1rem] items-center bg-[#cccccc21] h-[2.5em] '>
                 <img src={chatbackarrow} className="w-[0.625em] h-[0.9375em] cursor-pointer ml-[0.625em] mr-[0.9375em]" onClick={() => navigate(-1)} alt="back button" />
-                <img src={location.state.userImage !== null ? location.state.userImage : user} onClick={() => navigate(`/profile/public/${location.state.user2}`)} className="h-[1.5em] rounded-full cursor-pointer" alt="user" />
+                <img src={location.state.userImage !== null ? location.state.userImage : user} onClick={() => navigate(`/profile/public/${location.state.user2}`)} className="h-[1.5em] w-[1.5em] rounded-full cursor-pointer" alt="user" />
                 <h1 onClick={() => navigate(`/profile/public/${location.state.user2}`)} className='text-[0.75em] cursor-pointer text-[#595959] font-[700] ml-[0.75em]'>{location.state.userName}</h1>
             </div>
             {!chats.isLoading ?
@@ -278,7 +190,7 @@ const SingleChat = () => {
                                             </div>
                                         ) : (
                                             <div className='flex px-[0.8125em] justify-center mr-auto items-start' key={index}>
-                                                <img src={location.state.userImage !== null ? location.state.userImage : user} onClick={() => navigate(`/profile/public/${location.state.user2}`)} className="mr-[0.5em] mt-[2px] h-[1.875em] cursor-pointer rounded-full" alt="user" />
+                                                <img src={location.state.userImage !== null ? location.state.userImage : user} onClick={() => navigate(`/profile/public/${location.state.user2}`)} className="mr-[0.5em] mt-[2px] h-[1.875em] w-[1.875em] cursor-pointer rounded-full" alt="user" />
                                                 <div className='flex flex-col gap-[5px]'>
                                                     <p className='text-[0.65em] font-[300]'>{value.time}</p>
                                                     <div className='flex justify-center items-center py-[0.675em] px-[1em] rounded-[4px] bg-primary'>
@@ -301,7 +213,7 @@ const SingleChat = () => {
                                                     {value.type === 'image' && <img src={value.content} className='xsm:w-[40vw] sm:w-[40vw] w-[20vw]' alt="image" />}
                                                 </div>
                                                 {(value.read === true && index + 1 === chats?.data?.data?.messages?.length) && <div className='flex items-center justify-end'>
-                                                    <img src={location.state.userImage !== null ? location.state.userImage : user} onClick={() => navigate('/profile/public')} className="mr-[0.4em]  h-[1em] cursor-pointer rounded-full" alt="user" />
+                                                    <img src={location.state.userImage !== null ? location.state.userImage : user} className="mr-[0.4em] w-[1em] h-[1em] cursor-pointer rounded-full" alt="user" />
                                                     <p className='text-[0.65em] font-[300]'>Read</p>
                                                 </div>}
                                             </div>

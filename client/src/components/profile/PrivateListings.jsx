@@ -169,7 +169,6 @@ const PrivateListings = () => {
         const dayOfMonth = date.format("D");
         return `${dayOfMonth} ${monthName}`;
     }
-
     if (activeDiscsQuery.isLoading || finishedDiscsQuery.isLoading && !activeDiscsQuery.data || !finishedDiscsQuery.data) {
         return (
             <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>
@@ -216,16 +215,17 @@ const PrivateListings = () => {
                                                         </div>
                                                         <h1 className='text-[0.55em] font-[500] min-h-[20.81px] inline leading-[11px] text-[##595959]'>{value.brand}</h1>
                                                     </div>
-                                                    <div className='flex mt-[5px] flex-col  text-[#595959]'>
+                                                    {value.priceType === 'auction' && <div className='flex mt-[5px] flex-col  text-[#595959]'>
                                                         <span className='font-[600] text-[0.6em]'>{getMonthAndDate(value.endDay)} - {value.endTime} </span>
                                                         <span className='font-[500] text-[#595959BF] text-[0.55em]'>{remainingTime(value.endDay, value.endTime)}</span>
-                                                    </div>
+                                                    </div>}
                                                 </div>
 
-                                                <div className='flex flex-col  justify-end items-end'>
-                                                    <div className='flex flex-col items-end'>
+                                                <div className='flex flex-col justify-end items-end'>
+                                                    <div className='flex mt-[46px] flex-col items-end'>
                                                         {value?.priceType === 'fixedPrice' && <span className='text-[0.65em] mb-[-3px] text-end flex items-end  font-[600]'>{value.startingPrice} {userCurrency}</span>}
-                                                        {value?.priceType === 'auction' && <span className='text-[0.65em] mb-[-3px] text-end flex items-end  font-[600]'>{value?.buyer?.buyPrice} {userCurrency}</span>}
+                                                        {(value?.priceType === 'auction' && value.bids.length > 0) && <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{value.bids[value.bids.length - 1].bidPrice} {userCurrency}</span>}
+                                                        {(value?.priceType === 'auction' && value.bids.length === 0) && <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{value.startingPrice} {userCurrency}</span>}
                                                         {value.priceType === 'fixedPrice' && <span className='text-[0.6em] font-[500] text-[#595959bf]'>Fixed price</span>}
                                                         {(value.priceType !== 'fixedPrice') &&
                                                             <div className='flex items-center  text-[1em]'>

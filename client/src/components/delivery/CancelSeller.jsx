@@ -41,7 +41,7 @@ const CancelSeller = ({ setModel, disc, val }) => {
         }
     }
 
-    
+
     const handleOfferToNextBidder = () => {
         offerToNextBidder.mutate({ sellerId: val.disc.seller, discId: val.disc._id, cancelId: val._id, buyerId: secondBiggestBid.user._id, buyPrice: secondBiggestBid.bidPrice, time: secondBiggestBid.createdAt })
         if (rating !== 0) {
@@ -49,7 +49,7 @@ const CancelSeller = ({ setModel, disc, val }) => {
         }
     }
 
-    if (val.disc.bids.length > 1) {
+    if (disc.priceType === 'auction' && disc.bids.length > 1) {
         let bids = val.disc.bids.sort((a, b) => b.bidPrice - a.bidPrice);
         const secondBiggestBidPrice = bids[1]?.bidPrice;
         secondBiggestBid = bids.find(bid => bid.bidPrice === secondBiggestBidPrice);
@@ -66,7 +66,7 @@ const CancelSeller = ({ setModel, disc, val }) => {
                     onChange={(event, newValue) => {
                         setRating(Number(newValue));
                     }} precision={0.5} />
-               {val.disc.priceType === 'auction' && <div className='flex flex-col gap-[0.625em] items-center '>
+                {disc.priceType === 'auction' && <div className='flex flex-col gap-[0.625em] items-center '>
                     {val.disc.bids.length > 1 && <>
                         <button onClick={handleOfferToNextBidder} className='relative min-h-[2.6625em] min-w-[15.5625em] py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary button rounded-[2px] mb-[0.3125em]'>
                             {offerToNextBidder.isLoading && (
@@ -79,7 +79,7 @@ const CancelSeller = ({ setModel, disc, val }) => {
                         </button>
                         <div className='flex gap-[20px]  mb-[20px] items-center'>
                             <div className='flex gap-[0.563em]  '>
-                                <img onClick={() => navigate('/profile/public')} src={secondBiggestBid.user.profilePicture !== null ? secondBiggestBid.user.profilePicture : user} className="cursor-pointer mt-[3px] xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] rounded-full" alt="user" />
+                                <img onClick={() => navigate('/profile/public')} src={secondBiggestBid.user.profilePicture !== null ? secondBiggestBid.user.profilePicture : user} className="cursor-pointer mt-[3px] xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] xsm:w-[1.563em] sm:w-[1.563em] md:w-[1.9em] lg:w-[2em] xl:w-[2em] 2xl:w-[2em] rounded-full" alt="user" />
                                 <div className='flex flex-col justify-start'>
                                     <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate(`/profile/public/${secondBiggestBid.user._id}`)} >{secondBiggestBid.user.name}</h1>
                                     <div className='ml-[-0.2em] flex gap-[5px] mb-[6px]'>

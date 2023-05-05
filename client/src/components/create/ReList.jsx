@@ -219,11 +219,11 @@ const ReList = () => {
             toast.error('Price is required')
             return
         }
-        if (inputValues.endDay === '') {
+        if (inputValues.priceType === 'auction' && inputValues.endDay === '') {
             toast.error('End day is required')
             return
         }
-        if (inputValues.endTime === '') {
+        if (inputValues.priceType === 'auction' && inputValues.endTime === '') {
             toast.error('End time is required')
             return
         }
@@ -231,14 +231,32 @@ const ReList = () => {
             toast.error('Please add a picture')
             return
         }
-        if (inputValues.priceType === 'auction' && inputValues.minPrice === '') {
-            inputValues.minPrice = 1
+        if (inputValues.pictureURL instanceof Blob) {
+            const photo = await handleUpload(inputValues.pictureURL)
+            setInputValues((prevInputValues) => ({
+                ...prevInputValues,
+                pictureURL: photo,
+            }))
         }
-        if (isBeforeNow(inputValues.endDay, inputValues.endTime)) {
+        if (inputValues.priceType === 'auction' && inputValues.minPrice === '') {
+            setInputValues((prev) => {
+                return {
+                    ...prev,
+                    minPrice: 1
+                }
+            })
+        }
+        if (inputValues.priceType === 'fixedPrice') {
+            setInputValues((prevInputValues) => ({
+                ...prevInputValues,
+                endDay: '',
+                endTime: ''
+            }))
+        }
+        if (inputValues.priceType === 'auction' && isBeforeNow(inputValues.endDay, inputValues.endTime)) {
             toast.error('End day and time cannot be from past')
             return
         }
-
         if (inputValues.pictureURL instanceof Blob) {
             const photo = await handleUpload(inputValues.pictureURL)
             setInputValues((prevInputValues) => ({
@@ -247,12 +265,29 @@ const ReList = () => {
             }))
         }
         relistDisc.mutate()
-
     }
 
-    const handleFileUpload = (event) => {
-        setFile(event.target.files[0])
-        setPhotoURL(URL.createObjectURL(event.target.files[0]))
+    async function convertHeicToJpeg(heicBlob) {
+        const jpegBlob = await heic2any({
+            blob: heicBlob,
+            toType: 'image/jpeg',
+            quality: 0.92 // Optional: set the JPEG quality (default is 0.92)
+        });
+
+        return jpegBlob;
+    }
+
+    const handleFileUpload = async (event) => {
+        const file = event.target.files[0];
+
+        if (file.type === 'image/heic') {
+            const jpegBlob = await convertHeicToJpeg(file);
+            setFile(jpegBlob);
+            setPhotoURL(URL.createObjectURL(jpegBlob));
+        } else {
+            setFile(file);
+            setPhotoURL(URL.createObjectURL(file));
+        }
         setOpenCrop(true)
     }
 
@@ -425,20 +460,20 @@ const ReList = () => {
                             <input name='minPrice'
                                 value={inputValues.minPrice}
                                 onChange={handleOptionalChange} type="number" min={0} className={`w-full text-[0.75em] placeholder:font-[500] pl-[0.4375em] border-[1px] font-sans border-[#595959] h-[1.938em] rounded-[2px] ${inputValues.priceType !== 'auction' ? 'hidden' : ''}`} placeholder={`Min Price (Kr)`} />
-                            <p className={`font-[400] text-[.6em] mt-[.2em] text-[#AAAAAA] text-left ${inputValues.priceType !== 'auction' ? 'hidden' : ''}`}>5 Kr min price</p>
+                            <p className={`font-[400] text-[.6em] mt-[.2em] text-[#AAAAAA] text-left ${inputValues.priceType !== 'auction' ? 'hidden' : ''}`}>1 SEK default</p>
                         </div>
                     </div>
-                    <div className='flex flex-wrap mx-[0.8em] mt-[0.625em] gap-[0.625em] w-full'>
-                        <div className='flex items-center  font-[500]'>
+                    {inputValues.priceType === 'auction' && <div className='flex flex-wrap mx-[0.8em] mt-[0.625em] gap-[0.625em] w-full'>
+                        <div className='flex items-center font-[500]'>
                             <span className='mr-[0.3125em] text-[.75em]'>End time :</span>
                             <input name='endDay'
                                 value={inputValues.endDay}
-                                onChange={handleOptionalChange} className=' text-[#595959bf]  text-[.75em] rounded-[2px] border-[1px] border-[#000000]' id="data" type="date" placeholder='sss' />
+                                onChange={handleOptionalChange} className='text-[#595959bf] text-[.75em] rounded-[2px] border-[1px] border-[#000000]' id="data" type="date" placeholder='sss' />
                         </div>
                         <label htmlFor="time" className='text-[.75em] xsm:h-[1.25em] sm:h-[1.25em] h-[1.75em] font-[500]'>at<input name='endTime'
                             value={inputValues.endTime}
-                            onChange={handleOptionalChange} className='min-w-[80px]  ml-2 text-[#595959bf] rounded-[2px] border-[1px] border-[#000000]' type="time" id="time" /></label>
-                    </div>
+                            onChange={handleOptionalChange} className='min-w-[80px] ml-2 text-[#595959bf] rounded-[2px] border-[1px] border-[#000000]' type="time" id="time" /></label>
+                    </div>}
                 </div>
                 <div className='flex justify-center xsm:pt-[0em] sm:pt-[0em] pt-[1.2em] pb-[1.25em]'><button onClick={handlePublish} className='buttonAnimation relative w-[7.5em] h-[2.4125em] mt-[1.125em] text-[0.875em] button font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[4px]' style={{ boxShadow: "0 4px 0.375em -1px rgba(0, 0, 0, 0.1), 0 0.375em 4px -1px rgba(0, 0, 0, 0.06)" }}>
                     {relistDisc.isLoading ?

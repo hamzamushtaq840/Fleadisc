@@ -5,6 +5,7 @@ import { TempDisc } from '../models/tempDisc.js';
 import { User } from '../models/user.js';
 import { getUsers, io } from '../index.js';
 import { CancelDisc } from '../models/cancelDiscs.js';
+import { Notification } from '../models/notification.js';
 
 export const confirmPurchase = tryCatch(async (req, res) => {
     const { id, buyerId } = req.body;
@@ -19,10 +20,14 @@ export const confirmPurchase = tryCatch(async (req, res) => {
     // Update isSold field to true
     await TempDisc.findByIdAndUpdate(id, { purchaseConfirmed: true });
     const receiver = getUsers(buyerId);
-    console.log(receiver);
+    await Notification.create({
+        user: buyerId,
+        type: 'Disc'
+    });
     if (receiver && receiver.socketId) {
         // Emit 'refetchBuying' event to the specific receiver's socketId
         io.to(receiver.socketId).emit('refetchBuying');
+        io.to(receiver.socketId).emit('refetchNotification');
     }
     res.status(201).json({ message: 'Purchase Confirmed' });
 });
@@ -38,10 +43,14 @@ export const sendAddress = tryCatch(async (req, res) => {
     // Update isSold field to true
     await TempDisc.findByIdAndUpdate(id, { addressSent: true, address: address });
     const receiver = getUsers(sellerId);
-    console.log(receiver);
+    await Notification.create({
+        user: sellerId,
+        type: 'Disc'
+    });
     if (receiver && receiver.socketId) {
         // Emit 'refetchBuying' event to the specific receiver's socketId
         io.to(receiver.socketId).emit('refetchSelling');
+        io.to(receiver.socketId).emit('refetchNotification');
     }
     res.status(201).json({ message: 'Purchase Confirmed' });
 });
@@ -59,9 +68,13 @@ export const sendPaymentDetails = tryCatch(async (req, res) => {
     // Update isSold field to true
     await TempDisc.findByIdAndUpdate(id, { paymentAddressConfirmed: true, paymentMethod: paymentMethod, shippingCost: shippingCost, shippingCostPaidBy: shippingCostPaidBy });
     const receiver = getUsers(buyerId);
-
+    await Notification.create({
+        user: buyerId,
+        type: 'Disc'
+    });
     if (receiver && receiver.socketId) {
         io.to(receiver.socketId).emit('refetchBuying');
+        io.to(receiver.socketId).emit('refetchNotification');
     }
     res.status(201).json({ message: 'Purchase Confirmed' });
 });
@@ -86,8 +99,13 @@ export const paymentSent = tryCatch(async (req, res) => {
 
     await TempDisc.findByIdAndUpdate(id, { paymentSent: true, paymentMethod: abc });
     const receiver = getUsers(sellerId);
+    await Notification.create({
+        user: sellerId,
+        type: 'Disc'
+    });
     if (receiver && receiver.socketId) {
         io.to(receiver.socketId).emit('refetchSelling');
+        io.to(receiver.socketId).emit('refetchNotification');
     }
     res.status(201).json({ message: 'Purchase Confirmed' });
 });
@@ -102,8 +120,13 @@ export const confirmPayment = tryCatch(async (req, res) => {
 
     await TempDisc.findByIdAndUpdate(id, { paymentConfirmed: true });
     const receiver = getUsers(buyerId);
+    await Notification.create({
+        user: buyerId,
+        type: 'Disc'
+    });
     if (receiver && receiver.socketId) {
         io.to(receiver.socketId).emit('refetchBuying');
+        io.to(receiver.socketId).emit('refetchNotification');
     }
     res.status(201).json({ message: 'Purchase Confirmed' });
 
@@ -119,8 +142,13 @@ export const confirmParcelSent = tryCatch(async (req, res) => {
 
     await TempDisc.findByIdAndUpdate(id, { parcelSent: true });
     const receiver = getUsers(buyerId);
+    await Notification.create({
+        user: buyerId,
+        type: 'Disc'
+    });
     if (receiver && receiver.socketId) {
         io.to(receiver.socketId).emit('refetchBuying');
+        io.to(receiver.socketId).emit('refetchNotification');
     }
     res.status(201).json({ message: 'Purchase Confirmed' });
 
@@ -137,10 +165,13 @@ export const confirmParcel = tryCatch(async (req, res) => {
     // Update isSold field to true
     await TempDisc.findByIdAndUpdate(id, { parcelReceived: true });
     const receiver = getUsers(sellerId);
-    console.log(receiver);
+    await Notification.create({
+        user: sellerId,
+        type: 'Disc'
+    });
     if (receiver && receiver.socketId) {
-        // Emit 'refetchBuying' event to the specific receiver's socketId
         io.to(receiver.socketId).emit('refetchSelling');
+        io.to(receiver.socketId).emit('refetchNotification');
     }
     res.status(201).json({ message: 'Parcel Confirmed' });
 });
@@ -215,10 +246,22 @@ export const cancel = tryCatch(async (req, res) => {
         receiver = getUsers(buyerId);
     }
     if (receiver && receiver.socketId) {
-        if (from === 'buy')
+        if (from === 'buy') {
+            await Notification.create({
+                user: sellerId,
+                type: 'Disc'
+            });
+            io.to(receiver.socketId).emit('refetchNotification');
             io.to(receiver.socketId).emit('refetchSelling');
-        else
+        }
+        else {
+            await Notification.create({
+                user: buyerId,
+                type: 'Disc'
+            });
+            io.to(receiver.socketId).emit('refetchNotification');
             io.to(receiver.socketId).emit('refetchBuying');
+        }
     }
     res.status(200).json('success');
 });
@@ -294,6 +337,11 @@ export const offerToNextBidder = tryCatch(async (req, res) => {
         io.to(receiver.socketId).emit('refetchSelling');
     }
     if (receiver2 && receiver2.socketId) {
+        await Notification.create({
+            user: buyerId,
+            type: 'Disc'
+        });
+        io.to(receiver.socketId).emit('refetchNotification');
         io.to(receiver2.socketId).emit('refetchBuying');
     }
     res.status(200).json({ message: 'success' });

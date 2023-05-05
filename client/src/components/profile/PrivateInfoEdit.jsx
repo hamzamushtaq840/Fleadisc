@@ -250,7 +250,7 @@ const PrivateInfoEdit = () => {
                     {formData.paymentMethods.map((paymentMethod, index) => (
                         <div key={index} className='flex gap-[0.75em]'>
                             <div className='flex w-[70%] flex-col gap-[0.75em]'>
-                                <input value={paymentMethod.name} name={`paymentMethod${index}.name`} id={index} className='name text-[0.75em] pl-[5px] ml-[0.625em] w-[80%] placeholder:font-[500]  border-[1px] border-[#595959]  xsm:h-[27px] sm:h-[27px] h-[2.938em] rounded-[2px]' placeholder='Name of method' onChange={handleInputChange} />
+                                <textarea value={paymentMethod.name} rows={5} name={`paymentMethod${index}.name`} id={index} className='name resize-none text-[0.75em] pl-[5px] ml-[0.625em] w-[80%] placeholder:font-[500] border-[1px] border-[#595959]  rounded-[2px]' placeholder='Add a description to your payment method, like phone number, account number or other relevant information' onChange={handleInputChange} />
                                 <input value={paymentMethod.accountNo} name={`paymentMethod${index}.accountNo`} className='accountNo text-[0.75em] pl-[5px] ml-[0.625em] w-full placeholder:font-[500]  border-[1px] border-[#595959]  xsm:h-[27px] sm:h-[27px] h-[2.938em] rounded-[2px]' placeholder='Account No i.e IBAN, BSB, IFSC etc' onChange={handleInputChange} />
                             </div>
                             <div className='flex justify-center w-[30%] items-center'><button className='h-[1.875em] w-[1.875em] bg-[#F21111] flex justify-center items-center' onClick={() => handleRemovePaymentMethod(index)}><img src={cross} alt="" /></button></div>

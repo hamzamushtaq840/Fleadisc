@@ -16,9 +16,7 @@ export const postDisc = tryCatch(async (req, res) => {
 
 export const postBid = tryCatch(async (req, res) => {
     const { listingId, userId, price, time, fromCurrency, toCurrency } = req.body;
-
     // Convert bid price to the requested currency
-
     const disc = await Disc.findById(listingId);
     if (!disc) {
         throw new AppError('invalid_id', 'Invalid Listing ID', 404);
@@ -186,13 +184,6 @@ export const buyDisc = tryCatch(async (req, res) => {
     });
     let receiver = getUsers(sellerId.toString());
     let receiver2 = getUsers(userId);
-    console.log(userId);
-    console.log('--------------');
-    console.log(sellerId.toString());
-    console.log('--------------');
-    console.log(receiver);
-    console.log('--------------');
-    console.log(receiver2);
     if (receiver && receiver.socketId) {
         io.to(receiver.socketId).emit('refetchNotification');
     }
@@ -267,16 +258,17 @@ export const checkDiscTime = async () => {
                         await listing.save()
                         io.emit("bid_added");
                     }
-                } else if (disc.priceType === "fixedPrice") {
-                    if (disc.isActive) {
-                        let listing = await Disc.findOne({ _id: disc._id });
-                        listing.isActive = false
-                        listing.isFinished = true
-                        listing.buyer = null
-                        await listing.save()
-                        io.emit("bid_added");
-                    }
                 }
+                // else if (disc.priceType === "fixedPrice") {
+                //     if (disc.isActive) {
+                //         let listing = await Disc.findOne({ _id: disc._id });
+                //         listing.isActive = false
+                //         listing.isFinished = true
+                //         listing.buyer = null
+                //         await listing.save()
+                //         io.emit("bid_added");
+                //     }
+                // }
             }
         });
     } catch (error) {

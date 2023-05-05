@@ -71,7 +71,7 @@ const ConfirmBid = ({ setModel, price, type, val, currentTime, seller, clearForm
                     <div className='flex flex-col gap-[8px] '>
                         <h1 className='text-[0.9375em] font-[500] '>{type === 'bid' ? "Bidder" : "Buyer"}</h1>
                         <div className='flex gap-[6px] items-center'>
-                            <img src={auth.profilePicture !== null ? auth.profilePicture : signin} className="h-[25px] rounded-full" alt="" />
+                            <img src={auth.profilePicture !== null ? auth.profilePicture : signin} className="h-[25px] w-[25px] rounded-full" alt="" />
                             <p className='text-[0.75em] font-[400]'>{auth.name}</p>
                         </div>
                     </div>

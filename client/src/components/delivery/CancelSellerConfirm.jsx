@@ -91,7 +91,7 @@ const CancelSellerConfirm = ({ setModel, val }) => {
                         </button>
                         <div className='flex gap-[20px]  mb-[20px] items-center'>
                             <div className='flex gap-[0.563em]  '>
-                                <img onClick={() => navigate('/profile/public')} src={secondBiggestBid.user.profilePicture !== null ? secondBiggestBid.user.profilePicture : user} className="cursor-pointer mt-[3px] xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] rounded-full" alt="user" />
+                                <img onClick={() => navigate('/profile/public')} src={secondBiggestBid.user.profilePicture !== null ? secondBiggestBid.user.profilePicture : user} className="cursor-pointer mt-[3px] xsm:h-[1.563em] sm:h-[1.563em] md:h-[1.9em] lg:h-[2em] xl:h-[2em] 2xl:h-[2em] xsm:w-[1.563em] sm:w-[1.563em] md:w-[1.9em] lg:w-[2em] xl:w-[2em] 2xl:w-[2em] rounded-full" alt="user" />
                                 <div className='flex flex-col justify-start'>
                                     <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate(`/profile/public/${secondBiggestBid.user._id}`)} >{secondBiggestBid.user.name}</h1>
                                     <div className='ml-[-0.2em] flex gap-[5px] mb-[6px]'>

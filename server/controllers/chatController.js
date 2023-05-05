@@ -1,5 +1,4 @@
 import { tryCatch } from '../utils/tryCatch.js';
-import AppError from '../utils/AppError.js';
 import { Chat } from '../models/chat.js';
 import { getUsers, io } from '../index.js';
 
@@ -32,6 +31,36 @@ export const getUserAllChats = tryCatch(async (req, res) => {
     res.status(201).json(chatsWithLastMessage);
 });
 
+export const getUserUnreadChats = tryCatch(async (req, res) => {
+    const { userId } = req.params;
+    const existingChat = await Chat.find({
+        $or: [
+            { sender: userId },
+            { receiver: userId }
+        ]
+    }).populate('sender').populate('receiver')
+
+    if (!existingChat) {
+        return res.status(201).json([]);
+    }
+
+    let unReadMessages = 0
+    existingChat.forEach(chat => {
+        if (chat.messages.length > 0) {
+            for (let i = chat.messages.length - 1; i >= 0; i--) {
+                const val = chat.messages[i];
+                if (val.sender.toString() !== userId) {
+                    if (!val.read) {
+                        unReadMessages++;
+                    }
+                    break; // exit the loop once you find the first unread message
+                }
+            }
+        }
+    });
+    res.status(201).json({ unReadMessages: unReadMessages });
+});
+
 
 export const newMessage = tryCatch(async (req, res) => {
     const { user1, user2, senderId, text, type, date, time } = req.body;
@@ -60,6 +89,7 @@ export const newMessage = tryCatch(async (req, res) => {
         // Emit 'refetchChat' event to receiver's socketId
         const receiver = getUsers(user2);
         if (receiver && receiver.socketId) {
+            io.to(receiver.socketId).emit('refetchMessageRead');
             io.to(receiver.socketId).emit('refetchChat', { chatId: existingChat._id });
         }
 
@@ -84,9 +114,9 @@ export const newMessage = tryCatch(async (req, res) => {
         // Emit 'refetchChat' event to receiver's socketId
         const receiver = getUsers(user2);
         if (receiver && receiver.socketId) {
+            io.to(receiver.socketId).emit('refetchMessageRead');
             io.to(receiver.socketId).emit('refetchChat', { chatId: newChat._id });
         }
-
         res.status(200).json({ message: 'Message sent successfully' });
     }
 });
