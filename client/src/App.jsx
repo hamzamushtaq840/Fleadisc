@@ -79,7 +79,6 @@ const App = () => {
                 <Route path="listings" element={<Suspense fallback={Loader}><PrivateListings /></Suspense>} />
                 <Route path="purchases" element={<Suspense fallback={Loader}><PrivatePurchases /></Suspense>} />
               </Route>
-
             </Route>
 
             <Route path="/create">
@@ -105,10 +104,3 @@ const App = () => {
 }
 
 export default App
-
-{/*Nested Protected routes */ }
-//  <Route path="/" element={<Suspense fallback={Loader}><RequireAuth allowedRoles={[ROLES.User]} /></Suspense>}>
-//  <Route path="/listing">
-//    <Route path="sublisting" element={<Suspense fallback={Loader}><Navbar><SubListing /></Navbar></Suspense>} />
-//  </Route>
-// </Route>

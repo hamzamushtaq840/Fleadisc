@@ -78,6 +78,7 @@ const SingleSellItem = ({ value }) => {
     const handleRating = (e) => {
         rating.mutate({ id: value._id, sellerId: value.seller._id, buyerId: value.buyer._id, rating: e.target.value, from: 'sell' })
     }
+    console.log(value.soldToNextBidder);
 
     return (
         <>
@@ -112,30 +113,44 @@ const SingleSellItem = ({ value }) => {
                         })}
                     </div>
                 </div>
-                <div className='mt-[55px] xsm:mt-[35px] sm:mt-[35px] mb-[20px]'>
-                    <div className='flex gap-[0.688em] xsm:h-[55px] sm:h-[55px] h-[65px]'>
-                        <div className='flex flex-col items-center '>
-                            <div className={`p-[0.363em] mt-[2px] rounded-full border-[0.063em] ${value.purchaseConfirmed ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
-                            <div className='div h-full flex flex-col'></div>
+                <div className='mb-[20px]'>
+                    {value.soldToNextBidder === true && <div className='mt-[35px] xsm:mt-[35px] sm:mt-[35px]  flex flex-col gap-[20px]'>
+                        <h1 className='text-[0.80em] font-[500] text-center'>Offered to next highest bidder</h1>
+                        <div className='flex gap-[0.688em] sm:h-[50px] xsm:h-[50px] h-[70px] '>
+                            <div className='flex flex-col items-center '>
+                                <div className={`p-[0.363em] mt-[2px] rounded-full border-[0.063em] ${value.purchaseConfirmed ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
+                                <div className='div h-full flex flex-col'></div>
+                            </div>
+                            <div>
+                                <h1 className={`text-[0.75em] font-[300] ${value.purchaseConfirmed ? 'text-[#000000]' : 'text-[#78636382]'}`}>{value.purchaseConfirmed ? "Buyer has confirmed purchase" : "Waiting for buyer purchase confirmation"}</h1>
+                            </div>
                         </div>
-                        <div className='mt-[-0.3em]'>
-                            <button
-                                style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }}
-                                className={`text-[#ffffff] min-w-[105px] xsm:min-h-[30px] sm:min-h-[30px] min-h-[35px] rounded-[8px] py-[0.5em] px-[0.906em] text-[0.75em] bg-primary relative ${confirmPurchase.isLoading ? "opacity-50 cursor-wait" : ""}`}
-                                onClick={() => { confirmPurchase.mutate({ id: value._id, buyerId: value.buyer._id }) }}
-                                disabled={value.purchaseConfirmed}
-                            >
-                                {confirmPurchase.isLoading && (
-                                    <FaSpinner
-                                        className="animate-spin absolute inset-0 m-auto"
-                                        style={{ width: "1em", height: "1em" }}
-                                    />
-                                )}
-                                {!confirmPurchase.isLoading && (value.purchaseConfirmed ? "Purchased Confirmed" : "Confirm Purchase")}
-                            </button>
+                    </div>}
+                    {value.soldToNextBidder === false && <div className='mt-[55px] xsm:mt-[35px] sm:mt-[35px] '>
+                        <div className='flex gap-[0.688em] xsm:h-[55px] sm:h-[55px] h-[65px]'>
+                            <div className='flex flex-col items-center '>
+                                <div className={`p-[0.363em] mt-[2px] rounded-full border-[0.063em] ${(value.purchaseConfirmed) ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
+                                <div className='div h-full flex flex-col'></div>
+                            </div>
+                            <div className='mt-[-0.3em]'>
+                                <button
+                                    style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }}
+                                    className={`text-[#ffffff] min-w-[105px] xsm:min-h-[30px] sm:min-h-[30px] min-h-[35px] rounded-[8px] py-[0.5em] px-[0.906em] text-[0.75em] bg-primary relative ${confirmPurchase.isLoading ? "opacity-50 cursor-wait" : ""}`}
+                                    onClick={() => { confirmPurchase.mutate({ id: value._id, buyerId: value.buyer._id, sellerId: value.seller._id, from: 'seller' }) }}
+                                    disabled={value.purchaseConfirmed}
+                                >
+                                    {confirmPurchase.isLoading && (
+                                        <FaSpinner
+                                            className="animate-spin absolute inset-0 m-auto"
+                                            style={{ width: "1em", height: "1em" }}
+                                        />
+                                    )}
+                                    {!confirmPurchase.isLoading && (value.purchaseConfirmed ? "Purchased Confirmed" : "Confirm Purchase")}
+                                </button>
+                            </div>
                         </div>
                     </div>
-
+                    }
                     <div className={`flex ${value.addressSent ? "xsm:h-[70px] sm:h-[70px] h-[85px]" : "xsm:h-[50px] sm:h-[50px] h-[55px]"} gap-[0.688em] `}>
                         <div className='flex flex-col items-center  '>
                             <div className={`p-[0.363em] mt-[2px] rounded-full border-[0.063em] ${value.addressSent === true ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>

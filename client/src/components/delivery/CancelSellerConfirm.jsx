@@ -31,7 +31,6 @@ const CancelSellerConfirm = ({ setModel, val }) => {
 
     const offerToNextBidder = useMutation((data) => axios.post(`/delivery/offerToNextBidder`, data), {
         onSuccess: (res) => {
-            console.log('done rating');
         },
         onError: (error) => {
             console.log(error);

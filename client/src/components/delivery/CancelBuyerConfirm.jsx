@@ -9,7 +9,6 @@ const CancelBuyerConfirm = ({ setModel, val }) => {
 
     const cancelRemove = useMutation((data) => axios.post(`/delivery/removeCancel`, data), {
         onSuccess: () => {
-            toast.success('Rating given')
         },
         onError: (error) => {
             console.log(error);
@@ -18,7 +17,7 @@ const CancelBuyerConfirm = ({ setModel, val }) => {
 
     const giveRating = useMutation((data) => axios.post(`/delivery/giveRating`, data), {
         onSuccess: (res) => {
-            console.log('done rating');
+            toast.success('Rating given')
         },
         onError: (error) => {
             console.log(error);

@@ -8,10 +8,8 @@ import { CancelDisc } from '../models/cancelDiscs.js';
 import { Notification } from '../models/notification.js';
 
 export const confirmPurchase = tryCatch(async (req, res) => {
-    const { id, buyerId } = req.body;
-    console.log(id);
+    const { id, buyerId, sellerId, from } = req.body;
     const listing = await TempDisc.findOne({ _id: id });
-    console.log(listing);
 
     if (listing.purchaseConfirmed === true) {
         throw new AppError('already confirmed purchased', 'already confirmed purchased', 404);
@@ -19,14 +17,14 @@ export const confirmPurchase = tryCatch(async (req, res) => {
 
     // Update isSold field to true
     await TempDisc.findByIdAndUpdate(id, { purchaseConfirmed: true });
-    const receiver = getUsers(buyerId);
+    const receiver = getUsers(from === "seller" ? buyerId : sellerId);
     await Notification.create({
-        user: buyerId,
+        user: from === "seller" ? buyerId : sellerId,
         type: 'Disc'
     });
     if (receiver && receiver.socketId) {
         // Emit 'refetchBuying' event to the specific receiver's socketId
-        io.to(receiver.socketId).emit('refetchBuying');
+        io.to(receiver.socketId).emit(from === "seller" ? 'refetchBuying' : 'refetchSelling');
         io.to(receiver.socketId).emit('refetchNotification');
     }
     res.status(201).json({ message: 'Purchase Confirmed' });
@@ -57,9 +55,7 @@ export const sendAddress = tryCatch(async (req, res) => {
 
 export const sendPaymentDetails = tryCatch(async (req, res) => {
     const { id, buyerId, paymentMethod, shippingCost, shippingCostPaidBy } = req.body;
-    console.log(req.body);
     const listing = await TempDisc.findOne({ _id: id });
-    console.log(listing);
 
     if (listing.paymentAddressConfirmed === true) {
         throw new AppError('already confirmed purchased', 'already confirmed purchased', 404);
@@ -81,7 +77,6 @@ export const sendPaymentDetails = tryCatch(async (req, res) => {
 
 export const paymentSent = tryCatch(async (req, res) => {
     const { id, sellerId, selectedPaymentMethod } = req.body;
-    console.log(req.body);
     const listing = await TempDisc.findOne({ _id: id });
 
     if (listing.paymentSent === true) {
@@ -180,7 +175,6 @@ export const rating = tryCatch(async (req, res) => {
     const { id, sellerId, buyerId, from, rating } = req.body;
     const listing = await TempDisc.findOne({ _id: id }).populate('disc.discId');
     listing.disc.forEach(async element => {
-        console.log(element.discId._id);
         await Disc.findOneAndUpdate(element.discId._id, { isFinished: true })
     });
     if (from === 'buy') {
@@ -239,7 +233,18 @@ export const cancel = tryCatch(async (req, res) => {
 
     // Save the CancelDisc document
     await cancelDisc.save();
-
+    if (from === 'buy') {
+        await Notification.create({
+            user: sellerId,
+            type: 'Disc'
+        });
+    }
+    else {
+        await Notification.create({
+            user: buyerId,
+            type: 'Disc'
+        });
+    }
     let receiver
     if (from === 'buy') { receiver = getUsers(sellerId) }
     else {
@@ -247,18 +252,12 @@ export const cancel = tryCatch(async (req, res) => {
     }
     if (receiver && receiver.socketId) {
         if (from === 'buy') {
-            await Notification.create({
-                user: sellerId,
-                type: 'Disc'
-            });
+
             io.to(receiver.socketId).emit('refetchNotification');
             io.to(receiver.socketId).emit('refetchSelling');
         }
         else {
-            await Notification.create({
-                user: buyerId,
-                type: 'Disc'
-            });
+
             io.to(receiver.socketId).emit('refetchNotification');
             io.to(receiver.socketId).emit('refetchBuying');
         }
@@ -292,8 +291,6 @@ export const removeCancel = tryCatch(async (req, res) => {
 
 export const giveRating = tryCatch(async (req, res) => {
     const { userId, rating } = req.body
-    console.log('i ran');
-    console.log(rating);
 
     const u = await User.findOne({ _id: userId })
     let ratings = {
@@ -316,33 +313,89 @@ export const offerToNextBidder = tryCatch(async (req, res) => {
     }
     await disc.save();
 
-    const existingTempDisc = await TempDisc.findOne({ buyer: buyerId, seller: sellerId, paymentSent: false }).lean();
-    if (existingTempDisc) {
-        await TempDisc.updateOne(
-            { _id: existingTempDisc._id },
-            { $push: { disc: { discId: disc._id } } }
-        );
-    }
-    else {
-        await TempDisc.create({
-            buyer: buyerId,
-            seller: sellerId,
-            disc: [{ discId: disc._id }]
-        });
-    }
+    await TempDisc.create({
+        buyer: buyerId,
+        seller: sellerId,
+        disc: [{ discId: disc._id }],
+        soldToNextBidder: true
+    });
+
     await CancelDisc.findOneAndRemove({ _id: cancelId })
+
+    await Notification.create({
+        user: buyerId,
+        type: 'Disc'
+    });
+
     let receiver = getUsers(sellerId);
     let receiver2 = getUsers(buyerId);
     if (receiver && receiver.socketId) {
         io.to(receiver.socketId).emit('refetchSelling');
     }
     if (receiver2 && receiver2.socketId) {
-        await Notification.create({
-            user: buyerId,
-            type: 'Disc'
-        });
         io.to(receiver.socketId).emit('refetchNotification');
         io.to(receiver2.socketId).emit('refetchBuying');
+    }
+    res.status(200).json({ message: 'success' });
+});
+
+export const offerToNextBidderFromSale = tryCatch(async (req, res) => {
+    const { sellerId, buyerId, discId, tempId, buyPrice, oldBuyerId } = req.body
+    const disc = await Disc.findById(discId);
+
+    disc.buyer = {
+        user: buyerId,
+        buyPrice: buyPrice,
+        createdAt: new Date(),
+    }
+    await disc.save();
+
+    const listing = await TempDisc.findOne({ _id: tempId }).populate('disc.discId'); // Assuming TempDisc is the model for tempSchema
+    const discIndex = listing.disc.findIndex(disc => disc.discId._id.toString() === discId); // Replace "id" with the appropriate property name of the disc object
+    listing.disc.splice(discIndex, 1)[0];
+
+    if (listing.disc.length === 0) {
+        await TempDisc.deleteOne({ _id: tempId });
+    } else {
+        await listing.save();
+    }
+
+    const cancelDisc = new CancelDisc({
+        disc: discId,
+        cancelFrom: 'sell',
+        sellerId: sellerId,
+        buyerId: oldBuyerId
+    });
+
+    await cancelDisc.save();
+
+    await TempDisc.create({
+        buyer: buyerId,
+        seller: sellerId,
+        disc: [{ discId: disc._id }],
+        soldToNextBidder: true
+    });
+
+    await Notification.create({
+        user: oldBuyerId,
+        type: 'Disc'
+    });
+
+    await Notification.create({
+        user: buyerId,
+        type: 'Disc'
+    });
+
+    let receiver = getUsers(sellerId);
+    let receiver2 = getUsers(buyerId);
+    if (receiver && receiver.socketId) {
+        io.to(receiver.socketId).emit('refetchSelling');
+        io.to(receiver.socketId).emit('refetchNotification');
+    }
+    if (receiver2 && receiver2.socketId) {
+
+        io.to(receiver?.socketId).emit('refetchNotification');
+        io.to(receiver2?.socketId).emit('refetchBuying');
     }
     res.status(200).json({ message: 'success' });
 });

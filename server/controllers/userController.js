@@ -9,7 +9,6 @@ import { Notification } from "../models/notification.js";
 
 export const signinController = tryCatch(async (req, res) => {
     if (req.body.googleAccessToken) {
-        console.log('abc');
         const userInfo = await axios.get(
             'https://www.googleapis.com/oauth2/v3/userinfo',
             { headers: { Authorization: `Bearer ${req.body.googleAccessToken}` } },

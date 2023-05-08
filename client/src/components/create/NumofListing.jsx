@@ -69,6 +69,13 @@ const NumofListing = ({ setModel, discs, clearForm }) => {
 
             // Save the discs array to your database
             const promises = discs.map(async (disc) => {
+                if (disc.priceType === 'auction' && disc.minPrice === '') {
+                    disc.minPrice = 1
+                }
+                if (disc.priceType === 'fixedPrice') {
+                    disc.endDay = ''
+                    disc.endTime = ''
+                }
                 const { data } = await axios.post('/disc', disc);
                 return data;
             });

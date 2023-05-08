@@ -12,10 +12,11 @@ import CropEasy from './cropEasy'
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { Storage } from './../../utils/firebase'
 import moment from 'moment'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import axios from '../../api/axios'
 import useAuth from '../../hooks/useAuth'
 import { FaSpinner } from 'react-icons/fa'
+import CreatableSelect from 'react-select/creatable';
 
 const options = [
     { value: 'Aerobie', label: 'Aerobie' },
@@ -110,6 +111,14 @@ const ReList = () => {
         endDay: data.endDay,
         endTime: data.endTime,
     });
+    const brandQuery = useQuery(['getBrand', auth.userId], () => axios.get(`/disc/getBrand`), {
+        onSuccess: (res) => {
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+    let options = brandQuery?.data?.data
 
     const handleOptionalChange = (event) => {
         if (event.target.name === 'priceType') {
@@ -336,27 +345,35 @@ const ReList = () => {
                             <input name='discName'
                                 value={inputValues.discName}
                                 onChange={handleOptionalChange} type="text" className='text-[0.75em] placeholder:font-[500] pl-[7px] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[1.938em] rounded-[2px]' placeholder='Disc Name *' />
-                            <Select value={options.find((option) => option.value === inputValues.brand) || null} className="select2 w-full text-[0.75em] font-[500] text-[#AAAAAA] rounded-[2px] outline-none  leading-[14.63px] bg-[white]" closeMenuOnScroll={true} placeholder="Brand" options={options} onChange={(selectedOption) => {
-                                setInputValues((prevInputValues) => ({
-                                    ...prevInputValues,
-                                    brand: selectedOption ? selectedOption.value : '', // use '' if no option is selected
-                                }));
-                            }} /><input
-                                name='range'
-                                value={inputValues.range}
-                                onChange={handleOptionalChange}
-                                list="rangeOptions"
-                                className="w-full text-[0.75em] bg-white border-[1px] border-[#595959] placeholder:font-[500] pl-[7px] rounded-[2px] xsm:h-[23px] sm:h-[23px] h-[1.938em]"
-                                placeholder="Range *"
+                            <CreatableSelect
+                                isClearable
+                                value={options.find((option) => option.value === inputValues.brand) || null}
+                                className="select2 w-full text-[0.75em] font-[500] text-[#AAAAAA] rounded-[2px] outline-none leading-[14.63px] bg-[white]"
+                                closeMenuOnScroll={true}
+                                placeholder="Brand"
+                                options={options}
+                                onChange={(selectedOption) => {
+                                    setInputValues((prevInputValues) => ({
+                                        ...prevInputValues,
+                                        brand: selectedOption ? selectedOption.value : '',
+                                    }));
+                                }}
+                                onCreateOption={(inputValue) => {
+                                    const newOption = { value: inputValue, label: inputValue };
+                                    options.push(newOption);
+                                    setInputValues((prevInputValues) => ({
+                                        ...prevInputValues,
+                                        brand: newOption.value,
+                                    }));
+                                }}
                             />
-                            <datalist id="rangeOptions">
-                                <option value="Zara" />
-                                <option value="Gucci" />
-                                <option value="Leopard" />
-                                <option value="" disabled>
-                                    Type something else
-                                </option>
-                            </datalist>
+                            <select name='range' value={inputValues.range} onChange={handleOptionalChange} className="w-full text-[0.75em] bg-white border-[1px] border-[#595959] placeholder:font-[500] px-[1px] rounded-[2px] xsm:h-[23px] sm:h-[23px] h-[1.938em]" placeholder="Range *">
+                                <option selected value='range'>Range</option>
+                                <option value='Putt & Approach'>Putt & Approach</option>
+                                <option value='Midrange'>Midrange</option>
+                                <option value='Fairway drivers'>Fairway drivers</option>
+                                <option value='Distance Drivers'>Distance Drivers</option>
+                            </select>
                         </div>
                         <div className="w-[50%] grid grid-cols-4 xsm:gap-x-2 sm:gap-x-2 gap-x-10 xsm:gap-y-[0.375em] sm:gap-y-[0.375em] gap-y-[0.675em]">
                             {ranges.map((value, index) => (

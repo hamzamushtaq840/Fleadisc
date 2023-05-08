@@ -99,7 +99,11 @@ const PrivateListings = () => {
     });
 
     activeDiscsQuery?.data?.data?.forEach(disc => {
-        activeCost += parseInt(disc.startingPrice, 10);
+        if (disc.bids.length > 0) {
+            activeCost += parseInt(disc.bids[disc.bids.length - 1].bidPrice, 10)
+        }
+        else
+            activeCost += parseInt(disc.startingPrice, 10);
     });
 
     function handleScrollRight() {
@@ -169,6 +173,7 @@ const PrivateListings = () => {
         const dayOfMonth = date.format("D");
         return `${dayOfMonth} ${monthName}`;
     }
+
     if (activeDiscsQuery.isLoading || finishedDiscsQuery.isLoading && !activeDiscsQuery.data || !finishedDiscsQuery.data) {
         return (
             <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }} className=''>

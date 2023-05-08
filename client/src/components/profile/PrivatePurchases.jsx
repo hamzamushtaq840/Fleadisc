@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs";
-import disc from './../../assets/disc.svg';
 import useAuth from '../../hooks/useAuth'
 import { useQuery } from '@tanstack/react-query';
 import axios from '../../api/axios';
@@ -15,6 +14,7 @@ const PrivatePurchases = () => {
         width: window.innerWidth,
         height: window.innerHeight
     });
+    let userCurrency = 'SEK'
 
     function handleScrollRight() {
         let value = 220;
@@ -77,11 +77,11 @@ const PrivatePurchases = () => {
 
         let passedTime;
         if (years > 0) {
-            passedTime = `${years} ${years === 1 ? 'y' : 'y'}`;
+            passedTime = `${years}${years === 1 ? 'y' : 'y'}`;
         } else if (months > 0) {
-            passedTime = `${months} ${months === 1 ? 'm' : 'm'}`;
+            passedTime = `${months}${months === 1 ? 'm' : 'm'}`;
         } else if (days > 0) {
-            passedTime = `${days} ${days === 1 ? 'd' : 'd'} ${hours}h`;
+            passedTime = `${days}${days === 1 ? 'd' : 'd'} ${hours}h`;
         } else if (hours > 0) {
             passedTime = `${hours}h ${minutes}${minutes === 1 ? 'm' : 'm'}`;
         } else if (minutes > 0) {
@@ -171,13 +171,15 @@ const PrivatePurchases = () => {
                                                 </div>
                                                 <div className='flex mt-[5px] flex-col  text-[#595959]'>
                                                     <span className='font-[600] text-[0.6em]'>{getMonthAndDate(value.endDay)} - {value.endTime} </span>
-                                                    <span className='font-[500] text-[#595959BF] text-[0.55em]'>{remainingTime(value.endDay, value.endTime)}</span>
+                                                    <span className='font-[500] text-[#595959BF] text-[0.55em]'>Bought {remainingTime(value.endDay, value.endTime)}</span>
                                                 </div>
                                             </div>
 
                                             <div className='flex flex-col  justify-end items-end'>
                                                 <div className='flex flex-col items-end'>
-                                                    <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{value.startingPrice} SEK</span>
+                                                    {value.priceType === 'fixedPrice' && <span className='text-[0.65em] mb-[-3px] text-end flex items-end  font-[600]'>{value.startingPrice} {userCurrency}</span>}
+                                                    {(value.priceType === 'auction' && value.buyer === null) && <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{value?.startingPrice} {userCurrency}</span>}
+                                                    {(value.priceType === 'auction' && value.buyer !== null) && <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{value?.buyer?.buyPrice} {userCurrency}</span>}
                                                     {value.priceType === 'fixedPrice' && <span className='text-[0.6em] font-[500] text-[#595959bf]'>Fixed price</span>}
                                                     {(value.priceType !== 'fixedPrice') &&
                                                         <div className='flex items-center  text-[1em]'>

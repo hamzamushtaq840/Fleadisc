@@ -83,8 +83,6 @@ const SingleListCard = ({ val, seller }) => {
         }
     );
 
-    console.log('val', val);
-    console.log('seller', seller);
     const handleFollowClick = (e) => {
         e.stopPropagation()
         if (Object.keys(auth).length === 0) {

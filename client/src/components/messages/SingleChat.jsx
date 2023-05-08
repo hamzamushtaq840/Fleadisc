@@ -220,7 +220,7 @@ const SingleChat = () => {
                                         </div>
                                     ) : (
                                         <div className='flex px-[0.8125em] justify-center mr-auto items-start' key={index}>
-                                            <img src={location.state.userImage !== null ? location.state.userImage : user} onClick={() => navigate(`/profile/public/${location.state.user2}`)} className="mr-[0.5em] mt-[2px] h-[1.875em] cursor-pointer rounded-full" alt="user" />
+                                            <img src={location.state.userImage !== null ? location.state.userImage : user} onClick={() => navigate(`/profile/public/${location.state.user2}`)} className="mr-[0.5em] mt-[2px] h-[1.875em] w-[1.875em] cursor-pointer rounded-full" alt="user" />
                                             <div className='flex flex-col gap-[5px]'>
                                                 <p className='text-[0.65em] font-[300]'>{value.time}</p>
                                                 <div className='flex justify-center items-center py-[0.675em] px-[1em] rounded-[4px] bg-primary'>
@@ -241,7 +241,7 @@ const SingleChat = () => {
                             style={{ display: 'none' }}
                             onChange={(e) => handleUpload(e)}
                         />
-                        <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} placeholder='Write a message' required className='border-[0.5px] px-[0.7125em] text-[0.75em] font-[500] flex-1 mx-4 h-[39px] resize-none rounded-[8px]' />
+                        <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} placeholder='Write a message' required className='border-[0.5px] px-[0.7125em] text-[0.75em] font-[500] flex-1 mx-4 xsm:h-[39px] sm:h-[39px] h-[49px] resize-none rounded-[8px]' />
                         {message === '' && <label htmlFor="fileInput" className="cursor-pointer">
                             <img src={imagesend} className='hey' alt="send an image" />
                         </label>}

@@ -96,7 +96,7 @@ const Navbar = () => {
     useEffect(() => {
         if (isSocketReady && socket) { // Check if socket is ready before using it
             socket.on('refetchNotification', () => {
-                if (location.pathname === '/delivery' || location.pathname === 'delivery/selling') {
+                if (location.pathname === '/delivery' || location.pathname === '/delivery/selling') {
                     setRead.mutate({ userId: auth.userId })
                 }
                 else {
@@ -166,7 +166,7 @@ const Navbar = () => {
                                     <h1 className='min-w-[80px] text-center font-sans text-[.8em]' >Logout</h1>
                                 </MenuItem>
                             </Menu>
-                            <h1 className={` ${location.pathname === "/profile/private" ? "text-primary font-[600] text-[.75em] mt-[-2px]" : 'text-[.75em] mt-[-2px] font-[400]'}`}>Profile</h1>
+                            <h1 className={` ${(location.pathname === "/profile/private" || location.pathname === '/profile/private/listings' || location.pathname === '/profile/private/purchases') ? "text-primary font-[600] text-[.75em] mt-[-2px]" : 'text-[.75em] mt-[-2px] font-[400]'}`}>Profile</h1>
                         </div>
                     }
                 </div>

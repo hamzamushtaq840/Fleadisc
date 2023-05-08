@@ -15,10 +15,10 @@ const CancelSeller = ({ setModel, disc, val }) => {
 
     const cancelBuy = useMutation((data) => axios.post(`/delivery/cancel`, data), {
         onSuccess: () => {
-            toast.success('Disc sale has been canceled')
-            setModel(false)
             queryClient.invalidateQueries('buyingDiscs')
             queryClient.invalidateQueries('sellingCancel')
+            toast.success('Disc sale has been canceled')
+            setModel(false)
         },
         onError: (error) => {
             console.log(error);
@@ -34,6 +34,16 @@ const CancelSeller = ({ setModel, disc, val }) => {
         }
     });
 
+    const offerToNextBidder = useMutation((data) => axios.post(`/delivery/offerToNextBidderFromSale`, data), {
+        onSuccess: (res) => {
+            setModel(false)
+            toast.success('Listing offered to next bidder')
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+
     const handleRemove = () => {
         cancelBuy.mutate({ from: 'sell', listingId: val, discId: disc._id, sellerId: disc.seller, buyerId: disc.buyer.user })
         if (rating !== 0 || rating !== '0') {
@@ -43,14 +53,14 @@ const CancelSeller = ({ setModel, disc, val }) => {
 
 
     const handleOfferToNextBidder = () => {
-        offerToNextBidder.mutate({ sellerId: val.disc.seller, discId: val.disc._id, cancelId: val._id, buyerId: secondBiggestBid.user._id, buyPrice: secondBiggestBid.bidPrice, time: secondBiggestBid.createdAt })
         if (rating !== 0) {
             giveRating.mutate({ userId: val.buyerId._id, rating: rating })
         }
+        offerToNextBidder.mutate({ sellerId: disc.seller, discId: disc._id, tempId: val, buyerId: secondBiggestBid.user._id, buyPrice: secondBiggestBid.bidPrice, time: secondBiggestBid.createdAt, oldBuyerId: disc.buyer.user })
     }
 
     if (disc.priceType === 'auction' && disc.bids.length > 1) {
-        let bids = val.disc.bids.sort((a, b) => b.bidPrice - a.bidPrice);
+        let bids = disc.bids.sort((a, b) => b.bidPrice - a.bidPrice);
         const secondBiggestBidPrice = bids[1]?.bidPrice;
         secondBiggestBid = bids.find(bid => bid.bidPrice === secondBiggestBidPrice);
     }
@@ -66,8 +76,8 @@ const CancelSeller = ({ setModel, disc, val }) => {
                     onChange={(event, newValue) => {
                         setRating(Number(newValue));
                     }} precision={0.5} />
-                {disc.priceType === 'auction' && <div className='flex flex-col gap-[0.625em] items-center '>
-                    {val.disc.bids.length > 1 && <>
+                {(disc.priceType === 'auction' && disc.buyer.user !== secondBiggestBid.user._id) && <div className='flex flex-col gap-[0.625em] items-center '>
+                    {(disc.bids.length > 1 && secondBiggestBid.user._id !== disc.buyer._id) && <>
                         <button onClick={handleOfferToNextBidder} className='relative min-h-[2.6625em] min-w-[15.5625em] py-[0.625em] text-[.75em] px-[2.813em] text-[#ffffff] bg-primary button rounded-[2px] mb-[0.3125em]'>
                             {offerToNextBidder.isLoading && (
                                 <FaSpinner
@@ -84,7 +94,7 @@ const CancelSeller = ({ setModel, disc, val }) => {
                                     <h1 className='text-[0.75em] font-[500] cursor-pointer' onClick={() => navigate(`/profile/public/${secondBiggestBid.user._id}`)} >{secondBiggestBid.user.name}</h1>
                                     <div className='ml-[-0.2em] flex gap-[5px] mb-[6px]'>
                                         <Rating size='small' name="half-rating-read" onChange={(e) => setRating(e.target.value)} defaultValue={rating} precision={0.5} readOnly />
-                                        <p className='text-[0.7em] font-[500]'>({secondBiggestBid.user.rating.length})</p>
+                                        <p className='text-[0.7em] font-[500]'>({secondBiggestBid?.user?.rating?.length})</p>
                                     </div>
                                 </div>
                             </div>

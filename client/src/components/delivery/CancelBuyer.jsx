@@ -13,6 +13,8 @@ const CancelBuyer = ({ setModel, temp, disc }) => {
         onSuccess: () => {
             queryClient.invalidateQueries('buyingDiscs')
             queryClient.invalidateQueries('sellingCancel')
+            toast.success('Disc purchase has been canceled')
+            setModel(false)
         },
         onError: (error) => {
             console.log(error);
@@ -30,11 +32,8 @@ const CancelBuyer = ({ setModel, temp, disc }) => {
     const handleDiscCancel = () => {
         cancelBuy.mutate({ from: 'buy', listingId: temp._id, discId: disc._id, sellerId: disc.seller, buyerId: disc.buyer.user })
         if (rating !== 0) {
-            console.log('i ran');
             giveRating.mutate({ userId: disc.seller, rating: rating })
         }
-        toast.success('Disc purchase has been canceled')
-        setModel(false)
     }
 
     return (

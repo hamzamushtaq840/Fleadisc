@@ -1,6 +1,6 @@
 const router = express.Router();
 import express from 'express';
-import { cancel, confirmParcel, confirmParcelSent, confirmPayment, confirmPurchase, getBuyingCancel, getSellingCancel, giveRating, offerToNextBidder, paymentSent, rating, removeCancel, sendAddress, sendPaymentDetails } from '../controllers/deliveryController.js';
+import { cancel, confirmParcel, confirmParcelSent, confirmPayment, confirmPurchase, getBuyingCancel, getSellingCancel, giveRating, offerToNextBidder, offerToNextBidderFromSale, paymentSent, rating, removeCancel, sendAddress, sendPaymentDetails } from '../controllers/deliveryController.js';
 
 router.post('/confirmPurchase', confirmPurchase);
 router.post('/sendAddress', sendAddress);
@@ -16,5 +16,6 @@ router.get('/getBuyingCancel/:userId', getBuyingCancel);
 router.post('/removeCancel', removeCancel);
 router.post('/giveRating', giveRating);
 router.post('/offerToNextBidder', offerToNextBidder);
+router.post('/offerToNextBidderFromSale', offerToNextBidderFromSale);
 
 export default router;

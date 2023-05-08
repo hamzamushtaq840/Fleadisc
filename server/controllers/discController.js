@@ -6,12 +6,33 @@ import { getUsers, io } from '../index.js';
 import { TempDisc } from '../models/tempDisc.js';
 import { Notification } from '../models/notification.js';
 import { CancelDisc } from '../models/cancelDiscs.js';
+import { Option } from '../models/options.js';
 
 export const postDisc = tryCatch(async (req, res) => {
     const { seller, pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime } = req.body;
-    const disc = await Disc.create({ seller, pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime, });
-    io.emit("bid_added");
+
+    // Fetch all options from the database
+    const optionsFromDB = await Option.find();
+
+    // Get the values of all options from the database
+    const existingOptions = optionsFromDB.map(option => option.value);
+
+    // Check if the brand option from the request is not in the existing options array
+    if (!existingOptions.includes(brand)) {
+        // Add the brand option to the database
+        const newBrandOption = await Option.create({ value: brand, label: brand });
+        optionsFromDB.push(newBrandOption);
+    }
+
+    const disc = await Disc.create({ seller, pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime });
+
+    io.emit('bid_added');
     res.status(201).json({ message: 'Disc created successfully', disc });
+});
+
+export const getBrand = tryCatch(async (req, res) => {
+    const optionsFromDB = await Option.find();
+    res.status(201).json(optionsFromDB);
 });
 
 export const postBid = tryCatch(async (req, res) => {
@@ -160,7 +181,7 @@ export const buyDisc = tryCatch(async (req, res) => {
     await disc.save();
     // check if disc.buyer and dics.seller are found in that collection then add it to there disc array 
     // only if the last added disc has paymentSent = false
-    const existingTempDisc = await TempDisc.findOne({ buyer: userId, seller: sellerId, paymentSent: false }).lean();
+    const existingTempDisc = await TempDisc.findOne({ buyer: userId, seller: sellerId, paymentSent: false, soldToNextBidder: false }).lean();
     if (existingTempDisc) {
         await TempDisc.updateOne(
             { _id: existingTempDisc._id },
@@ -217,7 +238,7 @@ export const checkDiscTime = async () => {
                         disc.buyer = buyer;
                         disc.isActive = false;
                         await disc.save();
-                        const existingTempDisc = await TempDisc.findOne({ buyer: highestBid.user, seller: sellerId, paymentSent: false }).lean();
+                        const existingTempDisc = await TempDisc.findOne({ buyer: highestBid.user, seller: sellerId, paymentSent: false, soldToNextBidder: false }).lean();
                         if (existingTempDisc) {
                             await TempDisc.updateOne(
                                 { _id: existingTempDisc._id },
@@ -236,7 +257,7 @@ export const checkDiscTime = async () => {
                             type: 'Disc'
                         });
                         await Notification.create({
-                            user: sellerId,
+                            user: sellerId.toString(),
                             type: 'Disc'
                         });
                         let receiver = getUsers(sellerId.toString());
@@ -438,6 +459,19 @@ export const editDisc = tryCatch(async (req, res) => {
     disc.endDay = endDay;
     disc.endTime = endTime;
 
+    // Fetch all options from the database
+    const optionsFromDB = await Option.find();
+
+    // Get the values of all options from the database
+    const existingOptions = optionsFromDB.map(option => option.value);
+
+    // Check if the brand option from the request is not in the existing options array
+    if (!existingOptions.includes(brand)) {
+        // Add the brand option to the database
+        const newBrandOption = await Option.create({ value: brand, label: brand });
+        optionsFromDB.push(newBrandOption);
+    }
+
     // Save the updated disc
     disc = await disc.save();
     io.emit("bid_added");
@@ -452,6 +486,18 @@ export const reListDisc = tryCatch(async (req, res) => {
     if (cancel) {
         await CancelDisc.findByIdAndDelete(cancel._id);
     }
+    const optionsFromDB = await Option.find();
+
+    // Get the values of all options from the database
+    const existingOptions = optionsFromDB.map(option => option.value);
+
+    // Check if the brand option from the request is not in the existing options array
+    if (!existingOptions.includes(brand)) {
+        // Add the brand option to the database
+        const newBrandOption = await Option.create({ value: brand, label: brand });
+        optionsFromDB.push(newBrandOption);
+    }
+
     await Disc.findByIdAndUpdate(discId, { isActive: true, isFinished: false, seller, pictureURL, quantity, discName, brand, range, condition, plastic, grams, named, dyed, blank, glow, collectible, firstRun, priceType, startingPrice, minPrice, endDay, endTime });
     io.emit("bid_added");
     res.send('Disc relisted successfully');
@@ -467,7 +513,17 @@ export const buyingDiscs = tryCatch(async (req, res) => {
 
 export const sellingDiscs = tryCatch(async (req, res) => {
     const { userId } = req.params;
-    const discs = await TempDisc.find({ seller: userId }).populate('seller').populate('buyer').populate('disc.discId');
+    const discs = await TempDisc.find({ seller: userId })
+        .populate('seller')
+        .populate('buyer')
+        .populate('disc.discId')
+        .populate({
+            path: 'disc.discId',
+            populate: {
+                path: 'bids.user', // Populate the 'user' field in 'bids' array of 'disc'
+                model: 'User'
+            }
+        });
     res.status(200).json(discs);
 })
 

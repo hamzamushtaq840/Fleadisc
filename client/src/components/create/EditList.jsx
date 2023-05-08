@@ -5,61 +5,18 @@ import info from '../../assets/info.svg'
 import plastic from '../../assets/plastic.svg'
 import { getCountryInfoByISO } from '../../utils/iso-country-currency'
 import upload from './../../assets/upload.svg'
-import Select from 'react-select'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import CropEasy from './cropEasy'
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { Storage } from './../../utils/firebase'
 import RemoveModel from './RemoveModel'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import axios from '../../api/axios'
 import { FaSpinner } from 'react-icons/fa'
+import CreatableSelect from 'react-select/creatable';
+import useAuth from '../../hooks/useAuth'
 
-const options = [
-    { value: 'Aerobie', label: 'Aerobie' },
-    { value: 'Alfa Discs', label: 'Alfa Discs' },
-    { value: 'Axiom Discs', label: 'Axiom Discs' },
-    { value: 'Bushnell', label: 'Bushnell' },
-    { value: 'Clash Discs', label: 'Clash Discs' },
-    { value: 'DGA', label: 'DGA' },
-    { value: 'DiscGolf Pins', label: 'DiscGolf Pins' },
-    { value: 'DiscGolfPark', label: 'DiscGolfPark' },
-    { value: 'Discmania', label: 'Discmania' },
-    { value: 'Discraft', label: 'Discraft' },
-    { value: 'Discsport', label: 'Discsport' },
-    { value: 'Dynamic Discs', label: 'Dynamic Discs' },
-    { value: 'E-RaY', label: 'E-RaY' },
-    { value: 'European Birdies', label: 'European Birdies' },
-    { value: 'EV-7', label: 'EV-7' },
-    { value: 'Fossa', label: 'Fossa' },
-    { value: 'Galaxy Discs', label: 'Galaxy Discs' },
-    { value: 'Gateway', label: 'Gateway' },
-    { value: 'Grip Eq', label: 'Grip Eq' },
-    { value: 'Hero Disc', label: 'Hero Disc' },
-    { value: 'Innova', label: 'Innova' },
-    { value: 'Jacquard', label: 'Jacquard' },
-    { value: 'Kastaplast', label: 'Kastaplast' },
-    { value: 'Keen', label: 'Keen' },
-    { value: 'KnA games', label: 'KnA games' },
-    { value: 'Latitude 64', label: 'Latitude 64' },
-    { value: 'Launch Discs', label: 'Launch Discs' },
-    { value: 'Legacy Discs', label: 'Legacy Discs' },
-    { value: 'Løft Discs (loft)', label: 'Løft Discs (loft)' },
-    { value: 'Millennium', label: 'Millennium' },
-    { value: 'Momentum SE', label: 'Momentum SE' },
-    { value: 'MVP Discs', label: 'MVP Discs' },
-    { value: 'Oak Socks', label: 'Oak Socks' },
-    { value: 'Prodigy', label: 'Prodigy' },
-    { value: 'Prodiscus', label: 'Prodiscus' },
-    { value: 'PUG Förlag', label: 'PUG Förlag' },
-    { value: 'Streamline Discs', label: 'Streamline Discs' },
-    { value: 'Swedisc', label: 'Swedisc' },
-    { value: 'Ugglan', label: 'Ugglan' },
-    { value: 'Westside', label: 'Westside' },
-    { value: 'Wham-O', label: 'Wham-O' },
-    { value: 'Other', label: 'Other' }
-];
 //will be in global auth of user 
 const userCountry = 'PK'
 const countryInfo = getCountryInfoByISO(userCountry);
@@ -109,6 +66,15 @@ const Edit = () => {
         endDay: data.endDay,
         endTime: data.endTime,
     });
+    const { auth } = useAuth()
+    const brandQuery = useQuery(['getBrand', auth.userId], () => axios.get(`/disc/getBrand`), {
+        onSuccess: (res) => {
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+    let options = brandQuery?.data?.data
 
     const handleOptionalChange = (event) => {
         if (event.target.name === 'priceType') {
@@ -317,27 +283,35 @@ const Edit = () => {
                             <input name='discName'
                                 value={inputValues.discName}
                                 onChange={handleOptionalChange} type="text" className='text-[0.75em] placeholder:font-[500] pl-[7px] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[1.938em] rounded-[2px]' placeholder='Disc Name *' />
-                            <Select value={options.find((option) => option.value === inputValues.brand) || null} className="select2 w-full text-[0.75em] font-[500] text-[#AAAAAA] rounded-[2px] outline-none  leading-[14.63px] bg-[white]" closeMenuOnScroll={true} placeholder="Brand" options={options} onChange={(selectedOption) => {
-                                setInputValues((prevInputValues) => ({
-                                    ...prevInputValues,
-                                    brand: selectedOption ? selectedOption.value : '', // use '' if no option is selected
-                                }));
-                            }} /><input
-                                name='range'
-                                value={inputValues.range}
-                                onChange={handleOptionalChange}
-                                list="rangeOptions"
-                                className="w-full text-[0.75em] bg-white border-[1px] border-[#595959] placeholder:font-[500] pl-[7px] rounded-[2px] xsm:h-[23px] sm:h-[23px] h-[1.938em]"
-                                placeholder="Range *"
+                            <CreatableSelect
+                                isClearable
+                                value={options.find((option) => option.value === inputValues.brand) || null}
+                                className="select2 w-full text-[0.75em] font-[500] text-[#AAAAAA] rounded-[2px] outline-none leading-[14.63px] bg-[white]"
+                                closeMenuOnScroll={true}
+                                placeholder="Brand"
+                                options={options}
+                                onChange={(selectedOption) => {
+                                    setInputValues((prevInputValues) => ({
+                                        ...prevInputValues,
+                                        brand: selectedOption ? selectedOption.value : '',
+                                    }));
+                                }}
+                                onCreateOption={(inputValue) => {
+                                    const newOption = { value: inputValue, label: inputValue };
+                                    options.push(newOption);
+                                    setInputValues((prevInputValues) => ({
+                                        ...prevInputValues,
+                                        brand: newOption.value,
+                                    }));
+                                }}
                             />
-                            <datalist id="rangeOptions">
-                                <option value="Zara" />
-                                <option value="Gucci" />
-                                <option value="Leopard" />
-                                <option value="" disabled>
-                                    Type something else
-                                </option>
-                            </datalist>
+                            <select name='range' value={inputValues.range} onChange={handleOptionalChange} className="w-full text-[0.75em] bg-white border-[1px] border-[#595959] placeholder:font-[500] px-[1px] rounded-[2px] xsm:h-[23px] sm:h-[23px] h-[1.938em]" placeholder="Range *">
+                                <option selected value='range'>Range</option>
+                                <option value='Putt & Approach'>Putt & Approach</option>
+                                <option value='Midrange'>Midrange</option>
+                                <option value='Fairway drivers'>Fairway drivers</option>
+                                <option value='Distance Drivers'>Distance Drivers</option>
+                            </select>
                         </div>
                         <div className="w-[50%] grid grid-cols-4 xsm:gap-x-2 sm:gap-x-2 gap-x-10 xsm:gap-y-[0.375em] sm:gap-y-[0.375em] gap-y-[0.675em]">
                             {ranges.map((value, index) => (

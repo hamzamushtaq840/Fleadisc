@@ -32,7 +32,7 @@ const SingleBuyItem = ({ value }) => {
                 })
                 .join('');
             if (concatenatedAddresses === '')
-                setAddresses('No address found');
+                setAddresses('No address found, this can be added in your profile settings');
             else {
                 setAddresses(concatenatedAddresses || '');
             }
@@ -49,11 +49,19 @@ const SingleBuyItem = ({ value }) => {
         textareaRef.current.select();
     };
 
+    const confirmPurchase = useMutation((data) => axios.post(`/delivery/confirmPurchase`, data), {
+        onSuccess: () => {
+            queryClient.invalidateQueries('sellingDiscs')
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+
     const sendAddress = useMutation((data) => axios.post(`/delivery/sendAddress`, data), {
         onSuccess: () => {
             queryClient.invalidateQueries('buyingDiscs')
             textareaRef.current.disabled = true;
-
         },
         onError: (error) => {
             console.log(error);
@@ -123,15 +131,41 @@ const SingleBuyItem = ({ value }) => {
                 </div>
             </div>
             <div className='mt-[55px] xsm:mt-[35px] sm:mt-[35px] mb-[20px]'>
-                <div className='flex gap-[0.688em] sm:h-[50px] xsm:h-[50px] h-[70px] '>
-                    <div className='flex flex-col items-center '>
+                {value.soldToNextBidder === true &&
+                    <div className='flex flex-col gap-[20px]'>
+                        <h1 className='text-[0.75em] font-[500] text-center'>The seller offered it to you as you were the second highest bidder</h1>
+                        <div className='flex gap-[0.688em] xsm:h-[55px] sm:h-[55px] h-[65px]'>
+                            <div className='flex flex-col items-center '>
+                                <div className={`p-[0.363em] mt-[2px] rounded-full border-[0.063em] ${(value.purchaseConfirmed) ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
+                                <div className='div h-full flex flex-col'></div>
+                            </div>
+                            <div className='mt-[-0.3em]'>
+                                <button
+                                    style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }}
+                                    className={`text-[#ffffff] min-w-[105px] xsm:min-h-[30px] sm:min-h-[30px] min-h-[35px] rounded-[8px] py-[0.5em] px-[0.906em] text-[0.75em] bg-primary relative ${confirmPurchase.isLoading ? "opacity-50 cursor-wait" : ""}`}
+                                    onClick={() => { confirmPurchase.mutate({ id: value._id, buyerId: value.buyer._id, sellerId: value.seller._id, from: 'buyer' }) }}
+                                    disabled={value.purchaseConfirmed}
+                                >
+                                    {confirmPurchase.isLoading && (
+                                        <FaSpinner
+                                            className="animate-spin absolute inset-0 m-auto"
+                                            style={{ width: "1em", height: "1em" }}
+                                        />
+                                    )}
+                                    {!confirmPurchase.isLoading && (value.purchaseConfirmed ? "Purchased Confirmed" : "Confirm Purchase")}
+                                </button>
+                            </div>
+                        </div>
+                    </div>}
+                {value.soldToNextBidder === false && <div className='flex gap-[0.688em] sm:h-[50px] xsm:h-[50px] h-[70px] '>
+                    <div className='flex flex-col items-center'>
                         <div className={`p-[0.363em] mt-[2px] rounded-full border-[0.063em] ${value.purchaseConfirmed ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
                         <div className='div h-full flex flex-col'></div>
                     </div>
                     <div>
                         <h1 className={`text-[0.75em] font-[300] ${value.purchaseConfirmed ? 'text-[#000000]' : 'text-[#78636382]'}`}>{value.purchaseConfirmed ? "Seller has confirmed purchase" : "Waiting for purchase confirmation"}</h1>
                     </div>
-                </div>
+                </div>}
                 <div className='flex gap-[0.688em] sm:h-[55px] xsm:h-[55px] h-[75px] '>
                     <div className='flex flex-col items-center  '>
                         <div className={`p-[0.363em] mt-[2px] rounded-full border-[0.063em] ${value.addressSent ? 'bg-[#81b29aac] border-[#81B29A33]' : 'border-[#ccc]'} `}></div>
@@ -139,7 +173,7 @@ const SingleBuyItem = ({ value }) => {
                     </div>
                     <div className='flex w-full items-start gap-[0.875em] mt-[-0.3em]'>
                         <button style={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }}
-                            onClick={() => { if (addresses.trim() === '' || addresses.trim() === 'No address found') { toast.error('Please add address'); return }; sendAddress.mutate({ id: value._id, sellerId: value.seller._id, address: addresses }) }}
+                            onClick={() => { if (addresses.trim() === '' || addresses.trim() === 'No address found, this can be added in your profile settings') { toast.error('Please add address'); return }; sendAddress.mutate({ id: value._id, sellerId: value.seller._id, address: addresses }) }}
                             className={`text-[#ffffff] relative min-w-[105px] min-h-[30px] rounded-[8px] py-[0.5em] px-[0.906em] text-[0.75em] ${value.purchaseConfirmed ? 'bg-primary' : 'bg-[#81b29a4b]'} ${sendAddress.isLoading ? "opacity-50 cursor-wait" : ""} `}
                             disabled={value.addressSent === true || value.purchaseConfirmed === false ? true : false}>
                             {sendAddress.isLoading && (

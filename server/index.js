@@ -70,7 +70,7 @@ app.use('/chat', chatRoutes)
 app.use('/delivery', deliveryRoutes)
 
 cron.schedule('*/30 * * * * *', () => {
-    // checkDiscTime()
+    checkDiscTime()
 });
 
 const PORT = process.env.PORT || 5000
