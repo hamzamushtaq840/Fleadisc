@@ -14,16 +14,16 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from '../api/axios'
 
 const ranges = [
-    { condition: 0, info: "My dog/crocodile has chewed on it, the disc in parts and/or holes in the disc" },
-    { condition: 1, info: "Larger cracks or disc's original form partially worn away" },
-    { condition: 2, info: "The disc has cracks or is properly winded or worn" },
-    { condition: 3, info: "Disc at the end of its life, pressure almost worn out, wind after some decent tree/rock hits" },
-    { condition: 4, info: "Well used disc a little wind maybe, but still usable" },
-    { condition: 5, info: "Used disc, but not wind, with some light nicks and some scratches" },
-    { condition: 6, info: "Recorded with minor damage, but still in good condition" },
-    { condition: 7, info: "Barely recorded, use a few rounds without heavy nicks" },
-    { condition: 8, info: "Test thrown without direct damage, only light scratches" },
-    { condition: 9, info: "Unused, but possibly some small scratches in print from handling/storage, marked with name/decal below to" },
+    { condition: 0, info: "The disc is in pieces and/or has holes in it." },
+    { condition: 1, info: "Major cracks or the disc's original shape partially worn off" },
+    { condition: 2, info: "The disc has cracks or is significantly warped or worn" },
+    { condition: 3, info: "The disc is at the end of its life, with the design almost worn off, warped after a few solid tree/rock hits" },
+    { condition: 4, info: "Well-used disc, possibly slightly warped, but still usable" },
+    { condition: 5, info: "Used disc, but not warped, with some light scratches and some dents" },
+    { condition: 6, info: "Broken in with minor damage, but still in good condition" },
+    { condition: 7, info: "Barely broken in, used a few rounds without significant damage" },
+    { condition: 8, info: "Test-thrown without direct damage, only minor scratches" },
+    { condition: 9, info: "Unused, but may have some minor scratches from handling/storage, marked with a name/decal on the bottom" },
     { condition: 10, info: "\"Mint\", no scratches/damage" },
     { condition: 11, info: "In unopened original packaging" },
 ]

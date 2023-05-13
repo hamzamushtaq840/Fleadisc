@@ -36,6 +36,7 @@ const PrivateInfoEdit = () => {
     const [formData, setFormData] = useState({
         name: userInfoQuery.data.data.name || "",
         country: userInfoQuery.data.data.country || "",
+        city: userInfoQuery.data.data.city || "",
         deliveryAddressLine1: userInfoQuery.data.data.deliveryAddress ? userInfoQuery.data.data.deliveryAddress.line1 || "" : "",
         deliveryAddressLine2: userInfoQuery.data.data.deliveryAddress ? userInfoQuery.data.data.deliveryAddress.line2 || "" : "",
         deliveryPostalCode: userInfoQuery.data.data.deliveryAddress ? userInfoQuery.data.data.deliveryAddress.postalCode || "" : "",
@@ -158,7 +159,13 @@ const PrivateInfoEdit = () => {
                         />
                     </div>
                 </div>
-
+                <div className='flex w-full flex-col gap-[0.5em]'>
+                    <label className='text-[0.75em] font-[600]' htmlFor="name">City</label>
+                    <input name='city'
+                        value={formData.city}
+                        onChange={handleInputChange}
+                        type="text" className='text-[0.75em] pl-[5px] ml-[0.625em] w-[40%] placeholder:font-[500]  border-[1px] border-[#595959]  xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' />
+                </div>
                 <div className='flex w-full flex-col gap-[0.5em]'>
                     <label className='text-[0.75em] font-[600]' htmlFor="Delievery Address">Delivery Address (Recieving to)</label>
                     <input
@@ -204,7 +211,7 @@ const PrivateInfoEdit = () => {
                         <input name='shippingCity'
                             value={formData.shippingCity}
                             onChange={handleInputChange}
-                            type="text" className='text-[0.75em]   w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='City' />
+                            type="text" className='text-[0.75em] w-[50%] pl-[5px] placeholder:font-[500] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[2.938em] rounded-[2px]' placeholder='City' />
                     </div>
                     <div className='flex ml-[0.425em] xsm:w-[80%] sm:w-[80%] w-full gap-[0.9375em]'>
                         <input name='shippingState'
@@ -250,8 +257,8 @@ const PrivateInfoEdit = () => {
                     {formData.paymentMethods.map((paymentMethod, index) => (
                         <div key={index} className='flex gap-[0.75em]'>
                             <div className='flex w-[70%] flex-col gap-[0.75em]'>
-                                <textarea value={paymentMethod.name} rows={5} name={`paymentMethod${index}.name`} id={index} className='name resize-none text-[0.75em] pl-[5px] ml-[0.625em] w-[80%] placeholder:font-[500] border-[1px] border-[#595959]  rounded-[2px]' placeholder='Add a description to your payment method, like phone number, account number or other relevant information' onChange={handleInputChange} />
-                                <input value={paymentMethod.accountNo} name={`paymentMethod${index}.accountNo`} className='accountNo text-[0.75em] pl-[5px] ml-[0.625em] w-full placeholder:font-[500]  border-[1px] border-[#595959]  xsm:h-[27px] sm:h-[27px] h-[2.938em] rounded-[2px]' placeholder='Account No i.e IBAN, BSB, IFSC etc' onChange={handleInputChange} />
+                                <input value={paymentMethod.name} rows={5} name={`paymentMethod${index}.name`} id={index} className='name resize-none text-[0.75em] pl-[5px] ml-[0.625em] w-[80%] placeholder:font-[500] border-[1px] border-[#595959] rounded-[2px] xsm:h-[27px] sm:h-[27px] h-[2.938em]' placeholder={`For example "Swish" or "Bank transaction"`} onChange={handleInputChange} />
+                                <textarea value={paymentMethod.accountNo} name={`paymentMethod${index}.accountNo`} className='accountNo text-[0.75em] pl-[5px] ml-[0.625em] w-full placeholder:font-[500] border-[1px] border-[#595959] rounded-[2px]' placeholder='Ad a description to your payment method, like phone number, account number or other relevant information' onChange={handleInputChange} />
                             </div>
                             <div className='flex justify-center w-[30%] items-center'><button className='h-[1.875em] w-[1.875em] bg-[#F21111] flex justify-center items-center' onClick={() => handleRemovePaymentMethod(index)}><img src={cross} alt="" /></button></div>
                         </div>

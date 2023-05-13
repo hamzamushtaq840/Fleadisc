@@ -42,7 +42,6 @@ const SingleListCard = ({ val, seller }) => {
     }
     const modalComponent = useMemo(() => <ConfirmBid price={price} val={val} seller={seller} type={type} setModel={setModal} currentTime={currentTime} clearForm={clearForm} />, [price, val, type, currentTime, setModal]);
     const oldModalComponent = useMemo(() => <OlderBids setModel={setOldModal} discId={val._id} />, [setOldModal]);
-
     if (Object.keys(auth).length !== 0) {
         followingDataQuery = useMemo(
             () => ['following', { userId: auth.userId }],
@@ -157,9 +156,6 @@ const SingleListCard = ({ val, seller }) => {
                 return
             }
             if (val.bids.length > 0) {
-                console.log(price);
-                console.log(val.startingPrice);
-                console.log(val.highestBid.bidPrice);
                 if (price < Number(val.highestBid.bidPrice) + Number(val.minPrice)) {
                     setError(true)
                     setErrorText('Enter higher price than min')
@@ -178,6 +174,13 @@ const SingleListCard = ({ val, seller }) => {
         type === 'bid' ? setType('bid') : setType('buy')
         setCurrentTime(new Date().toLocaleString())
         setModal(true)
+    }
+    let highestBid
+
+    if (val.bids.length > 0) {
+        highestBid = val.bids.sort(
+            (a, b) => b.bidPrice - a.bidPrice
+        )[0];
     }
 
     return (
@@ -208,7 +211,7 @@ const SingleListCard = ({ val, seller }) => {
                     </button>
 
                     <div className='flex flex-col items-end '>
-                        {(val?.priceType === 'auction' && val.bids.length > 0) && <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{val.bids[val.bids.length - 1].bidPrice} {userCurrency}</span>}
+                        {(val?.priceType === 'auction' && val.bids.length > 0) && <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{highestBid.bidPrice} {userCurrency}</span>}
                         {(val?.priceType === 'auction' && val.bids.length === 0) && <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{val.startingPrice} {userCurrency}</span>}
                         {val?.priceType === 'fixedPrice' && <span className='text-[0.65em] mb-[-3px] text-end flex items-end font-[600]'>{val.startingPrice} {userCurrency}</span>}
                         {val.priceType === 'fixedPrice' && <span className='text-[0.6em] font-[500] min-w-[70px] text-end text-[#595959bf]'>Fixed price</span>}
@@ -278,7 +281,7 @@ const SingleListCard = ({ val, seller }) => {
                 </div>
                 {val.priceType === 'auction' &&
                     <form onSubmit={(e) => handleBid(e, 'bid')} className='flex flex-col mb-[6px] gap-[6px]'>
-                        <p className='text-[0.55em] text-[#595959] py-[2px] font-[400]'>Buyer pays shipping from <span className='font-[700]'>{getCountryInfoByISO(seller?.country).countryName}</span></p>
+                        <p className='text-[0.55em] text-[#595959] py-[2px] font-[400]'>Buyer pays shipping from <span className='font-[700]'>{seller?.city !== undefined ? seller.city + ", " : ""}{getCountryInfoByISO(seller?.country).countryName}</span></p>
                         {Object.keys(auth).length !== 0 && <input value={price} min={0} onChange={(e) => {
                             setPrice(e.target.value);
                             if (Number(e.target.value >= val.minPrice))
@@ -297,7 +300,7 @@ const SingleListCard = ({ val, seller }) => {
                     </form>}
                 {(val.priceType === 'fixedPrice') &&
                     <div className='flex mb-[5px] flex-col gap-[5px] mt-[5px]'>
-                        <p className='text-[0.55em] text-[#595959] py-[3px] font-[400]'>Buyer pays shipping from <span className='font-[700]'>{getCountryInfoByISO(seller.country).countryName}</span></p>
+                        <p className='text-[0.55em] text-[#595959] py-[3px] font-[400]'>Buyer pays shipping from <span className='font-[700]'>{seller?.city !== undefined ? seller.city + "," : ""}{getCountryInfoByISO(seller.country).countryName}</span></p>
                         {(Object.keys(auth).length !== 0) ?
                             <button onClick={(e) => { handleBid(e, 'buy') }} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Buy</button> :
                             <button onClick={() => { navigate('/signin') }} className='py-[0.25em] w-full rounded-[2px] text-[.75em] bg-primary font-[600] text-[#ffffff] button'>Sign in to buy</button>}
