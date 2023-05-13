@@ -10,27 +10,27 @@ import { toast } from 'react-toastify'
 import CropEasy from './cropEasy'
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { Storage } from './../../utils/firebase'
-import RemoveModel from './RemoveModel'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import axios from '../../api/axios'
 import { FaSpinner } from 'react-icons/fa'
 import CreatableSelect from 'react-select/creatable';
 import useAuth from '../../hooks/useAuth'
+import CancelModel from './CancelModel'
 
 //will be in global auth of user 
 const userCountry = 'PK'
 const countryInfo = getCountryInfoByISO(userCountry);
 const ranges = [
-    { condition: 0, info: "My dog/crocodile has chewed on it, the disc in parts and/or holes in the disc" },
-    { condition: 1, info: "Larger cracks or disc's original form partially worn away" },
-    { condition: 2, info: "The disc has cracks or is properly winded or worn" },
-    { condition: 3, info: "Disc at the end of its life, pressure almost worn out, wind after some decent tree/rock hits" },
-    { condition: 4, info: "Well used disc a little wind maybe, but still usable" },
-    { condition: 5, info: "Used disc, but not wind, with some light nicks and some scratches" },
-    { condition: 6, info: "Recorded with minor damage, but still in good condition" },
-    { condition: 7, info: "Barely recorded, use a few rounds without heavy nicks" },
-    { condition: 8, info: "Test thrown without direct damage, only light scratches" },
-    { condition: 9, info: "Unused, but possibly some small scratches in print from handling/storage, marked with name/decal below to" },
+    { condition: 0, info: "The disc is in pieces and/or has holes in it." },
+    { condition: 1, info: "Major cracks or the disc's original shape partially worn off" },
+    { condition: 2, info: "The disc has cracks or is significantly warped or worn" },
+    { condition: 3, info: "The disc is at the end of its life, with the design almost worn off, warped after a few solid tree/rock hits" },
+    { condition: 4, info: "Well-used disc, possibly slightly warped, but still usable" },
+    { condition: 5, info: "Used disc, but not warped, with some light scratches and some dents" },
+    { condition: 6, info: "Broken in with minor damage, but still in good condition" },
+    { condition: 7, info: "Barely broken in, used a few rounds without significant damage" },
+    { condition: 8, info: "Test-thrown without direct damage, only minor scratches" },
+    { condition: 9, info: "Unused, but may have some minor scratches from handling/storage, marked with a name/decal on the bottom" },
     { condition: 10, info: "\"Mint\", no scratches/damage" },
     { condition: 11, info: "In unopened original packaging" },
 ]
@@ -285,7 +285,7 @@ const Edit = () => {
                                 onChange={handleOptionalChange} type="text" className='text-[0.75em] placeholder:font-[500] pl-[7px] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[1.938em] rounded-[2px]' placeholder='Disc Name *' />
                             <CreatableSelect
                                 isClearable
-                                value={options.find((option) => option.value === inputValues.brand) || null}
+                                value={options?.find((option) => option.value === inputValues.brand) || null}
                                 className="select2 w-full text-[0.75em] font-[500] text-[#AAAAAA] rounded-[2px] outline-none leading-[14.63px] bg-[white]"
                                 closeMenuOnScroll={true}
                                 placeholder="Brand"
@@ -298,7 +298,7 @@ const Edit = () => {
                                 }}
                                 onCreateOption={(inputValue) => {
                                     const newOption = { value: inputValue, label: inputValue };
-                                    options.push(newOption);
+                                    options?.push(newOption);
                                     setInputValues((prevInputValues) => ({
                                         ...prevInputValues,
                                         brand: newOption.value,
@@ -422,11 +422,13 @@ const Edit = () => {
                         <div className='flex items-center font-[500]'>
                             <span className='mr-[0.3125em] text-[.75em]'>End time :</span>
                             <input name='endDay'
+                                disabled
                                 value={inputValues.endDay}
                                 onChange={handleOptionalChange} className='text-[#595959bf] text-[.75em] rounded-[2px] border-[1px] border-[#000000]' id="data" type="date" placeholder='sss' />
                         </div>
                         <label htmlFor="time" className='text-[.75em] xsm:h-[1.25em] sm:h-[1.25em] h-[1.75em] font-[500]'>at<input name='endTime'
                             value={inputValues.endTime}
+                            disabled
                             onChange={handleOptionalChange} className='min-w-[80px] ml-2 text-[#595959bf] rounded-[2px] border-[1px] border-[#000000]' type="time" id="time" /></label>
                     </div>}
                 </div>
@@ -437,11 +439,12 @@ const Edit = () => {
                             style={{ width: "1em", height: "1em", fontSize: '0.875em' }}
                         />
                         : "Update"}</button>
-                    <button onClick={() => setModel(true)} className='buttonAnimation w-[7.5em] h-[2.3125em] mt-[18px] text-[0.875rem] font-[600] bg-[#F21111] text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Remove</button>
+                    <button onClick={() => setModel(true)} className='buttonAnimation w-[7.5em] h-[2.3125em] mt-[18px] text-[0.875rem] font-[600] bg-[#F21111] text-[#ffff] shadow-2xl rounded-[2px]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Cancel</button>
                 </div>
             </div >
             {openCrop && <CropEasy photoURL={photoURL} setOpenCrop={setOpenCrop} dontCrop={dontCrop} onFinish={handleCropped} />}
-            {model && <RemoveModel setModel={setModel} discId={data._id} />}</div >
+            {model && <CancelModel setModel={setModel} discId={data._id} />}
+        </div >
     )
 }
 

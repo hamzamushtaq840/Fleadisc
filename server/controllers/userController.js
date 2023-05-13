@@ -4,7 +4,6 @@ import axios from "axios"
 import { User } from '../models/user.js'
 import { tryCatch } from '../utils/tryCatch.js';
 import AppError from '../utils/AppError.js';
-import { RefreshToken } from "../models/refreshToken.js";
 import { Notification } from "../models/notification.js";
 
 export const signinController = tryCatch(async (req, res) => {
@@ -31,11 +30,11 @@ export const signinController = tryCatch(async (req, res) => {
             }
         );
         // save refresh token to database
-        await RefreshToken.create({ userId: user._id, token: refreshToken, roles: user.roles });
+        // await RefreshToken.create({ userId: user._id, token: refreshToken, roles: user.roles });
 
         //maxAge is 24 hours
-        res.cookie('refreshToken', refreshToken, { sameSite: 'None', httpOnly: false, secure: false, maxAge: 24 * 60 * 60 * 1000 })
-        res.status(200).json({ message: 'Login successful', accessToken: accessToken, name: user.name, userId: user._id.toString(), email: user.email, profilePicture: user.profilePicture, roles: user.roles, country: user.country });
+        // res.cookie('refreshToken', refreshToken, { sameSite: 'None', httpOnly: false, secure: false, maxAge: 24 * 60 * 60 * 1000 })
+        res.status(200).json({ message: 'Login successful', accessToken: accessToken, name: user.name, userId: user._id.toString(), email: user.email, profilePicture: user.profilePicture, roles: user.roles, country: user.country, city: user.city });
     }
     else {
         const { email, password } = req.body;
@@ -67,7 +66,7 @@ export const signinController = tryCatch(async (req, res) => {
         // await RefreshToken.create({ userId: user._id, token: refreshToken, roles: user.roles });
 
         //maxAge is 24 hours
-        res.cookie('refreshToken', refreshToken, { domain: 'localhost', path: '/', sameSite: 'Lax', httpOnly: true, secure: false, maxAge: 24 * 60 * 60 * 1000 })
+        // res.cookie('refreshToken', refreshToken, { domain: 'localhost', path: '/', sameSite: 'Lax', httpOnly: true, secure: false, maxAge: 24 * 60 * 60 * 1000 })
         // res.cookie('refreshToken', refreshToken, {
         //     sameSite: 'lax',
         //     httpOnly: true,
@@ -75,7 +74,7 @@ export const signinController = tryCatch(async (req, res) => {
         //     maxAge: 24 * 60 * 60 * 1000
         // });
 
-        res.status(200).json({ message: 'Login successful', accessToken: accessToken, name: user.name, userId: user._id.toString(), email: user.email, profilePicture: user.profilePicture, roles: user.roles, country: user.country });
+        res.status(200).json({ message: 'Login successful', accessToken: accessToken, name: user.name, userId: user._id.toString(), email: user.email, profilePicture: user.profilePicture, roles: user.roles, country: user.country, city: user.city });
     }
 })
 
@@ -90,11 +89,11 @@ export const signupController = tryCatch(async (req, res) => {
         if (user) {
             throw new AppError('account_exist', 'Email already exists', 401)
         }
-        await User.create({ name: userInfo.data.name, email: userInfo.data.email, profilePicture: userInfo.data.picture, country: req.body.country, currency: req.body.currency })
+        await User.create({ name: userInfo.data.name, email: userInfo.data.email, profilePicture: userInfo.data.picture, country: req.body.country, city: req.body.city, currency: req.body.currency })
         res.status(201).json({ message: 'User registered successfully' });
     }
     else {
-        const { name, email, password, country, currency } = req.body;
+        const { name, email, password, country, currency, city } = req.body;
         // check if email already exists
         const user = await User.findOne({ email });
         if (user) {
@@ -102,7 +101,7 @@ export const signupController = tryCatch(async (req, res) => {
         }
         const hashedPassword = await bcrypt.hash(password, 12)
         // create new user
-        await User.create({ name, email, password: hashedPassword, country, currency });
+        await User.create({ name, email, password: hashedPassword, country, currency, city });
         res.status(201).json({ message: 'User registered successfully' });
     }
 })
@@ -127,6 +126,7 @@ export const checkEmail = tryCatch(async (req, res) => {
     else
         res.status(200).json({ message: 'User not registered before' });
 })
+
 export const getUserFollowing = tryCatch(async (req, res) => {
     const userId = req.params.userId;
     const user = await User.findById(userId).populate('following');

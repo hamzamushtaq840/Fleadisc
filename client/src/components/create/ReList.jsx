@@ -17,65 +17,21 @@ import axios from '../../api/axios'
 import useAuth from '../../hooks/useAuth'
 import { FaSpinner } from 'react-icons/fa'
 import CreatableSelect from 'react-select/creatable';
+import RemoveModel from './RemoveModel'
 
-const options = [
-    { value: 'Aerobie', label: 'Aerobie' },
-    { value: 'Alfa Discs', label: 'Alfa Discs' },
-    { value: 'Axiom Discs', label: 'Axiom Discs' },
-    { value: 'Bushnell', label: 'Bushnell' },
-    { value: 'Clash Discs', label: 'Clash Discs' },
-    { value: 'DGA', label: 'DGA' },
-    { value: 'DiscGolf Pins', label: 'DiscGolf Pins' },
-    { value: 'DiscGolfPark', label: 'DiscGolfPark' },
-    { value: 'Discmania', label: 'Discmania' },
-    { value: 'Discraft', label: 'Discraft' },
-    { value: 'Discsport', label: 'Discsport' },
-    { value: 'Dynamic Discs', label: 'Dynamic Discs' },
-    { value: 'E-RaY', label: 'E-RaY' },
-    { value: 'European Birdies', label: 'European Birdies' },
-    { value: 'EV-7', label: 'EV-7' },
-    { value: 'Fossa', label: 'Fossa' },
-    { value: 'Galaxy Discs', label: 'Galaxy Discs' },
-    { value: 'Gateway', label: 'Gateway' },
-    { value: 'Grip Eq', label: 'Grip Eq' },
-    { value: 'Hero Disc', label: 'Hero Disc' },
-    { value: 'Innova', label: 'Innova' },
-    { value: 'Jacquard', label: 'Jacquard' },
-    { value: 'Kastaplast', label: 'Kastaplast' },
-    { value: 'Keen', label: 'Keen' },
-    { value: 'KnA games', label: 'KnA games' },
-    { value: 'Latitude 64', label: 'Latitude 64' },
-    { value: 'Launch Discs', label: 'Launch Discs' },
-    { value: 'Legacy Discs', label: 'Legacy Discs' },
-    { value: 'Løft Discs (loft)', label: 'Løft Discs (loft)' },
-    { value: 'Millennium', label: 'Millennium' },
-    { value: 'Momentum SE', label: 'Momentum SE' },
-    { value: 'MVP Discs', label: 'MVP Discs' },
-    { value: 'Oak Socks', label: 'Oak Socks' },
-    { value: 'Prodigy', label: 'Prodigy' },
-    { value: 'Prodiscus', label: 'Prodiscus' },
-    { value: 'PUG Förlag', label: 'PUG Förlag' },
-    { value: 'Streamline Discs', label: 'Streamline Discs' },
-    { value: 'Swedisc', label: 'Swedisc' },
-    { value: 'Ugglan', label: 'Ugglan' },
-    { value: 'Westside', label: 'Westside' },
-    { value: 'Wham-O', label: 'Wham-O' },
-    { value: 'Other', label: 'Other' }
-];
 //will be in global auth of user 
 const userCountry = 'PK'
-const countryInfo = getCountryInfoByISO(userCountry);
 const ranges = [
-    { condition: 0, info: "My dog/crocodile has chewed on it, the disc in parts and/or holes in the disc" },
-    { condition: 1, info: "Larger cracks or disc's original form partially worn away" },
-    { condition: 2, info: "The disc has cracks or is properly winded or worn" },
-    { condition: 3, info: "Disc at the end of its life, pressure almost worn out, wind after some decent tree/rock hits" },
-    { condition: 4, info: "Well used disc a little wind maybe, but still usable" },
-    { condition: 5, info: "Used disc, but not wind, with some light nicks and some scratches" },
-    { condition: 6, info: "Recorded with minor damage, but still in good condition" },
-    { condition: 7, info: "Barely recorded, use a few rounds without heavy nicks" },
-    { condition: 8, info: "Test thrown without direct damage, only light scratches" },
-    { condition: 9, info: "Unused, but possibly some small scratches in print from handling/storage, marked with name/decal below to" },
+    { condition: 0, info: "The disc is in pieces and/or has holes in it." },
+    { condition: 1, info: "Major cracks or the disc's original shape partially worn off" },
+    { condition: 2, info: "The disc has cracks or is significantly warped or worn" },
+    { condition: 3, info: "The disc is at the end of its life, with the design almost worn off, warped after a few solid tree/rock hits" },
+    { condition: 4, info: "Well-used disc, possibly slightly warped, but still usable" },
+    { condition: 5, info: "Used disc, but not warped, with some light scratches and some dents" },
+    { condition: 6, info: "Broken in with minor damage, but still in good condition" },
+    { condition: 7, info: "Barely broken in, used a few rounds without significant damage" },
+    { condition: 8, info: "Test-thrown without direct damage, only minor scratches" },
+    { condition: 9, info: "Unused, but may have some minor scratches from handling/storage, marked with a name/decal on the bottom" },
     { condition: 10, info: "\"Mint\", no scratches/damage" },
     { condition: 11, info: "In unopened original packaging" },
 ]
@@ -87,6 +43,7 @@ const ReList = () => {
     const { auth } = useAuth()
     const [optional, setOptional] = useState(false);
     const [openCrop, setOpenCrop] = useState(false)
+    const [model, setModel] = useState(false)
     const [photoURL, setPhotoURL] = useState(data.pictureURL);
     const [files, setFile] = useState(null)
     const [inputValues, setInputValues] = useState({
@@ -347,7 +304,7 @@ const ReList = () => {
                                 onChange={handleOptionalChange} type="text" className='text-[0.75em] placeholder:font-[500] pl-[7px] border-[1px] border-[#595959] xsm:h-[23px] sm:h-[23px] h-[1.938em] rounded-[2px]' placeholder='Disc Name *' />
                             <CreatableSelect
                                 isClearable
-                                value={options.find((option) => option.value === inputValues.brand) || null}
+                                value={options?.find((option) => option.value === inputValues.brand) || null}
                                 className="select2 w-full text-[0.75em] font-[500] text-[#AAAAAA] rounded-[2px] outline-none leading-[14.63px] bg-[white]"
                                 closeMenuOnScroll={true}
                                 placeholder="Brand"
@@ -360,7 +317,7 @@ const ReList = () => {
                                 }}
                                 onCreateOption={(inputValue) => {
                                     const newOption = { value: inputValue, label: inputValue };
-                                    options.push(newOption);
+                                    options?.push(newOption);
                                     setInputValues((prevInputValues) => ({
                                         ...prevInputValues,
                                         brand: newOption.value,
@@ -492,18 +449,21 @@ const ReList = () => {
                             onChange={handleOptionalChange} className='min-w-[80px] ml-2 text-[#595959bf] rounded-[2px] border-[1px] border-[#000000]' type="time" id="time" /></label>
                     </div>}
                 </div>
-                <div className='flex justify-center xsm:pt-[0em] sm:pt-[0em] pt-[1.2em] pb-[1.25em]'><button onClick={handlePublish} className='buttonAnimation relative w-[7.5em] h-[2.4125em] mt-[1.125em] text-[0.875em] button font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[4px]' style={{ boxShadow: "0 4px 0.375em -1px rgba(0, 0, 0, 0.1), 0 0.375em 4px -1px rgba(0, 0, 0, 0.06)" }}>
-                    {relistDisc.isLoading ?
-                        <FaSpinner
-                            className="animate-spin absolute inset-0 m-auto"
-                            style={{ width: "1em", height: "1em", fontSize: '0.875em' }}
-                        />
-                        : "Re-list"}</button></div>
+                <div className='flex justify-center gap-[10px] xsm:pt-[0em] sm:pt-[0em] pt-[1.2em] pb-[1.25em]'>
+                    <button onClick={() => setModel(true)} className='buttonAnimation relative w-[7.5em] h-[2.4125em] mt-[1.125em] text-[0.875em] button font-[600] bg-[#F21111] text-[#ffff] shadow-2xl rounded-[24x]' style={{ boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 6px 4px -1px rgba(0, 0, 0, 0.06)" }}>Remove</button>
+
+                    <button onClick={handlePublish} className='buttonAnimation relative w-[7.5em] h-[2.4125em] mt-[1.125em] text-[0.875em] button font-[600] bg-primary text-[#ffff] shadow-2xl rounded-[4px]' style={{ boxShadow: "0 4px 0.375em -1px rgba(0, 0, 0, 0.1), 0 0.375em 4px -1px rgba(0, 0, 0, 0.06)" }}>
+                        {relistDisc.isLoading ?
+                            <FaSpinner
+                                className="animate-spin absolute inset-0 m-auto"
+                                style={{ width: "1em", height: "1em", fontSize: '0.875em' }}
+                            />
+                            : "Re-list"}</button></div>
             </div>
             {openCrop && <CropEasy photoURL={photoURL} setOpenCrop={setOpenCrop} dontCrop={dontCrop} onFinish={handleCropped} />}
+            {model && <RemoveModel setModel={setModel} discId={data._id} />}
         </div >
     )
 }
 
 export default ReList
-

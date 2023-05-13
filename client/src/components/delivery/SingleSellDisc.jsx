@@ -9,12 +9,12 @@ import CancelSeller from './CancelSeller';
 const SingleSellDisc = ({ value, seller, val }) => {
     const [model, setModel] = useState(false)
     const [oldModal, setOldModal] = useState(false)
-    const oldModalComponent = useMemo(() => <OlderBids setModel={setOldModal} discId={value.discId._id} />, [setOldModal]);
+    const oldModalComponent = useMemo(() => <OlderBids setModel={setOldModal} discId={value.discId._id} />, []);
+    const memorizedOldModalComponent = React.memo(({ value, seller, val }) => { return (<OlderBids setModel={setOldModal} discId={value.discId._id} />) })
     const userCurrency = "SEK";
 
     function getMonthAndDate(dateString) {
         const date = moment(dateString);
-
         const monthName = date.format("MMM");
         const dayOfMonth = date.format("D");
         return `${dayOfMonth} ${monthName}`;

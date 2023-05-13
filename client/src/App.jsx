@@ -51,7 +51,6 @@ const App = () => {
     <BrowserRouter>
       <Routes>
 
-        {/* Public Routes */}
         <Route path="/signin" element={<Suspense fallback={Loader}>< Signin /></Suspense>} />
         <Route path="/signup">
           <Route index element={<Suspense fallback={Loader}>< Signup /></Suspense>} />
@@ -60,7 +59,6 @@ const App = () => {
 
         <Route path='/' element={<Navbar />}>
           <Route index element={<Listing />} />
-          {/* Private Routes */}
           <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
             <Route path="/create" element={<Suspense fallback={Loader}><Create /></Suspense>} />
             <Route path="/delivery" element={<Suspense fallback={Loader}><Delivery /></Suspense >} />

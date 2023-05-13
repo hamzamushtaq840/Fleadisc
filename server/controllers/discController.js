@@ -15,10 +15,10 @@ export const postDisc = tryCatch(async (req, res) => {
     const optionsFromDB = await Option.find();
 
     // Get the values of all options from the database
-    const existingOptions = optionsFromDB.map(option => option.value);
+    const existingOptions = optionsFromDB.map(option => option.value.toLowerCase().trim());
 
     // Check if the brand option from the request is not in the existing options array
-    if (!existingOptions.includes(brand)) {
+    if (!existingOptions.includes(brand.toLowerCase().trim())) {
         // Add the brand option to the database
         const newBrandOption = await Option.create({ value: brand, label: brand });
         optionsFromDB.push(newBrandOption);
@@ -462,16 +462,14 @@ export const editDisc = tryCatch(async (req, res) => {
     // Fetch all options from the database
     const optionsFromDB = await Option.find();
 
-    // Get the values of all options from the database
-    const existingOptions = optionsFromDB.map(option => option.value);
+    const existingOptions = optionsFromDB.map(option => option.value.toLowerCase().trim());
 
     // Check if the brand option from the request is not in the existing options array
-    if (!existingOptions.includes(brand)) {
+    if (!existingOptions.includes(brand.toLowerCase().trim())) {
         // Add the brand option to the database
         const newBrandOption = await Option.create({ value: brand, label: brand });
         optionsFromDB.push(newBrandOption);
     }
-
     // Save the updated disc
     disc = await disc.save();
     io.emit("bid_added");
@@ -489,10 +487,10 @@ export const reListDisc = tryCatch(async (req, res) => {
     const optionsFromDB = await Option.find();
 
     // Get the values of all options from the database
-    const existingOptions = optionsFromDB.map(option => option.value);
+    const existingOptions = optionsFromDB.map(option => option.value.toLowerCase().trim());
 
     // Check if the brand option from the request is not in the existing options array
-    if (!existingOptions.includes(brand)) {
+    if (!existingOptions.includes(brand.toLowerCase().trim())) {
         // Add the brand option to the database
         const newBrandOption = await Option.create({ value: brand, label: brand });
         optionsFromDB.push(newBrandOption);
@@ -534,3 +532,27 @@ export const boughtListing = tryCatch(async (req, res) => {
     res.status(201).json(listing);
 });
 
+
+export const cancelDisc = tryCatch(async (req, res) => {
+    const { discId } = req.params;
+    let disc = await Disc.findOne({ _id: discId });
+
+    const currentDate = new Date();
+
+    // Get the year, month, and day from the current date
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+
+    // Get the hours and minutes from the current time
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    disc.endDay = `${year}-${month}-${day}`;
+    disc.endTime = `${hours}:${minutes}`;
+    disc.buyer = null;
+    disc.isActive = false;
+    disc.isFinished = true;
+    await disc.save();
+    io.emit("bid_added");
+    res.send('Disc relisted successfully');
+});
